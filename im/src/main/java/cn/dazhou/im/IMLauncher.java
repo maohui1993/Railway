@@ -2,8 +2,11 @@ package cn.dazhou.im;
 
 import android.util.Log;
 
+import java.util.List;
+
 import cn.dazhou.im.core.ConnectManager;
 import cn.dazhou.im.core.IConnection;
+import cn.dazhou.im.core.smack.modle.User;
 
 /**
  * Created by hooyee on 2017/5/5.
@@ -41,5 +44,10 @@ public final class IMLauncher {
             Log.w("TAG", "登录失败:" + e.getMessage());
         }
         return result;
+    }
+
+    public static List<User> getUserBook(){
+        List<User> users = null;
+        return users;
     }
 }

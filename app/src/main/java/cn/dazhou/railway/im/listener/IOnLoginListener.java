@@ -10,5 +10,9 @@ public interface IOnLoginListener {
      */
     void onSuccess();
 
+    /**
+     * 登录失败时回调
+     * @param info
+     */
     void onFail(String info);
 }
