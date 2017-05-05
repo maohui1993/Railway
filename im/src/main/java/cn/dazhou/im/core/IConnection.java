@@ -5,5 +5,7 @@ package cn.dazhou.im.core;
  */
 
 public interface IConnection {
-    IConnection connect() throws Exception;
+    IConnection connect(String ip) throws Exception;
+
+    void login(String username, String password) throws Exception;
 }

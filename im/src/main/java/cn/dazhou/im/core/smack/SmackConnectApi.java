@@ -26,21 +26,30 @@ public class SmackConnectApi implements IConnection {
     }
 
     @Override
-    public IConnection connect() throws Exception {
+    public IConnection connect(String ip) throws Exception {
         XMPPTCPConnectionConfiguration config = null;
-        InetAddress inetAddress = InetAddress.getByName("192.168.1.39");
+        InetAddress inetAddress = InetAddress.getByName(ip);
         try {
             config = XMPPTCPConnectionConfiguration.builder()
-                    .setUsernameAndPassword("hooyee", "hooyee")
                     .setXmppDomain(JidCreate.from("192.168.1.39").asDomainBareJid())
                     .setHostAddress(inetAddress)
                     .setPort(5222)
+                    .setConnectTimeout(5000)
                     .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                     .build();
         } catch (Exception e) {
             throw e;
         }
         mConnection = new XMPPTCPConnection(config);
+        mConnection.connect();
         return this;
+    }
+
+    public void login(String username, String password) throws Exception {
+        try {
+            mConnection.login(username, password);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 }

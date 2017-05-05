@@ -10,12 +10,12 @@ public class ConnectManager {
     public static final byte CONNECT_PROTOCOL_XMPP = 0;
     public static final byte CONNECT_PROTOCOL_TCP = 1;
 
-    public static IConnection getConnection(int type) throws Exception {
+    public static IConnection getConnection(int type, String ip) throws Exception {
         IConnection IConnection = null;
         switch (type) {
             case CONNECT_PROTOCOL_XMPP :
                 IConnection = SmackConnectApi.getInstance();
-                IConnection.connect();
+                IConnection.connect(ip);
                 break;
             case CONNECT_PROTOCOL_TCP :
                 break;

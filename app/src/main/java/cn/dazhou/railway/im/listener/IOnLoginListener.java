@@ -5,5 +5,10 @@ package cn.dazhou.railway.im.listener;
  */
 
 public interface IOnLoginListener {
+    /**
+     * 登录成功时回调
+     */
     void onSuccess();
+
+    void onFail(String info);
 }
