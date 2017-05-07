@@ -27,20 +27,13 @@ dependencies {
     compile project(':maputil')
     compile project(':im')
     compile 'com.android.support:appcompat-v7:25.3.1'
-<<<<<<< HEAD
-=======
-    compile 'com.jakewharton:butterknife:8.5.1'
->>>>>>> a2be3e9ba6dfb8f50286524352bb9a1b31e49adb
     compile 'com.android.support:design:25.3.1'
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.0.9'
     compile 'com.github.florent37:materialtextfield:1.0.7'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
-<<<<<<< HEAD
     compile 'com.jakewharton:butterknife:8.5.1'
-=======
->>>>>>> a2be3e9ba6dfb8f50286524352bb9a1b31e49adb
+    testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 }

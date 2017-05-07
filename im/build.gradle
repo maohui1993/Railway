@@ -1,8 +1,5 @@
 apply plugin: 'com.android.library'
-<<<<<<< HEAD
 apply plugin: 'com.jakewharton.butterknife'
-=======
->>>>>>> a2be3e9ba6dfb8f50286524352bb9a1b31e49adb
 
 android {
     compileSdkVersion 25
@@ -35,8 +32,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
-<<<<<<< HEAD
-    compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile 'com.android.support:recyclerview-v7:23.1.0'
     compile 'org.igniterealtime.smack:smack-android-extensions:4.2.0'
     compile 'org.igniterealtime.smack:smack-experimental:4.2.0'
     compile 'org.igniterealtime.smack:smack-tcp:4.2.0'
@@ -45,15 +41,6 @@ dependencies {
 //    compile group: 'org.apache.mina', name: 'mina-core', version: '2.0.4'
     compile 'com.jakewharton:butterknife:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
-=======
-    compile 'org.igniterealtime.smack:smack-android-extensions:4.2.0'
-    compile 'org.igniterealtime.smack:smack-experimental:4.2.0'
-    compile 'org.igniterealtime.smack:smack-tcp:4.2.0'
-    // Optional for XMPP-IM (RFC 6121) support (Roster, Threaded Chats, …)
-    compile "org.igniterealtime.smack:smack-im:4.2.0"
-    compile group: 'org.apache.mina', name: 'mina-core', version: '2.0.4'
-
->>>>>>> a2be3e9ba6dfb8f50286524352bb9a1b31e49adb
 
     testCompile 'junit:junit:4.12'
 }
