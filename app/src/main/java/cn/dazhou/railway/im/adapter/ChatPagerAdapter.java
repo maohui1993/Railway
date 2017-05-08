@@ -13,11 +13,11 @@ import java.util.List;
 
 public class ChatPagerAdapter extends PagerAdapter {
     private List<View> mViewList;
-    private List<String> mTitleList;
+    private String[] mTitles;
 
-    public ChatPagerAdapter(List<View> mViewList, List<String> titles) {
+    public ChatPagerAdapter(List<View> mViewList, String[] titles) {
         this.mViewList = mViewList;
-        mTitleList = titles;
+        mTitles = titles;
     }
 
     @Override
@@ -43,6 +43,6 @@ public class ChatPagerAdapter extends PagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return mTitleList.get(position);//页卡标题
+        return mTitles[position];//页卡标题
     }
 }

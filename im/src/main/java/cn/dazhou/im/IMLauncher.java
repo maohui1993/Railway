@@ -2,12 +2,13 @@ package cn.dazhou.im;
 
 import android.util.Log;
 
+import org.jivesoftware.smack.roster.Roster;
+
 import java.util.List;
 
 import cn.dazhou.im.core.ConnectManager;
 import cn.dazhou.im.core.IMApi;
-import cn.dazhou.im.core.function.IConnection;
-import cn.dazhou.im.core.smack.modle.User;
+import cn.dazhou.im.core.modle.User;
 
 /**
  * Created by hooyee on 2017/5/5.
@@ -64,7 +65,7 @@ public final class IMLauncher {
         return users;
     }
 
-    public static void showRoster() {
-        mImApi.showRoster();
+    public static Roster getRoster() {
+        return mImApi.getRoster();
     }
 }

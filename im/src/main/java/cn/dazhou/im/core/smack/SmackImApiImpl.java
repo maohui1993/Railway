@@ -107,7 +107,7 @@ public class SmackImApiImpl implements IMApi {
     }
 
     @Override
-    public void showRoster() {
+    public Roster getRoster() {
         Roster roster = Roster.getInstanceFor(mConnection);
         try {
             roster.createEntry(JidCreate.entityBareFrom("test"+"@10.0.0.4"), "maohui", new String[]{"Friends"});
@@ -120,5 +120,7 @@ public class SmackImApiImpl implements IMApi {
         for (RosterEntry entry : entries) {
             Log.i("TAG", "entry: " + entry);
         }
+
+        return roster;
     }
 }

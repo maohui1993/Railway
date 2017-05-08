@@ -49,7 +49,7 @@ public class LoginPresenter {
         Observable.create(new ObservableOnSubscribe() {
             @Override
             public void subscribe(@NonNull ObservableEmitter e) throws Exception {
-                connected = IMLauncher.connect("10.0.0.4");
+                connected = IMLauncher.connect("192.168.1.39");
                 e.onNext(1);
             }
         })
