@@ -8,6 +8,7 @@ import java.util.List;
 
 import cn.dazhou.im.core.ConnectManager;
 import cn.dazhou.im.core.IMApi;
+import cn.dazhou.im.core.function.INewMessageListener;
 import cn.dazhou.im.core.modle.User;
 
 /**
@@ -60,9 +61,8 @@ public final class IMLauncher {
         return result;
     }
 
-    public static List<User> getUserBook(){
-        List<User> users = null;
-        return users;
+    public static void setNewMessageListener(INewMessageListener listener) {
+        mImApi.setOnNewMessageListener(listener);
     }
 
     public static Roster getRoster() {

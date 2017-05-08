@@ -15,6 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
+import cn.dazhou.im.core.function.INewMessageListener;
 import cn.dazhou.im.view.adapter.ChatAdapter;
 
 /**
@@ -22,7 +23,7 @@ import cn.dazhou.im.view.adapter.ChatAdapter;
  * mail: hooyee_moly@foxmail.com
  */
 
-public class ChatContentView extends LinearLayout {
+public class ChatContentView extends LinearLayout{
     @BindView(R2.id.rv_chat_content)
     RecyclerView mChatMessagesView;
     @BindView(R2.id.edit_chat_input)
@@ -55,7 +56,6 @@ public class ChatContentView extends LinearLayout {
 
     public void addMessage(String msg) {
         mAdapter.addMsg(msg);
-        mAdapter.notifyDataSetChanged();
     }
 
     // Butterknife为lib-moudle生成的R2文件

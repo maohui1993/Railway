@@ -24,6 +24,7 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.dazhou.im.IMLauncher;
+import cn.dazhou.im.core.function.INewMessageListener;
 import cn.dazhou.im.view.ChatContentView;
 import cn.dazhou.im.view.RosterView;
 import cn.dazhou.railway.R;
@@ -33,7 +34,7 @@ import cn.dazhou.railway.im.presenter.ChatPresenter;
 /**
  * 启动时需要知道是与谁聊天，故启动的时候要带一个data值传入。
  */
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity implements INewMessageListener{
 
     @BindView(R.id.tabs)
     TabLayout mTabLayout;
@@ -58,16 +59,18 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
         ButterKnife.bind(this);
         mJid = getIntent().getStringExtra("jid");
-//        mChatContentView.setOnSendListener(new ChatContentView.OnSendListener() {
-//            @Override
-//            public void onSend(String info) {
-//                IMLauncher.chatWith(mJid, info);
-//            }
-//        });
 
         LayoutInflater mInflater = LayoutInflater.from(this);
         mChatContentView = (ChatContentView) mInflater.inflate(R.layout.tab_message, null);
         mRosterView = (RosterView) mInflater.inflate(R.layout.tab_roster, null);
+        IMLauncher.setNewMessageListener(this);
+
+        mChatContentView.setOnSendListener(new ChatContentView.OnSendListener() {
+            @Override
+            public void onSend(String info) {
+                IMLauncher.chatWith(mJid, info);
+            }
+        });
 
         //添加页卡视图
         mViewList.add(mChatContentView);
@@ -91,5 +94,15 @@ public class ChatActivity extends AppCompatActivity {
         Intent intent = new Intent(context, ChatActivity.class);
         intent.putExtra("jid", data);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void showNewMessage(final String msg) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mChatContentView.addMessage(msg);
+            }
+        });
     }
 }
