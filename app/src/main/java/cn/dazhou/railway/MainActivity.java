@@ -52,25 +52,6 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.bt_position)
     void position() {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                SmackTest smackTest = new SmackTest();
-//                try {
-//                    smackTest.connect();
-//                    Log.i("TAG", "链接成功");
-//                } catch (IOException e) {
-//                    Log.i("TAG", "链接失败1");
-//                    e.printStackTrace();
-//                } catch (InterruptedException e) {Log.i("TAG", "链接失败2");
-//                    e.printStackTrace();
-//                } catch (XMPPException e) {Log.i("TAG", "链接失败3");
-//                    e.printStackTrace();
-//                } catch (SmackException e) {Log.e("TAG", "链接失败4");
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
         MapLauncher.loadMap(content);
         MapLauncher.getPosition();
     }

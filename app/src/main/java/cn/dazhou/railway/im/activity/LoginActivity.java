@@ -62,6 +62,7 @@ public class LoginActivity extends AppCompatActivity implements IOnLoginListener
     public void onSuccess() {
         mLoginPbt.setProgress(0);
         changeEditEnable();
+        ChatActivity.startItself(this, "admin@10.0.0.4");
     }
 
     @Override

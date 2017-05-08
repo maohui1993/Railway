@@ -5,7 +5,8 @@ import android.util.Log;
 import java.util.List;
 
 import cn.dazhou.im.core.ConnectManager;
-import cn.dazhou.im.core.IConnection;
+import cn.dazhou.im.core.IMApi;
+import cn.dazhou.im.core.function.IConnection;
 import cn.dazhou.im.core.smack.modle.User;
 
 /**
@@ -13,13 +14,13 @@ import cn.dazhou.im.core.smack.modle.User;
  */
 
 public final class IMLauncher {
-    private static final String TAG = "IM";
-    private static IConnection sConnection;
+    private static final String TAG = "IMApi";
+    private static IMApi mImApi;
 
     public static boolean connect(String ip) {
         boolean result = true;
         try {
-            sConnection = ConnectManager.getConnection(ConnectManager.CONNECT_PROTOCOL_XMPP, ip);
+            mImApi = ConnectManager.getConnection(ConnectManager.CONNECT_PROTOCOL_XMPP, ip);
         } catch (Exception e) {
             result = false;
             e.printStackTrace();
@@ -38,7 +39,7 @@ public final class IMLauncher {
         Log.d("TAG", "登录中··");
         boolean result = true;
         try {
-            sConnection.login(username, password);
+            mImApi.login(username, password);
         } catch (Exception e) {
             result = false;
             Log.w("TAG", "登录失败:" + e.getMessage());
@@ -46,8 +47,24 @@ public final class IMLauncher {
         return result;
     }
 
+    public static boolean chatWith(String id, String info) {
+        boolean result;
+        try {
+            mImApi.chatWith(id, info);
+            result = true;
+        } catch (Exception e) {
+            result = false;
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     public static List<User> getUserBook(){
         List<User> users = null;
         return users;
+    }
+
+    public static void showRoster() {
+        mImApi.showRoster();
     }
 }
