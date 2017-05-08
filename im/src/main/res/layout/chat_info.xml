@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tx_info_item"
-    android:layout_marginTop="10dp"
-    android:textSize="24sp"
-    android:layout_gravity="center_vertical"
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-</TextView>
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/tx_info_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="10dp"
+        android:textSize="24sp"/>
+
+    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/image_info_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

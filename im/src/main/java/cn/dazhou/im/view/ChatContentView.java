@@ -1,6 +1,8 @@
 package cn.dazhou.im.view;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -15,7 +17,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
+import cn.dazhou.im.core.PhotoActivity;
 import cn.dazhou.im.core.function.INewMessageListener;
+import cn.dazhou.im.core.util.Tool;
 import cn.dazhou.im.view.adapter.ChatAdapter;
 
 /**
@@ -62,11 +66,24 @@ public class ChatContentView extends LinearLayout{
     @OnClick(R2.id.bt_send)
     void sendMassage() {
         String info = mChatInput.getText().toString();
+        createBitmapByPath(Tool.gPicPath);
         mChatInput.setText("");
         if (getOnSendListener() != null) {
             getOnSendListener().onSend(info);
             addMessage(info);
         }
+    }
+
+    @OnClick(R2.id.bt_photo)
+    void selectPicture() {
+        PhotoActivity.startItself(getContext());
+    }
+
+    private void createBitmapByPath(String path) {
+        if (path == null || "".equals(path)) {
+            return;
+        }
+        Bitmap bmp = BitmapFactory.decodeFile(path);
     }
 
     public OnSendListener getOnSendListener() {

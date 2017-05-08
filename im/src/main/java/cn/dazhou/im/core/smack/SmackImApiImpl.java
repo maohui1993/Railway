@@ -41,7 +41,7 @@ import cn.dazhou.im.core.function.INewMessageListener;
 
 public class SmackImApiImpl implements IMApi {
     private static final byte LOGINED_STATE = 1;
-    private static final byte NOT_LOGIN_STATE  = -1;
+    private static final byte NOT_LOGIN_STATE = -1;
 
     private static SmackImApiImpl singleton = new SmackImApiImpl();
     private AbstractXMPPConnection mConnection;
@@ -50,14 +50,15 @@ public class SmackImApiImpl implements IMApi {
     private INewMessageListener mMsgListener;
 
     private byte mState;
-    private SmackImApiImpl(){}
+
+    private SmackImApiImpl() {
+    }
 
     public static SmackImApiImpl getInstance() {
         return singleton;
     }
 
     /**
-     *
      * @param ip 服务器IP
      * @return
      * @throws Exception
@@ -66,17 +67,14 @@ public class SmackImApiImpl implements IMApi {
     public IConnection connect(String ip) throws Exception {
         XMPPTCPConnectionConfiguration config = null;
         InetAddress inetAddress = InetAddress.getByName(ip);
-        try {
-            config = XMPPTCPConnectionConfiguration.builder()
-                    .setXmppDomain(JidCreate.from(ip).asDomainBareJid())
-                    .setHostAddress(inetAddress)
-                    .setPort(5222)
-                    .setConnectTimeout(5000)
-                    .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
-                    .build();
-        } catch (Exception e) {
-            throw e;
-        }
+        config = XMPPTCPConnectionConfiguration.builder()
+                .setXmppDomain(JidCreate.from(ip).asDomainBareJid())
+                .setHostAddress(inetAddress)
+                .setPort(5222)
+                .setConnectTimeout(5000)
+                .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
+                .build();
+
         mConnection = new XMPPTCPConnection(config);
         mConnection.connect();
         addPacketSendListener(new MyStanzaListener());
@@ -89,6 +87,7 @@ public class SmackImApiImpl implements IMApi {
         StanzaFilter filter = (StanzaFilter) new AndFilter(new PacketTypeFilter(Presence.class));
         addPacketSendListener(stanzaListener, filter);
     }
+
     public void addPacketSendListener(StanzaListener packetListener, StanzaFilter packetFilter) {
         mConnection.addPacketSendingListener(packetListener, packetFilter);
     }
@@ -135,7 +134,7 @@ public class SmackImApiImpl implements IMApi {
     public Roster getRoster() {
         Roster roster = Roster.getInstanceFor(mConnection);
         try {
-            roster.createEntry(JidCreate.entityBareFrom("maohui"+"@192.168.1.39"), "maohui", new String[]{"Friends"});
+            roster.createEntry(JidCreate.entityBareFrom("maohui" + "@192.168.1.39"), "maohui", new String[]{"Friends"});
         } catch (Exception e) {
 
         }
@@ -160,11 +159,11 @@ public class SmackImApiImpl implements IMApi {
         public void processStanza(Stanza packet) throws SmackException.NotConnectedException, InterruptedException {
             Log.i("TAG", "processStanza");
             if (packet instanceof Presence) {
-                Presence presence = (Presence)packet;
+                Presence presence = (Presence) packet;
                 Jid from = presence.getFrom();//发送方
                 Jid to = presence.getTo();//接收方
                 if (presence.getType().equals(Presence.Type.subscribe)) {
-                    Log.i("TAG", "收到添加请求！" + "发送方："+ from.getLocalpartOrNull() + "接收方：" + to.getLocalpartOrNull());
+                    Log.i("TAG", "收到添加请求！" + "发送方：" + from.getLocalpartOrNull() + "接收方：" + to.getLocalpartOrNull());
                 }
             }
         }
