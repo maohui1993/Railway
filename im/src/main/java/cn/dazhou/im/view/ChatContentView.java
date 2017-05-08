@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.nio.ByteBuffer;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -19,6 +21,7 @@ import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
 import cn.dazhou.im.core.PhotoActivity;
 import cn.dazhou.im.core.function.INewMessageListener;
+import cn.dazhou.im.core.modle.ChatMsgEntity;
 import cn.dazhou.im.core.util.Tool;
 import cn.dazhou.im.view.adapter.ChatAdapter;
 
@@ -66,9 +69,12 @@ public class ChatContentView extends LinearLayout{
     @OnClick(R2.id.bt_send)
     void sendMassage() {
         String info = mChatInput.getText().toString();
-        createBitmapByPath(Tool.gPicPath);
+        byte[] bytes = createBitmapByPath(Tool.gPicPath);
         mChatInput.setText("");
         if (getOnSendListener() != null) {
+            ChatMsgEntity msg = new ChatMsgEntity();
+            msg.setDate(info);
+            msg.setMesImage(bytes);
             getOnSendListener().onSend(info);
             addMessage(info);
         }
@@ -79,11 +85,16 @@ public class ChatContentView extends LinearLayout{
         PhotoActivity.startItself(getContext());
     }
 
-    private void createBitmapByPath(String path) {
+    private byte[] createBitmapByPath(String path) {
         if (path == null || "".equals(path)) {
-            return;
+            return null;
         }
         Bitmap bmp = BitmapFactory.decodeFile(path);
+        int bytes = bmp.getByteCount();
+
+        ByteBuffer buf = ByteBuffer.allocate(bytes);
+        bmp.copyPixelsToBuffer(buf);
+        return buf.array();
     }
 
     public OnSendListener getOnSendListener() {
