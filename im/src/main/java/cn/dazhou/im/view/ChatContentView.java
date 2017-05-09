@@ -82,6 +82,7 @@ public class ChatContentView extends LinearLayout{
                         ChatMsgEntity msg = new ChatMsgEntity();
                         msg.setMsgSoundRecord(bytes);
                         addMessage(msg);
+                        sendMultimediaMessage(msg);
                         break;
                 }
                 return false;
@@ -95,6 +96,10 @@ public class ChatContentView extends LinearLayout{
 
     public void addMessage(ChatMsgEntity msg) {
         mAdapter.addMsg(msg);
+    }
+
+    void sendMultimediaMessage(ChatMsgEntity msg) {
+        getOnSendListener().onSend(msg);
     }
 
     // Butterknife为lib-moudle生成的R2文件
