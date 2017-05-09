@@ -60,6 +60,7 @@ public class ChatContentView extends LinearLayout{
         mChatMessagesView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         mChatMessagesView.setHasFixedSize(true);
         mChatMessagesView.setAdapter(mAdapter);
+        mSoundRecord = new SoundRecord();
 
         mSoundBt.setOnTouchListener(new OnTouchListener() {
             @Override
