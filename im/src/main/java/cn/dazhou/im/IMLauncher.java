@@ -4,12 +4,10 @@ import android.util.Log;
 
 import org.jivesoftware.smack.roster.Roster;
 
-import java.util.List;
-
 import cn.dazhou.im.core.ConnectManager;
 import cn.dazhou.im.core.IMApi;
 import cn.dazhou.im.core.function.INewMessageListener;
-import cn.dazhou.im.core.modle.User;
+import cn.dazhou.im.modle.ChatMsgEntity;
 
 /**
  * Created by hooyee on 2017/5/5.
@@ -49,10 +47,10 @@ public final class IMLauncher {
         return result;
     }
 
-    public static boolean chatWith(String id, String info) {
+    public static boolean chatWith(String id, ChatMsgEntity msg) {
         boolean result;
         try {
-            mImApi.chatWith(id, info);
+            mImApi.chatWith(id, msg);
             result = true;
         } catch (Exception e) {
             result = false;

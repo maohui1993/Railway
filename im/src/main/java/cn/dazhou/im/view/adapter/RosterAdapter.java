@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.dazhou.im.R;
-import cn.dazhou.im.core.modle.User;
 
 /**
  * Created by hooyee on 2017/5/8.

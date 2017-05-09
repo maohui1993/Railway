@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
@@ -23,6 +24,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.core.function.INewMessageListener;
+import cn.dazhou.im.modle.ChatMsgEntity;
+import cn.dazhou.im.util.Tool;
 import cn.dazhou.im.view.ChatContentView;
 import cn.dazhou.im.view.RosterView;
 import cn.dazhou.railway.R;
@@ -65,8 +68,8 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
 
         mChatContentView.setOnSendListener(new ChatContentView.OnSendListener() {
             @Override
-            public void onSend(String info) {
-                IMLauncher.chatWith(mJid, info);
+            public void onSend(ChatMsgEntity msg) {
+                IMLauncher.chatWith(mJid, msg);
             }
         });
 
@@ -99,7 +102,8 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mChatContentView.addMessage(msg);
+                ChatMsgEntity msgEntity = (ChatMsgEntity) Tool.parseJSON(msg, ChatMsgEntity.class);
+                mChatContentView.addMessage(msgEntity);
             }
         });
     }

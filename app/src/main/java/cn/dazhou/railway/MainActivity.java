@@ -3,7 +3,6 @@ package cn.dazhou.railway;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -11,20 +10,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
-
-import com.baidu.mapapi.SDKInitializer;
-
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPException;
-
-import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.dazhou.im.SmackTest;
+import cn.dazhou.im.util.Tool;
 import cn.dazhou.maputil.MapLauncher;
 import cn.dazhou.railway.im.activity.LoginActivity;
 
@@ -38,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
         MapLauncher.init(getApplicationContext());
         ViewGroup content = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.activity_main, null);
         setContentView(content);
+        Tool.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        Tool.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        Tool.checkPermission(this, Manifest.permission.RECORD_AUDIO);
 
         ButterKnife.bind(this);
         Log.i("TAG", "onCreate");

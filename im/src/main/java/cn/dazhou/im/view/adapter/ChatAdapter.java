@@ -3,19 +3,16 @@ package cn.dazhou.im.view.adapter;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
+import cn.dazhou.im.modle.ChatMsgEntity;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.dazhou.im.R;
-import cn.dazhou.im.core.modle.ChatMsgEntity;
+import cn.dazhou.im.view.ChatMessageView;
 
 /**
  * Created by Hooyee on 2017/5/7.
@@ -31,7 +28,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     public void addMsg(String message) {
         ChatMsgEntity msg = new ChatMsgEntity();
-        msg.setDate(message);
+        msg.setMessage(message);
         addMsg(msg);
     }
     public void addMsg(ChatMsgEntity message) {
@@ -41,18 +38,18 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View root = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_info, null, false);
-        ViewHolder holder = new ViewHolder(root.findViewById(R.id.tx_info_item));
-        holder.image = (ImageView) root.findViewById(R.id.image_info_item);
+        View root = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_info, parent, false);
+        View msgView =  root.findViewById(R.id.chat_message);
+        ViewHolder holder = new ViewHolder(msgView);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.msg.setText(chatMsgs.get(position).getDate());
+        holder.messageView.setText(chatMsgs.get(position).getMessage());
         if (chatMsgs.get(position).getMesImage() != null) {
             Bitmap bmp = BitmapFactory.decodeByteArray(chatMsgs.get(position).getMesImage(), 0, chatMsgs.get(position).getMesImage().length);
-            holder.image.setImageDrawable(new BitmapDrawable(bmp));
+            holder.messageView.setImage(bmp);
         }
     }
 
@@ -63,11 +60,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView msg;
-        ImageView image;
+        ChatMessageView messageView;
         public ViewHolder(View itemView) {
             super(itemView);
-            msg = (TextView) itemView;
+            messageView = (ChatMessageView) itemView;
         }
     }
 }

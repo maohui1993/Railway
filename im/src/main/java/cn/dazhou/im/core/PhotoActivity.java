@@ -3,13 +3,11 @@ package cn.dazhou.im.core;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import cn.dazhou.im.core.util.Tool;
-import cn.dazhou.im.view.ChatContentView;
+import cn.dazhou.im.util.Tool;
 
 public class PhotoActivity extends AppCompatActivity {
 
@@ -21,6 +19,7 @@ public class PhotoActivity extends AppCompatActivity {
         Intent i = new Intent(
                 Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
+
         startActivityForResult(i, RESULT_LOAD_IMAGE);
     }
 
@@ -29,18 +28,14 @@ public class PhotoActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
+            Cursor cursor = getContentResolver().query(data.getData(), null, null, null, null);
             cursor.moveToFirst();
 
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            int columnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
             Tool.gPicPath = picturePath;
-            // String picturePath contains the path of selected Image
+            finish();
         }
     }
 

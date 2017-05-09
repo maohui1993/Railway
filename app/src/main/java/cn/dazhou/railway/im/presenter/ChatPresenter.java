@@ -1,5 +1,6 @@
 package cn.dazhou.railway.im.presenter;
 
+import cn.dazhou.im.modle.ChatMsgEntity;
 import cn.dazhou.im.view.ChatContentView;
 
 /**
@@ -8,6 +9,6 @@ import cn.dazhou.im.view.ChatContentView;
 
 public class ChatPresenter implements ChatContentView.OnSendListener{
     @Override
-    public void onSend(String info) {
+    public void onSend(ChatMsgEntity msg) {
     }
 }

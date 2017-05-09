@@ -1,18 +1,15 @@
 package cn.dazhou.im.core.smack;
 
-import android.content.Intent;
 import android.util.Log;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.StanzaListener;
-import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.chat2.IncomingChatMessageListener;
 import org.jivesoftware.smack.filter.AndFilter;
-import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.filter.StanzaFilter;
 import org.jivesoftware.smack.packet.Message;
@@ -25,7 +22,6 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
-import org.jxmpp.jid.parts.Localpart;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.net.InetAddress;
@@ -34,6 +30,8 @@ import java.util.Collection;
 import cn.dazhou.im.core.IMApi;
 import cn.dazhou.im.core.function.IConnection;
 import cn.dazhou.im.core.function.INewMessageListener;
+import cn.dazhou.im.modle.ChatMsgEntity;
+import cn.dazhou.im.util.Tool;
 
 /**
  * Created by hooyee on 2017/5/5.
@@ -113,8 +111,8 @@ public class SmackImApiImpl implements IMApi {
         mChatManager.addIncomingListener(new IncomingChatMessageListener() {
             @Override
             public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
-                Localpart localpart = from.getLocalpart();
-                Jid jid = message.getTo();
+//                Localpart localpart = from.getLocalpart();
+//                Jid jid = message.getTo();
                 if (mMsgListener != null) {
                     mMsgListener.showNewMessage(message.getBody());
                 }
@@ -124,10 +122,11 @@ public class SmackImApiImpl implements IMApi {
     }
 
     @Override
-    public void chatWith(String jid, String info) throws XmppStringprepException, SmackException.NotConnectedException, InterruptedException {
+    public void chatWith(String jid, ChatMsgEntity msg) throws XmppStringprepException, SmackException.NotConnectedException, InterruptedException {
         EntityBareJid id = JidCreate.entityBareFrom(jid);
         Chat chat = mChatManager.chatWith(id);
-        chat.send(info);
+        String msgJson = Tool.toJSON(msg);
+        chat.send(msgJson);
     }
 
     @Override

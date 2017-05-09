@@ -1,4 +1,6 @@
-package cn.dazhou.im.core.modle;
+package cn.dazhou.im.modle;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by hooyee on 2017/5/8.
@@ -10,6 +12,7 @@ public class ChatMsgEntity{
     private String message;//消息内容
     private byte[] mesImage;//发送图片
     private boolean isComMeg = true;// 是否为收到的消息
+    private byte[] msgSoundRecord;
     public int getImage() {
         return image;
     }
@@ -49,6 +52,14 @@ public class ChatMsgEntity{
         isComMeg = isComMsg;
     }
 
+    public byte[] getMsgSoundRecord() {
+        return msgSoundRecord;
+    }
+
+    public void setMsgSoundRecord(byte[] msgSoundRecord) {
+        this.msgSoundRecord = msgSoundRecord;
+    }
+
     public ChatMsgEntity() {
     }
 
@@ -61,4 +72,14 @@ public class ChatMsgEntity{
         this.mesImage=mesImage;
     }
 
+    @Override
+    public String toString() {
+        String imageStr = "";
+        try {
+            imageStr = new String(mesImage, "GB2312");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return "image=" + image + "," + "date=" + date + "," + "message=" + message + "," + "mesImage=" + imageStr;
+    }
 }

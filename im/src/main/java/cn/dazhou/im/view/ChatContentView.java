@@ -1,18 +1,15 @@
 package cn.dazhou.im.view;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
-
-import java.nio.ByteBuffer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,9 +17,9 @@ import butterknife.OnClick;
 import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
 import cn.dazhou.im.core.PhotoActivity;
-import cn.dazhou.im.core.function.INewMessageListener;
-import cn.dazhou.im.core.modle.ChatMsgEntity;
-import cn.dazhou.im.core.util.Tool;
+import cn.dazhou.im.modle.ChatMsgEntity;
+import cn.dazhou.im.modle.SoundRecord;
+import cn.dazhou.im.util.Tool;
 import cn.dazhou.im.view.adapter.ChatAdapter;
 
 /**
@@ -35,9 +32,13 @@ public class ChatContentView extends LinearLayout{
     RecyclerView mChatMessagesView;
     @BindView(R2.id.edit_chat_input)
     EditText mChatInput;
+    @BindView(R2.id.bt_sound)
+    Button mSoundBt;
     private OnSendListener mOnSendListener;
 
     private ChatAdapter mAdapter;
+
+    private SoundRecord mSoundRecord;
 
     public ChatContentView(Context context) {
         this(context, null);
@@ -59,9 +60,39 @@ public class ChatContentView extends LinearLayout{
         mChatMessagesView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         mChatMessagesView.setHasFixedSize(true);
         mChatMessagesView.setAdapter(mAdapter);
+
+        mSoundBt.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN :
+                        mSoundBt.setText("松开 结束");
+                        mSoundRecord.startRecording();
+                        break;
+                    case MotionEvent.ACTION_UP :
+                        mSoundBt.setText("按住 录音");
+                        mSoundRecord.stopRecording();
+                        mSoundRecord.getTmpPath();
+                        break;
+                    case MotionEvent.ACTION_CANCEL :
+                        mSoundBt.setText("按住 录音");
+                        mSoundRecord.stopRecording();
+                        byte[] bytes = mSoundRecord.getSoundRecord();
+                        ChatMsgEntity msg = new ChatMsgEntity();
+                        msg.setMsgSoundRecord(bytes);
+                        addMessage(msg);
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     public void addMessage(String msg) {
+        mAdapter.addMsg(msg);
+    }
+
+    public void addMessage(ChatMsgEntity msg) {
         mAdapter.addMsg(msg);
     }
 
@@ -69,14 +100,14 @@ public class ChatContentView extends LinearLayout{
     @OnClick(R2.id.bt_send)
     void sendMassage() {
         String info = mChatInput.getText().toString();
-        byte[] bytes = createBitmapByPath(Tool.gPicPath);
-        mChatInput.setText("");
+        byte[] bytes = Tool.createBitmapByPath(Tool.gPicPath);
+        restore();
         if (getOnSendListener() != null) {
             ChatMsgEntity msg = new ChatMsgEntity();
-            msg.setDate(info);
+            msg.setMessage(info);
             msg.setMesImage(bytes);
-            getOnSendListener().onSend(info);
-            addMessage(info);
+            getOnSendListener().onSend(msg);
+            addMessage(msg);
         }
     }
 
@@ -85,16 +116,9 @@ public class ChatContentView extends LinearLayout{
         PhotoActivity.startItself(getContext());
     }
 
-    private byte[] createBitmapByPath(String path) {
-        if (path == null || "".equals(path)) {
-            return null;
-        }
-        Bitmap bmp = BitmapFactory.decodeFile(path);
-        int bytes = bmp.getByteCount();
-
-        ByteBuffer buf = ByteBuffer.allocate(bytes);
-        bmp.copyPixelsToBuffer(buf);
-        return buf.array();
+    private void restore() {
+        Tool.gPicPath = null;
+        mChatInput.setText("");
     }
 
     public OnSendListener getOnSendListener() {
@@ -106,7 +130,7 @@ public class ChatContentView extends LinearLayout{
     }
 
     public interface OnSendListener {
-        void onSend(String info);
+        void onSend(ChatMsgEntity msg);
     }
 
 }
