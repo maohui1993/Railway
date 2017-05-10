@@ -6,12 +6,16 @@ import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.File;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
 
@@ -24,6 +28,10 @@ public class ChatMessageView extends RelativeLayout {
     TextView mMsgText;
     @BindView(R2.id.image_info_item)
     ImageView mMsgImage;
+    @BindView(R2.id.sound_info_item)
+    SoundView mMsgSound;
+
+    private OnSoundViewClickListener mListener;
 
     public ChatMessageView(Context context) {
         this(context, null);
@@ -43,6 +51,20 @@ public class ChatMessageView extends RelativeLayout {
         ButterKnife.bind(this);
     }
 
+    public void hasSoundInfo(boolean has) {
+        if (has == true) {
+            mMsgSound.setVisibility(VISIBLE);
+        }
+    }
+
+    public void setSoundInfo(byte[] mSoundByte) {
+        mMsgSound.setSoundByte(mSoundByte);
+    }
+
+    public File getSoundFile() {
+        return mMsgSound.getSoundFile();
+    }
+
     public void setText(String text) {
         mMsgText.setText(text);
         mMsgText.setVisibility(View.VISIBLE);
@@ -51,5 +73,24 @@ public class ChatMessageView extends RelativeLayout {
     public void setImage(Bitmap bmp) {
         mMsgImage.setImageDrawable(new BitmapDrawable(null, bmp));
         mMsgImage.setVisibility(View.VISIBLE);
+    }
+
+    public OnSoundViewClickListener getOnSoundViewClickListener() {
+        return mListener;
+    }
+
+    public void setOnSoundViewClickListener(OnSoundViewClickListener mListener) {
+        this.mListener = mListener;
+    }
+
+    @OnClick(R2.id.sound_info_item)
+    void click(View v) {
+        if (mListener != null) {
+            mListener.onSoundViewClick(v);
+        }
+    }
+
+    public interface OnSoundViewClickListener {
+        void onSoundViewClick(View v);
     }
 }

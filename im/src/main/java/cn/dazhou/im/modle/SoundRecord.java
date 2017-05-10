@@ -5,15 +5,11 @@ import android.media.MediaRecorder;
 import android.os.Environment;
 import android.util.Log;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 /**
  * Created by hooyee on 2017/5/9.
@@ -21,7 +17,8 @@ import java.io.OutputStream;
 
 public class SoundRecord {
 
-    private String tmpPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
+    private static String DIR_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
+    private String tmpPath;
     private MediaRecorder mMediaRecorder;
     private MediaPlayer mPlayer;
 
@@ -36,7 +33,7 @@ public class SoundRecord {
     }
 
     public void startRecording() {
-        tmpPath = tmpPath + System.currentTimeMillis() + ".ogg";
+        tmpPath = DIR_PATH + System.currentTimeMillis() + ".ogg";
         if (mMediaRecorder != null) {
             mMediaRecorder.release();
         }
@@ -95,16 +92,22 @@ public class SoundRecord {
     }
 
     public void startPlaying(String path) {
+        // 将正在播放的语音停止掉
         if (mPlayer != null) {
             mPlayer.release();
         }
         mPlayer = new MediaPlayer();
         try {
-            mPlayer.setDataSource(path);
+            File file = new File(path);
+            FileInputStream fis = new FileInputStream(file);
+            mPlayer.setDataSource(fis.getFD());
             mPlayer.prepare();
             mPlayer.start();
+//            mPlayer.setDataSource(path);
+//            mPlayer.prepare();
+//            mPlayer.start();
         } catch (IOException e) {
-            Log.i("ringtone", "prepare() failed");
+            Log.i("TAG", "prepare() failed");
         }
     }
 

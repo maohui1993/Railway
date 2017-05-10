@@ -73,16 +73,15 @@ public class ChatContentView extends LinearLayout{
                     case MotionEvent.ACTION_UP :
                         mSoundBt.setText("按住 录音");
                         mSoundRecord.stopRecording();
-                        mSoundRecord.getTmpPath();
-                        break;
-                    case MotionEvent.ACTION_CANCEL :
-                        mSoundBt.setText("按住 录音");
-                        mSoundRecord.stopRecording();
                         byte[] bytes = mSoundRecord.getSoundRecord();
                         ChatMsgEntity msg = new ChatMsgEntity();
                         msg.setMsgSoundRecord(bytes);
                         addMessage(msg);
                         sendMultimediaMessage(msg);
+                        break;
+                    case MotionEvent.ACTION_CANCEL :
+                        mSoundBt.setText("按住 录音");
+                        mSoundRecord.stopRecording();
                         break;
                 }
                 return false;

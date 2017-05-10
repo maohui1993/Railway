@@ -72,14 +72,14 @@ public class ChatMsgEntity{
         this.mesImage=mesImage;
     }
 
-    @Override
-    public String toString() {
-        String imageStr = "";
-        try {
-            imageStr = new String(mesImage, "GB2312");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return "image=" + image + "," + "date=" + date + "," + "message=" + message + "," + "mesImage=" + imageStr;
-    }
+//    @Override
+//    public String toString() {
+//        String imageStr = "";
+//        try {
+//            imageStr = new String(mesImage, "GB2312");
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+//        return "image=" + image + "," + "date=" + date + "," + "message=" + message + "," + "mesImage=" + imageStr;
+//    }
 }

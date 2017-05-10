@@ -27,6 +27,7 @@ import cn.dazhou.im.core.function.INewMessageListener;
 import cn.dazhou.im.modle.ChatMsgEntity;
 import cn.dazhou.im.util.Tool;
 import cn.dazhou.im.view.ChatContentView;
+import cn.dazhou.im.view.ChatMessageView;
 import cn.dazhou.im.view.RosterView;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.adapter.ChatPagerAdapter;
@@ -35,7 +36,7 @@ import cn.dazhou.railway.im.presenter.ChatPresenter;
 /**
  * 启动时需要知道是与谁聊天，故启动的时候要带一个data值传入。
  */
-public class ChatActivity extends AppCompatActivity implements INewMessageListener{
+public class ChatActivity extends AppCompatActivity implements INewMessageListener {
 
     @BindView(R.id.tabs)
     TabLayout mTabLayout;
