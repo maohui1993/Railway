@@ -1,4 +1,4 @@
-package cn.dazhou.im.view.adapter;
+package cn.dazhou.im.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

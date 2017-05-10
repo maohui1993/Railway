@@ -1,6 +1,5 @@
 package cn.dazhou.im.modle;
 
-import java.io.UnsupportedEncodingException;
 
 /**
  * Created by hooyee on 2017/5/8.
@@ -11,8 +10,11 @@ public class ChatMsgEntity{
     private String date;//消息日期
     private String message;//消息内容
     private byte[] mesImage;//发送图片
-    private boolean isComMeg = true;// 是否为收到的消息
     private byte[] msgSoundRecord;
+    private String time;
+    private int sendState;
+    private int type;
+
     public int getImage() {
         return image;
     }
@@ -44,14 +46,6 @@ public class ChatMsgEntity{
         this.message = message;
     }
 
-    public boolean getMsgType() {
-        return isComMeg;
-    }
-
-    public void setMsgType(boolean isComMsg) {
-        isComMeg = isComMsg;
-    }
-
     public byte[] getMsgSoundRecord() {
         return msgSoundRecord;
     }
@@ -60,19 +54,31 @@ public class ChatMsgEntity{
         this.msgSoundRecord = msgSoundRecord;
     }
 
-    public ChatMsgEntity() {
+    public String getTime() {
+        return time;
     }
 
-    public ChatMsgEntity( String date, String text,int im, boolean isComMsg,byte[] mesImage) {
-        super();
-        this.image = im;
-        this.date = date;
-        this.message = text;
-        this.isComMeg = isComMsg;
-        this.mesImage=mesImage;
+    public void setTime(String time) {
+        this.time = time;
     }
 
-//    @Override
+    public int getSendState() {
+        return sendState;
+    }
+
+    public void setSendState(int sendState) {
+        this.sendState = sendState;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    //    @Override
 //    public String toString() {
 //        String imageStr = "";
 //        try {

@@ -1,10 +1,8 @@
 package cn.dazhou.im.view;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Environment;
 import android.util.AttributeSet;
-import android.widget.Button;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,8 +13,7 @@ import java.io.IOException;
  * Created by hooyee on 2017/5/10.
  */
 
-@SuppressLint("AppCompatCustomView")
-public class SoundView extends Button {
+public class SoundView extends android.support.v7.widget.AppCompatImageView {
     private static String DIR_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
 
     private byte[] mSoundByte;

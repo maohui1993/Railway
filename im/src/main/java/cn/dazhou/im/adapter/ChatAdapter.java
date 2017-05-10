@@ -1,10 +1,9 @@
-package cn.dazhou.im.view.adapter;
+package cn.dazhou.im.adapter;
 
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,7 +74,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> im
 
     @Override
     public void onSoundViewClick(View v) {
-        Log.i("TAG", "应该是2");
         if (v instanceof SoundView) {
             SoundView soundView = (SoundView)v;
             mSoundRecord.startPlaying(soundView.getSoundFile().getAbsolutePath());

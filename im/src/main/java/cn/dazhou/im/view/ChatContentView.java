@@ -1,26 +1,33 @@
 package cn.dazhou.im.view;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.jude.easyrecyclerview.EasyRecyclerView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
+import cn.dazhou.im.adapter.ChatAdapter1;
 import cn.dazhou.im.core.PhotoActivity;
 import cn.dazhou.im.modle.ChatMsgEntity;
 import cn.dazhou.im.modle.SoundRecord;
+import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.Tool;
-import cn.dazhou.im.view.adapter.ChatAdapter;
 
 /**
  * Created by Hooyee on 2017/5/7.
@@ -29,16 +36,28 @@ import cn.dazhou.im.view.adapter.ChatAdapter;
 
 public class ChatContentView extends LinearLayout{
     @BindView(R2.id.rv_chat_content)
-    RecyclerView mChatMessagesView;
-    @BindView(R2.id.edit_chat_input)
+    EasyRecyclerView mChatMessagesView;
+//    @BindView(R2.id.edit_chat_input)
+//    EditText mChatInput;
+    @BindView(R2.id.bt_send)
+    Button mSendBt;
+    @BindView(R2.id.edit_text)
     EditText mChatInput;
-    @BindView(R2.id.bt_sound)
-    Button mSoundBt;
+    @BindView(R2.id.voice_text)
+    TextView voiceText;
+    @BindView(R2.id.emotion_voice)
+    ImageView mVoiceImage;
+
     private OnSendListener mOnSendListener;
-
-    private ChatAdapter mAdapter;
-
+//    private ChatAdapter mAdapter;
+    private ChatAdapter1 mAdapter;
     private SoundRecord mSoundRecord;
+
+    //录音相关
+    int animationRes = 0;
+    int res = 0;
+    AnimationDrawable animationDrawable = null;
+    private ImageView animView;
 
     public ChatContentView(Context context) {
         this(context, null);
@@ -56,32 +75,40 @@ public class ChatContentView extends LinearLayout{
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.chat_content_view, this);
         ButterKnife.bind(this);
-        mAdapter = new ChatAdapter();
+//        mAdapter = new ChatAdapter();
+        mAdapter = new ChatAdapter1(context);
         mChatMessagesView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        mChatMessagesView.setHasFixedSize(true);
+//        mChatMessagesView.setHasFixedSize(true);
         mChatMessagesView.setAdapter(mAdapter);
         mSoundRecord = new SoundRecord();
 
-        mSoundBt.setOnTouchListener(new OnTouchListener() {
+        mVoiceImage.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN :
-                        mSoundBt.setText("松开 结束");
+//                        mVoiceImage.setText("松开 结束");
                         mSoundRecord.startRecording();
                         break;
                     case MotionEvent.ACTION_UP :
-                        mSoundBt.setText("按住 录音");
-                        mSoundRecord.stopRecording();
-                        byte[] bytes = mSoundRecord.getSoundRecord();
-                        ChatMsgEntity msg = new ChatMsgEntity();
-                        msg.setMsgSoundRecord(bytes);
-                        addMessage(msg);
-                        sendMultimediaMessage(msg);
+//                        mVoiceImage.setText("按住 录音");
+                        try {
+                            mSoundRecord.stopRecording();
+                            byte[] bytes = mSoundRecord.getSoundRecord();
+                            ChatMsgEntity msg = new ChatMsgEntity();
+                            msg.setMsgSoundRecord(bytes);
+                            msg.setType(Constants.CHAT_ITEM_TYPE_LEFT);
+                            addMessage(msg);
+                            sendMultimediaMessage(msg);
+                        } catch (Exception e) {
+
+                        }
                         break;
                     case MotionEvent.ACTION_CANCEL :
-                        mSoundBt.setText("按住 录音");
-                        mSoundRecord.stopRecording();
+//                        mVoiceImage.setText("按住 录音");
+                        try {
+                            mSoundRecord.stopRecording();
+                        } catch (Exception e) {}
                         break;
                 }
                 return false;
@@ -94,6 +121,7 @@ public class ChatContentView extends LinearLayout{
     }
 
     public void addMessage(ChatMsgEntity msg) {
+        mAdapter.add(msg);
         mAdapter.addMsg(msg);
     }
 
@@ -111,12 +139,13 @@ public class ChatContentView extends LinearLayout{
             ChatMsgEntity msg = new ChatMsgEntity();
             msg.setMessage(info);
             msg.setMesImage(bytes);
+            msg.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
             getOnSendListener().onSend(msg);
             addMessage(msg);
         }
     }
 
-    @OnClick(R2.id.bt_photo)
+//    @OnClick(R2.id.bt_photo)
     void selectPicture() {
         PhotoActivity.startItself(getContext());
     }

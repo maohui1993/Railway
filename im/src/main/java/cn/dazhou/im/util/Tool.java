@@ -78,8 +78,8 @@ public class Tool {
             return null;
         }
 
-     //   Bitmap bmp = decodeSampledBitmapFromFile(path, 600, 600);
-        Bitmap bmp = BitmapFactory.decodeFile(path);
+        Bitmap bmp = decodeSampledBitmapFromFile(path, 600, 600);
+//        Bitmap bmp = BitmapFactory.decodeFile(path);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
         return baos.toByteArray();

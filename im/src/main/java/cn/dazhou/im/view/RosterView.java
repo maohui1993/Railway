@@ -13,7 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
-import cn.dazhou.im.view.adapter.RosterAdapter;
+import cn.dazhou.im.adapter.RosterAdapter;
 
 /**
  * Created by hooyee on 2017/5/8.

@@ -25,6 +25,7 @@ import butterknife.ButterKnife;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.core.function.INewMessageListener;
 import cn.dazhou.im.modle.ChatMsgEntity;
+import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.Tool;
 import cn.dazhou.im.view.ChatContentView;
 import cn.dazhou.im.view.ChatMessageView;
@@ -104,6 +105,7 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
             @Override
             public void run() {
                 ChatMsgEntity msgEntity = (ChatMsgEntity) Tool.parseJSON(msg, ChatMsgEntity.class);
+                msgEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
                 mChatContentView.addMessage(msgEntity);
             }
         });

@@ -52,7 +52,7 @@ public class SoundRecord {
         mMediaRecorder.start();
     }
 
-    public void stopRecording() {
+    public void stopRecording() throws Exception{
 
         if (mMediaRecorder == null) {
             return;
@@ -71,7 +71,7 @@ public class SoundRecord {
         try {
             in = new FileInputStream(file);
             int length = 0;
-            while((length = in.read(bytes)) != -1) {
+            while ((length = in.read(bytes)) != -1) {
                 out.write(bytes, 0, length);
             }
         } catch (FileNotFoundException e) {
@@ -130,10 +130,10 @@ public class SoundRecord {
         mPlayer = null;
     }
 
-    public void dispose() {
-        stopRecording();
-        stopPlaying();
-    }
+//    public void dispose() {
+//        stopRecording();
+//        stopPlaying();
+//    }
 
     public void deleteAudioFile(String path) {
         File file = new File(path);
