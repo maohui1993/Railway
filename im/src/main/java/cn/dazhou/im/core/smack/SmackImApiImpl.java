@@ -19,6 +19,7 @@ import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
@@ -48,6 +49,8 @@ public class SmackImApiImpl implements IMApi {
     private INewMessageListener mMsgListener;
 
     private byte mState;
+
+    private Chat mChat;
 
     private SmackImApiImpl() {
     }
@@ -123,27 +126,41 @@ public class SmackImApiImpl implements IMApi {
     @Override
     public void chatWith(String jid, ChatMsgEntity msg) throws XmppStringprepException, SmackException.NotConnectedException, InterruptedException {
         EntityBareJid id = JidCreate.entityBareFrom(jid);
-        Chat chat = mChatManager.chatWith(id);
+        mChat = mChatManager.chatWith(id);
         String msgJson = Tool.toJSON(msg);
-        chat.send(msgJson);
+        mChat.send(msgJson);
+    }
+
+    @Override
+    public void chatWith(EntityBareJid jid) {
+        mChat = mChatManager.chatWith(jid);
+    }
+
+    @Override
+    public void chat(ChatMsgEntity msg) throws Exception {
+        if (mChat == null) {
+            return;
+        }
+        String msgJson = Tool.toJSON(msg);
+        mChat.send(msgJson);
     }
 
     @Override
     public Roster getRoster() {
+        return Roster.getInstanceFor(mConnection);
+    }
+
+    @Override
+    public Roster addFriend(String jid) {
         Roster roster = Roster.getInstanceFor(mConnection);
         try {
-            roster.createEntry(JidCreate.entityBareFrom("maohui" + "@192.168.1.39"), "maohui", new String[]{"Friends"});
+            // 添加好友
+            roster.createEntry(JidCreate.entityBareFrom("maohui@"+jid), "MAOHUI", new String[]{"Friends"});
+            roster.createEntry(JidCreate.entityBareFrom("hooyee@"+jid), "HOOYEE", new String[]{"Friends"});
         } catch (Exception e) {
 
         }
-        Log.i("TAG", "group-size: " + roster.getGroupCount());
-        Collection<RosterEntry> entries = roster.getEntries();
-        Log.i("TAG", "entrys-size: " + entries.size());
-        for (RosterEntry entry : entries) {
-            Log.i("TAG", "entry: " + entry);
-        }
-
-        return roster;
+        return null;
     }
 
     @Override

@@ -19,7 +19,7 @@ import cn.dazhou.im.util.Tool;
 import cn.dazhou.maputil.MapLauncher;
 import cn.dazhou.railway.im.activity.LoginActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity {
     @BindView(R.id.content)
     ViewGroup content;
 
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MapLauncher.init(getApplicationContext());
-        ViewGroup content = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.activity_main, null);
+        ViewGroup content = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.activity_splash, null);
         setContentView(content);
         Tool.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
         Tool.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);

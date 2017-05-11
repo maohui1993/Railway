@@ -13,6 +13,7 @@ import android.view.View;
 
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
+import org.jxmpp.jid.EntityBareJid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,6 @@ import cn.dazhou.im.modle.ChatMsgEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.Tool;
 import cn.dazhou.im.widget.ChatContentView;
-import cn.dazhou.im.widget.RosterView;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.adapter.ChatPagerAdapter;
 import cn.dazhou.railway.im.presenter.ChatPresenter;
@@ -36,18 +36,12 @@ import cn.dazhou.railway.im.presenter.ChatPresenter;
  * 启动时需要知道是与谁聊天，故启动的时候要带一个data值传入。
  */
 public class ChatActivity extends AppCompatActivity implements INewMessageListener {
+    private static final String DATA_KEY = "jid";
 
-    @BindView(R.id.tabs)
-    TabLayout mTabLayout;
-    @BindView(R.id.pager)
-    ViewPager mViewPager;
-    @BindArray(R.array.titles)
-    String[] mTitles;
 
-    private ChatContentView mChatContentView;
-    private RosterView mRosterView;
+    @BindView(R.id.chat_content)
+    ChatContentView mChatContentView;
     private ChatPresenter mPresenter;
-    private List<View> mViewList = new ArrayList<View>();
     /**
      * 正在chat的用户jid
      */
@@ -59,41 +53,22 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         ButterKnife.bind(this);
-        mJid = getIntent().getStringExtra("jid");
+        mJid = getIntent().getStringExtra(DATA_KEY);
 
-        LayoutInflater mInflater = LayoutInflater.from(this);
-        mChatContentView = (ChatContentView) mInflater.inflate(R.layout.tab_message, null);
-        mRosterView = (RosterView) mInflater.inflate(R.layout.tab_roster, null);
-        IMLauncher.setNewMessageListener(this);
-
+        // 点击发送按钮时
         mChatContentView.setOnSendListener(new ChatContentView.OnSendListener() {
             @Override
             public void onSend(ChatMsgEntity msg) {
                 IMLauncher.chatWith(mJid, msg);
             }
         });
-
-        //添加页卡视图
-        mViewList.add(mChatContentView);
-        mViewList.add(mRosterView);
-
-        mTabLayout.setTabMode(TabLayout.MODE_FIXED);//设置tab模式，当前为系统默认模式
-        mTabLayout.addTab(mTabLayout.newTab().setText(mTitles[0]));//添加tab选项卡
-        mTabLayout.addTab(mTabLayout.newTab().setText(mTitles[1]));
-
-        ChatPagerAdapter mAdapter = new ChatPagerAdapter(mViewList, mTitles);
-        mViewPager.setAdapter(mAdapter);//给ViewPager设置适配器
-        mTabLayout.setupWithViewPager(mViewPager);//将TabLayout和ViewPager关联起来。
-
-        Roster roster = IMLauncher.getRoster();
-        Set<RosterEntry> entries = roster.getEntries();
-        mRosterView.updateRosterData(new ArrayList(entries));
-
+        // 当有新的消息是显示出来
+        IMLauncher.setNewMessageListener(this);
     }
 
     public static void startItself(Context context, String data) {
         Intent intent = new Intent(context, ChatActivity.class);
-        intent.putExtra("jid", data);
+        intent.putExtra(DATA_KEY, data);
         context.startActivity(intent);
     }
 

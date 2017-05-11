@@ -3,6 +3,7 @@ package cn.dazhou.im;
 import android.util.Log;
 
 import org.jivesoftware.smack.roster.Roster;
+import org.jxmpp.jid.EntityBareJid;
 
 import cn.dazhou.im.core.ConnectManager;
 import cn.dazhou.im.core.IMApi;
@@ -59,11 +60,19 @@ public final class IMLauncher {
         return result;
     }
 
+    public static void chatWith(EntityBareJid id) {
+        mImApi.chatWith(id);
+    }
+
     public static void setNewMessageListener(INewMessageListener listener) {
         mImApi.setOnNewMessageListener(listener);
     }
 
     public static Roster getRoster() {
         return mImApi.getRoster();
+    }
+
+    public static Roster addFriend(String jid) {
+        return mImApi.addFriend(jid);
     }
 }

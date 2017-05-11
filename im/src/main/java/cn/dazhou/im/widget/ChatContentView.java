@@ -35,8 +35,6 @@ import cn.dazhou.im.util.Tool;
 public class ChatContentView extends LinearLayout{
     @BindView(R2.id.rv_chat_content)
     EasyRecyclerView mChatMessagesView;
-//    @BindView(R2.id.edit_chat_input)
-//    EditText mChatInput;
     @BindView(R2.id.bt_send)
     Button mSendBt;
     @BindView(R2.id.edit_text)
@@ -51,7 +49,6 @@ public class ChatContentView extends LinearLayout{
     View mMicrophoneView;
 
     private OnSendListener mOnSendListener;
-//    private ChatAdapter mAdapter;
     private ChatAdapter1 mAdapter;
     private SoundRecord mSoundRecord;
 
@@ -77,47 +74,49 @@ public class ChatContentView extends LinearLayout{
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.chat_content_view, this);
         ButterKnife.bind(this);
-//        mAdapter = new ChatAdapter();
         mAdapter = new ChatAdapter1(context);
         mChatMessagesView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-//        mChatMessagesView.setHasFixedSize(true);
         mChatMessagesView.setAdapter(mAdapter);
         mSoundRecord = new SoundRecord();
 
         mVoiceBt.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getActionMasked()) {
-                    case MotionEvent.ACTION_DOWN :
-                        mVoiceBt.setText("松开 结束");
-                        mSoundRecord.startRecording();
-//                        mMicrophoneView.setVisibility(VISIBLE);
-                        break;
-                    case MotionEvent.ACTION_UP :
-                        mVoiceBt.setText("按住 录音");
-                        try {
-                            mSoundRecord.stopRecording();
-                            byte[] bytes = mSoundRecord.getSoundRecord();
-                            ChatMsgEntity msg = new ChatMsgEntity();
-                            msg.setMsgSoundRecord(bytes);
-                            msg.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
-                            // 显示自己发送的
-                            addMessage(msg);
-                            sendMultimediaMessage(msg);
-                        } catch (Exception e) {
-
-                        }
-                        break;
-                    case MotionEvent.ACTION_CANCEL :
-                        mVoiceBt.setText("按住 录音");
-                        try {
-                            mSoundRecord.stopRecording();
-                        } catch (Exception e) {}
-                        break;
-                }
+                onVoiceBtTouch(event);
                 return false;
             }
         });
+    }
+
+    private void onVoiceBtTouch(MotionEvent event) {
+        switch (event.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN :
+                mVoiceBt.setText("松开 结束");
+                mSoundRecord.startRecording();
+//                        mMicrophoneView.setVisibility(VISIBLE);
+                break;
+            case MotionEvent.ACTION_UP :
+                mVoiceBt.setText("按住 录音");
+                try {
+                    mSoundRecord.stopRecording();
+                    byte[] bytes = mSoundRecord.getSoundRecord();
+                    ChatMsgEntity msg = new ChatMsgEntity();
+                    msg.setMsgSoundRecord(bytes);
+                    msg.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
+                    // 显示自己发送的
+                    addMessage(msg);
+                    sendMultimediaMessage(msg);
+                } catch (Exception e) {
+
+                }
+                break;
+            case MotionEvent.ACTION_CANCEL :
+                mVoiceBt.setText("按住 录音");
+                try {
+                    mSoundRecord.stopRecording();
+                } catch (Exception e) {}
+                break;
+        }
     }
 
     public void addMessage(ChatMsgEntity msg) {
@@ -133,6 +132,7 @@ public class ChatContentView extends LinearLayout{
         String info = mChatInput.getText().toString();
         byte[] bytes = Tool.createBitmapByPath(Tool.gPicPath);
         restore();
+        // 图片发送有问题 需要 修改
         if (getOnSendListener() != null) {
             ChatMsgEntity msg = new ChatMsgEntity();
             msg.setMessage(info);
@@ -175,6 +175,7 @@ public class ChatContentView extends LinearLayout{
         this.mOnSendListener = mOnSendListener;
     }
 
+    // 图片发送
     public interface OnSendListener {
         void onSend(ChatMsgEntity msg);
     }

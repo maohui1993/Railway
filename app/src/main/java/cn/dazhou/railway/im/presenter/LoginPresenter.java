@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import cn.dazhou.im.IMLauncher;
+import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.listener.IOnLoginListener;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -32,7 +33,7 @@ public class LoginPresenter {
         Observable.create(new ObservableOnSubscribe() {
             @Override
             public void subscribe(@NonNull ObservableEmitter e) throws Exception {
-                connected = IMLauncher.connect("10.0.0.4");
+                connected = IMLauncher.connect(Constants.SERVER_IP);
             }
         })
         .subscribeOn(Schedulers.io())
@@ -49,7 +50,7 @@ public class LoginPresenter {
         Observable.create(new ObservableOnSubscribe() {
             @Override
             public void subscribe(@NonNull ObservableEmitter e) throws Exception {
-                connected = IMLauncher.connect("192.168.1.39");
+                connected = IMLauncher.connect(Constants.SERVER_IP);
                 e.onNext(1);
             }
         })
