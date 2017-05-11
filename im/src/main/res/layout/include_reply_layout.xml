@@ -43,6 +43,20 @@
             android:paddingRight="@dimen/content_horizontal_margin"
             android:textSize="16sp" />
 
+        <Button
+            android:id="@+id/voice_bt"
+            android:visibility="gone"
+            android:text="按住 录音"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/corners_edit_white"
+            android:maxLines="3"
+            android:minHeight="36dp"
+            android:paddingLeft="@dimen/content_horizontal_margin"
+            android:paddingRight="@dimen/content_horizontal_margin"
+            android:textSize="16sp" />
+
         <TextView
             android:id="@+id/voice_text"
             style="@style/text_subhead_black"

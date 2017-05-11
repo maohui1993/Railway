@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cn.dazhou.im.view.RosterView xmlns:android="http://schemas.android.com/apk/res/android"
+<cn.dazhou.im.widget.RosterView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</cn.dazhou.im.view.RosterView>
+</cn.dazhou.im.widget.RosterView>

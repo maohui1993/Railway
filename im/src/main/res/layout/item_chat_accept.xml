@@ -21,39 +21,37 @@
             android:layout_height="48dp"
             android:layout_alignParentLeft="true" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/chat_item_text"
+            style="@style/text_body"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/content_vertical_margin"
+            android:layout_toRightOf="@id/chat_item_header" />
+
+        <TextView
+            android:id="@+id/chat_item_voice_time"
+            style="@style/text_body"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/content_vertical_margin"
+            android:layout_toRightOf="@id/chat_item_header"
+            android:visibility="gone" />
+
+        <cn.dazhou.im.widget.SoundView
+            android:id="@+id/chat_item_voice"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_toRightOf="@id/chat_item_header"
+            android:src="@mipmap/icon_voice_left3"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/chat_item_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@id/chat_item_header">
-
-            <TextView
-                android:id="@+id/chat_item_text"
-                style="@style/text_body"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/content_vertical_margin" />
-
-            <TextView
-                android:id="@+id/chat_item_voice_time"
-                style="@style/text_body"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/content_vertical_margin"
-                android:visibility="gone" />
-
-            <cn.dazhou.im.view.SoundView
-                android:id="@+id/chat_item_voice"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:src="@mipmap/icon_voice_left3"
-                android:visibility="gone" />
-
-            <ImageView
-                android:id="@+id/chat_item_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:visibility="gone" />
-        </LinearLayout>
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:visibility="gone" />
     </RelativeLayout>
 
 </LinearLayout>

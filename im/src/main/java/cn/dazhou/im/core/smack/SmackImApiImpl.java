@@ -111,8 +111,7 @@ public class SmackImApiImpl implements IMApi {
         mChatManager.addIncomingListener(new IncomingChatMessageListener() {
             @Override
             public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
-//                Localpart localpart = from.getLocalpart();
-//                Jid jid = message.getTo();
+                // 回调，将数据传给ChatActivity显示出来
                 if (mMsgListener != null) {
                     mMsgListener.showNewMessage(message.getBody());
                 }

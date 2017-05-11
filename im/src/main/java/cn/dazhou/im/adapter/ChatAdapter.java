@@ -14,8 +14,8 @@ import java.util.List;
 import cn.dazhou.im.R;
 import cn.dazhou.im.modle.ChatMsgEntity;
 import cn.dazhou.im.modle.SoundRecord;
-import cn.dazhou.im.view.ChatMessageView;
-import cn.dazhou.im.view.SoundView;
+import cn.dazhou.im.widget.ChatMessageView;
+import cn.dazhou.im.widget.SoundView;
 
 /**
  * Created by Hooyee on 2017/5/7.

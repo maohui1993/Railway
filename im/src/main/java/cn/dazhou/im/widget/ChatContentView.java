@@ -1,7 +1,6 @@
-package cn.dazhou.im.view;
+package cn.dazhou.im.widget;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.AttributeSet;
@@ -13,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jude.easyrecyclerview.EasyRecyclerView;
 
@@ -43,10 +41,14 @@ public class ChatContentView extends LinearLayout{
     Button mSendBt;
     @BindView(R2.id.edit_text)
     EditText mChatInput;
+    @BindView(R2.id.voice_bt)
+    Button mVoiceBt;
     @BindView(R2.id.voice_text)
-    TextView voiceText;
+    TextView mVoiceText;
     @BindView(R2.id.emotion_voice)
     ImageView mVoiceImage;
+    @BindView(R2.id.microphone)
+    View mMicrophoneView;
 
     private OnSendListener mOnSendListener;
 //    private ChatAdapter mAdapter;
@@ -82,22 +84,24 @@ public class ChatContentView extends LinearLayout{
         mChatMessagesView.setAdapter(mAdapter);
         mSoundRecord = new SoundRecord();
 
-        mVoiceImage.setOnTouchListener(new OnTouchListener() {
+        mVoiceBt.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN :
-//                        mVoiceImage.setText("松开 结束");
+                        mVoiceBt.setText("松开 结束");
                         mSoundRecord.startRecording();
+//                        mMicrophoneView.setVisibility(VISIBLE);
                         break;
                     case MotionEvent.ACTION_UP :
-//                        mVoiceImage.setText("按住 录音");
+                        mVoiceBt.setText("按住 录音");
                         try {
                             mSoundRecord.stopRecording();
                             byte[] bytes = mSoundRecord.getSoundRecord();
                             ChatMsgEntity msg = new ChatMsgEntity();
                             msg.setMsgSoundRecord(bytes);
-                            msg.setType(Constants.CHAT_ITEM_TYPE_LEFT);
+                            msg.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
+                            // 显示自己发送的
                             addMessage(msg);
                             sendMultimediaMessage(msg);
                         } catch (Exception e) {
@@ -105,7 +109,7 @@ public class ChatContentView extends LinearLayout{
                         }
                         break;
                     case MotionEvent.ACTION_CANCEL :
-//                        mVoiceImage.setText("按住 录音");
+                        mVoiceBt.setText("按住 录音");
                         try {
                             mSoundRecord.stopRecording();
                         } catch (Exception e) {}
@@ -116,20 +120,14 @@ public class ChatContentView extends LinearLayout{
         });
     }
 
-    public void addMessage(String msg) {
-        mAdapter.addMsg(msg);
-    }
-
     public void addMessage(ChatMsgEntity msg) {
         mAdapter.add(msg);
-        mAdapter.addMsg(msg);
     }
 
     void sendMultimediaMessage(ChatMsgEntity msg) {
         getOnSendListener().onSend(msg);
     }
 
-    // Butterknife为lib-moudle生成的R2文件
     @OnClick(R2.id.bt_send)
     void sendMassage() {
         String info = mChatInput.getText().toString();
@@ -148,6 +146,20 @@ public class ChatContentView extends LinearLayout{
 //    @OnClick(R2.id.bt_photo)
     void selectPicture() {
         PhotoActivity.startItself(getContext());
+    }
+
+    @OnClick(R2.id.emotion_voice)
+    void updateVoiceButtonVisibility() {
+        int currentState = mChatInput.getVisibility();
+        switch (currentState) {
+            case VISIBLE:
+                mChatInput.setVisibility(GONE);
+                mVoiceBt.setVisibility(VISIBLE);
+                break;
+            default:
+                mChatInput.setVisibility(VISIBLE);
+                mVoiceBt.setVisibility(GONE);
+        }
     }
 
     private void restore() {

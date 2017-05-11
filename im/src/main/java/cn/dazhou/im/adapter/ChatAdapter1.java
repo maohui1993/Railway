@@ -1,10 +1,8 @@
 package cn.dazhou.im.adapter;
 
 import android.content.Context;
-import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
@@ -12,17 +10,20 @@ import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 import cn.dazhou.im.adapter.holder.ChatAcceptViewHolder;
 import cn.dazhou.im.adapter.holder.ChatSendViewHolder;
 import cn.dazhou.im.modle.ChatMsgEntity;
+import cn.dazhou.im.modle.SoundRecord;
 import cn.dazhou.im.util.Constants;
+import cn.dazhou.im.widget.SoundView;
 
 /**
  * Created by hooyee on 2017/5/10.
  */
 
 public class ChatAdapter1 extends RecyclerArrayAdapter<ChatMsgEntity> {
-    private OnItemClickListener onItemClickListener;
+    private SoundRecord mSoundRecord;
 
     public ChatAdapter1(Context context) {
         super(context);
+        mSoundRecord = new SoundRecord();
     }
 
     @Override
@@ -30,10 +31,10 @@ public class ChatAdapter1 extends RecyclerArrayAdapter<ChatMsgEntity> {
         BaseViewHolder viewHolder = null;
         switch (viewType) {
             case Constants.CHAT_ITEM_TYPE_LEFT:
-                viewHolder = new ChatAcceptViewHolder(parent);
+                viewHolder = new ChatAcceptViewHolder(parent, onItemClickListener);
                 break;
             case Constants.CHAT_ITEM_TYPE_RIGHT:
-                viewHolder = new ChatSendViewHolder(parent);
+                viewHolder = new ChatSendViewHolder(parent, onItemClickListener);
                 break;
         }
         return viewHolder;
@@ -44,10 +45,28 @@ public class ChatAdapter1 extends RecyclerArrayAdapter<ChatMsgEntity> {
         return getAllData().get(position).getType();
     }
 
-    public void addMsg(String msg) {
-    }
+    private OnItemClickListener onItemClickListener = new OnItemClickListener() {
+        @Override
+        public void onHeaderClick(int position) {
 
-    public void addMsg(ChatMsgEntity msg) {
-        notifyDataSetChanged();
+        }
+
+        @Override
+        public void onImageClick(View view) {
+
+        }
+
+        @Override
+        public void onVoiceClick(SoundView soundView) {
+            mSoundRecord.startPlaying(soundView.getSoundFile().getPath());
+        }
+    };
+
+    public interface OnItemClickListener {
+        void onHeaderClick(int position);
+
+        void onImageClick(View view);
+
+        void onVoiceClick(SoundView soundView);
     }
 }

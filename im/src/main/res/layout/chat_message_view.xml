@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <cn.dazhou.im.view.SoundView
+    <cn.dazhou.im.widget.SoundView
         android:id="@+id/sound_info_item"
         android:layout_below="@id/image_info_item"
         android:visibility="invisible"

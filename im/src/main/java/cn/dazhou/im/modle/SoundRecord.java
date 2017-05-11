@@ -59,7 +59,7 @@ public class SoundRecord {
         }
         mMediaRecorder.stop();
         mMediaRecorder.release();
-//        mMediaRecorder = null;
+        mMediaRecorder = null;
         mRecordTime = System.currentTimeMillis() - mRecordTime;
     }
 

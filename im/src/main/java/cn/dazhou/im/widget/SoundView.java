@@ -1,4 +1,4 @@
-package cn.dazhou.im.view;
+package cn.dazhou.im.widget;
 
 import android.content.Context;
 import android.os.Environment;

@@ -1,4 +1,4 @@
-package cn.dazhou.im.view;
+package cn.dazhou.im.widget;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,7 +6,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
