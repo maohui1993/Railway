@@ -59,7 +59,7 @@ public class ChatAcceptViewHolder extends BaseViewHolder<ChatMsgEntity> {
             chatItemVoice.setVisibility(View.VISIBLE);
             chatItemVoice.setSoundByte(data.getMsgSoundRecord());
         } else if (data.getMesImage() != null) {
-            Glide.with(getContext()).load(data.getMesImage()).asBitmap().into(chatItemImage);
+            Glide.with(getContext()).load(data.getMesImage()).into(chatItemImage);
             chatItemImage.setVisibility(View.VISIBLE);
         }
     }

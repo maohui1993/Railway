@@ -1,9 +1,14 @@
 package cn.dazhou.im.widget;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,6 +42,10 @@ public class ChatContentView extends LinearLayout{
     EasyRecyclerView mChatMessagesView;
     @BindView(R2.id.bt_send)
     Button mSendBt;
+    @BindView(R2.id.function_add)
+    ImageView mAddFunctionIv;
+    @BindView(R2.id.more_function)
+    View mAdditionalFunc;
     @BindView(R2.id.edit_text)
     EditText mChatInput;
     @BindView(R2.id.voice_bt)
@@ -52,11 +61,11 @@ public class ChatContentView extends LinearLayout{
     private ChatAdapter1 mAdapter;
     private SoundRecord mSoundRecord;
 
-    //录音相关
-    int animationRes = 0;
-    int res = 0;
-    AnimationDrawable animationDrawable = null;
-    private ImageView animView;
+//    //录音相关
+//    int animationRes = 0;
+//    int res = 0;
+//    AnimationDrawable animationDrawable = null;
+//    private ImageView animView;
 
     public ChatContentView(Context context) {
         this(context, null);
@@ -78,6 +87,23 @@ public class ChatContentView extends LinearLayout{
         mChatMessagesView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         mChatMessagesView.setAdapter(mAdapter);
         mSoundRecord = new SoundRecord();
+
+        mChatInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                showSendBt(true);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         mVoiceBt.setOnTouchListener(new OnTouchListener() {
             @Override
@@ -130,22 +156,37 @@ public class ChatContentView extends LinearLayout{
     @OnClick(R2.id.bt_send)
     void sendMassage() {
         String info = mChatInput.getText().toString();
-        byte[] bytes = Tool.createBitmapByPath(Tool.gPicPath);
-        restore();
-        // 图片发送有问题 需要 修改
-        if (getOnSendListener() != null) {
-            ChatMsgEntity msg = new ChatMsgEntity();
-            msg.setMessage(info);
-            msg.setMesImage(bytes);
-            msg.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
-            getOnSendListener().onSend(msg);
-            addMessage(msg);
+        mChatInput.setText("");
+        ChatMsgEntity msg = new ChatMsgEntity();
+        msg.setMessage(info);
+        msg.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
+        // 显示自己的聊天信息
+        addMessage(msg);
+        // 将聊天信息发送给别人
+        getOnSendListener().onSend(msg);
+        showSendBt(false);
+    }
+
+    private void showSendBt(boolean visibility) {
+        if (visibility) {
+            mSendBt.setVisibility(VISIBLE);
+            mAddFunctionIv.setVisibility(GONE);
+        } else {
+            mSendBt.setVisibility(GONE);
+            mAddFunctionIv.setVisibility(VISIBLE);
         }
     }
 
-//    @OnClick(R2.id.bt_photo)
-    void selectPicture() {
-        PhotoActivity.startItself(getContext());
+    @OnClick(R2.id.function_add)
+    void showMoreFunction() {
+        mAdditionalFunc.setVisibility(VISIBLE);
+    }
+
+    @OnClick(R2.id.iv_gallery)
+    void loadImage() {
+        Intent i = new Intent(
+                Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        ((Activity)getContext()).startActivityForResult(i, Constants.RESULT_LOAD_IMAGE);
     }
 
     @OnClick(R2.id.emotion_voice)
@@ -160,11 +201,6 @@ public class ChatContentView extends LinearLayout{
                 mChatInput.setVisibility(VISIBLE);
                 mVoiceBt.setVisibility(GONE);
         }
-    }
-
-    private void restore() {
-        Tool.gPicPath = null;
-        mChatInput.setText("");
     }
 
     public OnSendListener getOnSendListener() {

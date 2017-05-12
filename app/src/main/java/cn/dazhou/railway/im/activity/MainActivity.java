@@ -28,6 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.railway.R;
+import cn.dazhou.railway.SplashActivity;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.adapter.ChatPagerAdapter;
 import cn.dazhou.railway.im.adapter.RosterAdapter;
@@ -60,10 +61,10 @@ public class MainActivity extends AppCompatActivity {
         initRoster();
 
         mViewList.add(mRosterView);
-        mViewList.add(mRosterView);
+//        mViewList.add(mRosterView);
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);//设置tab模式，当前为系统默认模式
         mTabLayout.addTab(mTabLayout.newTab().setText(mTitles[0]));//添加tab选项卡
-        mTabLayout.addTab(mTabLayout.newTab().setText(mTitles[1]));
+//        mTabLayout.addTab(mTabLayout.newTab().setText(mTitles[1]));
 
         ChatPagerAdapter mAdapter = new ChatPagerAdapter(mViewList, mTitles);
         mViewPager.setAdapter(mAdapter);//给ViewPager设置适配器
@@ -81,8 +82,6 @@ public class MainActivity extends AppCompatActivity {
         mRosterView.addItemDecoration(itemDecoration);
         mRosterAdapter = new RosterAdapter(this);
         mRosterView.setAdapter(mRosterAdapter);
-
-        String ip = IPUtil.getIPAddress(this);
 
         IMLauncher.addFriend(Constants.SERVER_IP);
         Roster roster = IMLauncher.getRoster();

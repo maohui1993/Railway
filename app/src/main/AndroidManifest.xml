@@ -21,7 +21,8 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="tKiTYcTGAZB0NrpWK19f57Rrp3PzrGOo" />
 
-        <activity android:name=".SplashActivity">
+        <activity android:name=".SplashActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

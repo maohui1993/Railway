@@ -13,4 +13,5 @@ public class Constants {
     public static final int CHAT_ITEM_SENDING = 0x003;
     public static final int CHAT_ITEM_SEND_ERROR = 0x004;
     public static final int CHAT_ITEM_SEND_SUCCESS = 0x005;
+    public static final int RESULT_LOAD_IMAGE = 200;
 }

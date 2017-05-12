@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 /**
@@ -73,19 +74,45 @@ public class Tool {
         }
     }
 
-    public static byte[] createBitmapByPath(String path) {
+    public static Bitmap createBitmapByPath(String path, int maxWidth, int maxHeight) {
         if (path == null || "".equals(path)) {
             return null;
         }
 
-        Bitmap bmp = decodeSampledBitmapFromFile(path, 600, 600);
-//        Bitmap bmp = BitmapFactory.decodeFile(path);
+        Bitmap bmp = decodeSampledBitmapFromFile(path, maxWidth, maxHeight);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        // 把压缩后的数据baos存放到ByteArrayInputStream中
+        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
+        // 把ByteArrayInputStream数据生成图片
+        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);
+        return bitmap;
+    }
+
+    /**
+     * 质量压缩
+     * @param image
+     * @param size  最大kb
+     * @param options
+     * @return
+     */
+    public static byte[] compressImage(Bitmap image,int size,int options) {
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        // 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+        image.compress(Bitmap.CompressFormat.JPEG, 80, baos);
+        // 循环判断如果压缩后图片是否大于100kb,大于继续压缩
+        while (baos.toByteArray().length / 1024 > size) {
+            options -= 10;// 每次都减少10
+            baos.reset();// 重置baos即清空baos
+            // 这里压缩options%，把压缩后的数据存放到baos中
+            image.compress(Bitmap.CompressFormat.JPEG, options, baos);
+        }
         return baos.toByteArray();
     }
 
-    public static int calculateInSampleSize(BitmapFactory.Options options,
+
+    private static int calculateInSampleSize(BitmapFactory.Options options,
                                             int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
@@ -102,12 +129,13 @@ public class Tool {
         return inSampleSize;
     }
 
-    public static Bitmap decodeSampledBitmapFromFile(String filename,
+    private static Bitmap decodeSampledBitmapFromFile(String filename,
                                                      int reqWidth, int reqHeight) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
         BitmapFactory.decodeFile(filename, options);
 
         // Calculate inSampleSize

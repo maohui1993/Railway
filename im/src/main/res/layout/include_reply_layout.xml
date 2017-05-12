@@ -45,8 +45,6 @@
 
         <Button
             android:id="@+id/voice_bt"
-            android:visibility="gone"
-            android:text="按住 录音"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -55,7 +53,9 @@
             android:minHeight="36dp"
             android:paddingLeft="@dimen/content_horizontal_margin"
             android:paddingRight="@dimen/content_horizontal_margin"
-            android:textSize="16sp" />
+            android:text="按住 录音"
+            android:textSize="16sp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/voice_text"
@@ -79,20 +79,40 @@
             android:clickable="true"
             android:src="@mipmap/icon_chat_expression" />
 
-        <!--<ImageView-->
-            <!--android:id="@+id/emotion_add"-->
-            <!--android:layout_width="28dp"-->
-            <!--android:layout_height="28dp"-->
-            <!--android:layout_marginLeft="@dimen/content_horizontal_margin"-->
-            <!--android:clickable="true"-->
-            <!--android:scaleType="centerCrop"-->
-            <!--android:src="@mipmap/icon_chat_add" />-->
+        <ImageView
+            android:id="@+id/function_add"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginLeft="@dimen/content_horizontal_margin"
+            android:clickable="true"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/icon_chat_add" />
+
         <Button
-        android:id="@+id/bt_send"
-        android:text="发送"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+            android:id="@+id/bt_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发送"
+            android:visibility="gone" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/more_function"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/iv_gallery"
+            android:src="@android:drawable/ic_menu_gallery"
+            android:layout_width="45dp"
+            android:layout_height="45dp" />
+        <ImageView
+            android:id="@+id/iv_camera"
+            android:layout_toRightOf="@+id/iv_gallery"
+            android:src="@android:drawable/ic_menu_camera"
+            android:layout_width="45dp"
+            android:layout_height="45dp" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -152,7 +152,10 @@ public class SmackImApiImpl implements IMApi {
 
     @Override
     public Roster addFriend(String jid) {
+        if (mConnection == null) return null;
         Roster roster = Roster.getInstanceFor(mConnection);
+        roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
+
         try {
             // 添加好友
             roster.createEntry(JidCreate.entityBareFrom("maohui@"+jid), "MAOHUI", new String[]{"Friends"});

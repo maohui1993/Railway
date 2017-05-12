@@ -2,8 +2,10 @@ package cn.dazhou.railway.im.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -38,7 +40,6 @@ import cn.dazhou.railway.im.presenter.ChatPresenter;
 public class ChatActivity extends AppCompatActivity implements INewMessageListener {
     private static final String DATA_KEY = "jid";
 
-
     @BindView(R.id.chat_content)
     ChatContentView mChatContentView;
     private ChatPresenter mPresenter;
@@ -54,14 +55,10 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
         setContentView(R.layout.activity_chat);
         ButterKnife.bind(this);
         mJid = getIntent().getStringExtra(DATA_KEY);
+        mPresenter = new ChatPresenter(this, mJid);
 
         // 点击发送按钮时
-        mChatContentView.setOnSendListener(new ChatContentView.OnSendListener() {
-            @Override
-            public void onSend(ChatMsgEntity msg) {
-                IMLauncher.chatWith(mJid, msg);
-            }
-        });
+        mChatContentView.setOnSendListener(mPresenter);
         // 当有新的消息是显示出来
         IMLauncher.setNewMessageListener(this);
     }
@@ -70,6 +67,10 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
         Intent intent = new Intent(context, ChatActivity.class);
         intent.putExtra(DATA_KEY, data);
         context.startActivity(intent);
+    }
+
+    public void addMessage(ChatMsgEntity msg) {
+        mChatContentView.addMessage(msg);
     }
 
     @Override
@@ -82,5 +83,10 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
                 mChatContentView.addMessage(msgEntity);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mPresenter.loadImageInfo(requestCode, resultCode, data);
     }
 }
