@@ -3,15 +3,14 @@ package cn.dazhou.railway.im.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.baidu.mapapi.NetworkUtil;
 import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.jude.easyrecyclerview.decoration.DividerDecoration;
 import com.jude.rollviewpager.Util;
@@ -28,13 +27,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.railway.R;
-import cn.dazhou.railway.SplashActivity;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.adapter.ChatPagerAdapter;
 import cn.dazhou.railway.im.adapter.RosterAdapter;
 import cn.dazhou.railway.im.presenter.ChatPresenter;
 import cn.dazhou.railway.im.presenter.MainPresenter;
-import cn.dazhou.railway.util.IPUtil;
 
 public class MainActivity extends AppCompatActivity {
     private static final String DATA_KEY = "jid";
@@ -93,5 +90,11 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(DATA_KEY, data);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+//        IMLauncher.disconnect();
+        super.onBackPressed();
     }
 }

@@ -94,7 +94,9 @@ public class SoundRecord {
     public void startPlaying(String path) {
         // 将正在播放的语音停止掉
         if (mPlayer != null) {
+            mPlayer.stop();
             mPlayer.release();
+            mPlayer = null;
         }
         mPlayer = new MediaPlayer();
         try {

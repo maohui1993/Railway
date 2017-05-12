@@ -86,6 +86,11 @@ public class SmackImApiImpl implements IMApi {
         return this;
     }
 
+    @Override
+    public void disconnect() {
+        mConnection.disconnect();
+    }
+
     public void addPacketSendListener(StanzaListener stanzaListener) {
         //条件过滤器
         StanzaFilter filter = (StanzaFilter) new AndFilter(new PacketTypeFilter(Presence.class));

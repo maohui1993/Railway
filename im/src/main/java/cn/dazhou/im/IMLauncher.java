@@ -30,6 +30,10 @@ public final class IMLauncher {
         return result;
     }
 
+    public static void disconnect() {
+        mImApi.disconnect();
+    }
+
     /**
      *
      * @param username

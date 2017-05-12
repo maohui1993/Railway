@@ -15,4 +15,5 @@ public interface IMApi extends IChat, IConnection{
     void setOnNewMessageListener(INewMessageListener listener);
 
     Roster addFriend(String jid);
+
 }
