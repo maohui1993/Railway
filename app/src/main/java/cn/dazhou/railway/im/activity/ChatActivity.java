@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jxmpp.jid.EntityBareJid;
@@ -59,7 +60,7 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
 
         // 点击发送按钮时
         mChatContentView.setOnSendListener(mPresenter);
-        // 当有新的消息是显示出来
+        // 当有新的消息时显示出来
         IMLauncher.setNewMessageListener(this);
     }
 
@@ -74,11 +75,11 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
     }
 
     @Override
-    public void showNewMessage(final String msg) {
+    public void showNewMessage(final Message msg) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ChatMsgEntity msgEntity = (ChatMsgEntity) Tool.parseJSON(msg, ChatMsgEntity.class);
+                ChatMsgEntity msgEntity = (ChatMsgEntity) Tool.parseJSON(msg.getBody(), ChatMsgEntity.class);
                 msgEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
                 mChatContentView.addMessage(msgEntity);
             }

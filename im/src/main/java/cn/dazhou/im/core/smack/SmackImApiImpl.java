@@ -26,7 +26,9 @@ import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import cn.dazhou.im.core.IMApi;
 import cn.dazhou.im.core.function.IConnection;
@@ -45,6 +47,7 @@ public class SmackImApiImpl implements IMApi {
     private static SmackImApiImpl singleton = new SmackImApiImpl();
     private AbstractXMPPConnection mConnection;
     private ChatManager mChatManager;
+    private List<Message> mMsgCache = new ArrayList<>();
 
     private INewMessageListener mMsgListener;
 
@@ -116,11 +119,38 @@ public class SmackImApiImpl implements IMApi {
             public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
                 // 回调，将数据传给ChatActivity显示出来
                 if (mMsgListener != null) {
-                    mMsgListener.showNewMessage(message.getBody());
+                    mMsgListener.showNewMessage(message);
+                } else {
+                    mMsgCache.add(message);
+                    handleOfflineMessage();
                 }
                 Log.i("TAG", "New message from " + from + ": " + "to " + message.getTo() + "body:" + message.getBody());
             }
         });
+    }
+
+    Thread thread;
+
+    void handleOfflineMessage() {
+        // 已经起了线程去处理离线消息
+        if (thread != null) {
+            return;
+        }
+        thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    if (mMsgListener != null) {
+                        for (Message msg : mMsgCache) {
+                            mMsgListener.showNewMessage(msg);
+                        }
+                        mMsgCache.clear();
+                        return;
+                    }
+                }
+            }
+        });
+        thread.start();
     }
 
     @Override

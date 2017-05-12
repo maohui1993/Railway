@@ -3,12 +3,10 @@ package cn.dazhou.im.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,11 +24,9 @@ import butterknife.OnClick;
 import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
 import cn.dazhou.im.adapter.ChatAdapter1;
-import cn.dazhou.im.core.PhotoActivity;
 import cn.dazhou.im.modle.ChatMsgEntity;
 import cn.dazhou.im.modle.SoundRecord;
 import cn.dazhou.im.util.Constants;
-import cn.dazhou.im.util.Tool;
 
 /**
  * Created by Hooyee on 2017/5/7.

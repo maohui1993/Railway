@@ -4,6 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
@@ -66,6 +67,7 @@ public class ChatAcceptViewHolder extends BaseViewHolder<ChatMsgEntity> {
 
     @OnClick(R2.id.chat_item_voice)
     void playSound(SoundView v) {
+        Toast.makeText(getContext(), "sound", Toast.LENGTH_SHORT).show();
         if (onItemClickListener != null) {
             onItemClickListener.onVoiceClick(v);
         }
