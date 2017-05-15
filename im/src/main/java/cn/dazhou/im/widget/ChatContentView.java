@@ -3,9 +3,12 @@ package cn.dazhou.im.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,54 +17,70 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jude.easyrecyclerview.EasyRecyclerView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
 import cn.dazhou.im.adapter.ChatAdapter1;
+import cn.dazhou.im.adapter.CommonFragmentPagerAdapter;
+import cn.dazhou.im.fragment.ChatFunctionFragment;
 import cn.dazhou.im.modle.ChatMsgEntity;
 import cn.dazhou.im.modle.SoundRecord;
 import cn.dazhou.im.util.Constants;
+import cn.dazhou.im.util.MediaManager;
+import cn.dazhou.im.util.Utils;
 
 /**
  * Created by Hooyee on 2017/5/7.
  * mail: hooyee_moly@foxmail.com
  */
 
-public class ChatContentView extends LinearLayout{
-    @BindView(R2.id.rv_chat_content)
-    EasyRecyclerView mChatMessagesView;
-    @BindView(R2.id.bt_send)
-    Button mSendBt;
-    @BindView(R2.id.function_add)
-    ImageView mAddFunctionIv;
-    @BindView(R2.id.more_function)
-    View mAdditionalFunc;
-    @BindView(R2.id.edit_text)
-    EditText mChatInput;
-    @BindView(R2.id.voice_bt)
-    Button mVoiceBt;
-    @BindView(R2.id.voice_text)
-    TextView mVoiceText;
+public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItemClickListener{
+    @BindView(R2.id.chat_list)
+    EasyRecyclerView chatList;
     @BindView(R2.id.emotion_voice)
-    ImageView mVoiceImage;
-    @BindView(R2.id.microphone)
-    View mMicrophoneView;
+    ImageView emotionVoice;
+    @BindView(R2.id.edit_text)
+    EditText editText;
+    @BindView(R2.id.voice_text)
+    TextView voiceText;
+    @BindView(R2.id.emotion_button)
+    ImageView emotionButton;
+    @BindView(R2.id.emotion_add)
+    ImageView emotionAdd;
+    @BindView(R2.id.emotion_send)
+    Button emotionSend;
+    @BindView(R2.id.viewpager)
+    NoScrollViewPager viewpager;
+    @BindView(R2.id.emotion_layout)
+    RelativeLayout emotionLayout;
+
+    private EmotionInputDetector mDetector;
+
+    private ArrayList<Fragment> fragments;
+    private ChatFunctionFragment chatFunctionFragment;
+    private CommonFragmentPagerAdapter fragementAdapter;
 
     private OnSendListener mOnSendListener;
     private ChatAdapter1 mAdapter;
     private SoundRecord mSoundRecord;
 
-//    //录音相关
-//    int animationRes = 0;
-//    int res = 0;
-//    AnimationDrawable animationDrawable = null;
-//    private ImageView animView;
+    //录音相关
+    int animationRes = 0;
+    int res = 0;
+    AnimationDrawable animationDrawable = null;
+    private ImageView animView;
 
     public ChatContentView(Context context) {
         this(context, null);
@@ -77,69 +96,37 @@ public class ChatContentView extends LinearLayout{
     }
 
     private void init(Context context) {
-        LayoutInflater.from(context).inflate(R.layout.chat_content_view, this);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        inflater.inflate(R.layout.chat_content_view, this);
         ButterKnife.bind(this);
+
+        fragments = new ArrayList<>();
+        chatFunctionFragment = new ChatFunctionFragment();
+        fragments.add(chatFunctionFragment);
+        fragementAdapter = new CommonFragmentPagerAdapter(((AppCompatActivity)context).getSupportFragmentManager(), fragments);
+        viewpager.setAdapter(fragementAdapter);
+        viewpager.setCurrentItem(0);
+        EventBus.getDefault().register(this);
+
+        mDetector = EmotionInputDetector.with((Activity) context)
+                .setEmotionView(emotionLayout)
+                .setViewPager(viewpager)
+                .bindToContent(chatList)
+                .bindToEditText(editText)
+                .bindToEmotionButton(emotionButton)
+                .bindToAddButton(emotionAdd)
+                .bindToSendButton(emotionSend)
+                .bindToVoiceButton(emotionVoice)
+                .bindToVoiceText(voiceText)
+                .build();
+
         mAdapter = new ChatAdapter1(context);
-        mChatMessagesView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        mChatMessagesView.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(this);
+        chatList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        chatList.setAdapter(mAdapter);
         mSoundRecord = new SoundRecord();
-
-        mChatInput.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                showSendBt(true);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        mVoiceBt.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                onVoiceBtTouch(event);
-                return false;
-            }
-        });
     }
 
-    private void onVoiceBtTouch(MotionEvent event) {
-        switch (event.getActionMasked()) {
-            case MotionEvent.ACTION_DOWN :
-                mVoiceBt.setText("松开 结束");
-                mSoundRecord.startRecording();
-//                        mMicrophoneView.setVisibility(VISIBLE);
-                break;
-            case MotionEvent.ACTION_UP :
-                mVoiceBt.setText("按住 录音");
-                try {
-                    mSoundRecord.stopRecording();
-                    byte[] bytes = mSoundRecord.getSoundRecord();
-                    ChatMsgEntity msg = new ChatMsgEntity();
-                    msg.setMsgSoundRecord(bytes);
-                    msg.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
-                    // 显示自己发送的
-                    addMessage(msg);
-                    sendMultimediaMessage(msg);
-                } catch (Exception e) {
-
-                }
-                break;
-            case MotionEvent.ACTION_CANCEL :
-                mVoiceBt.setText("按住 录音");
-                try {
-                    mSoundRecord.stopRecording();
-                } catch (Exception e) {}
-                break;
-        }
-    }
 
     public void addMessage(ChatMsgEntity msg) {
         mAdapter.add(msg);
@@ -149,54 +136,20 @@ public class ChatContentView extends LinearLayout{
         getOnSendListener().onSend(msg);
     }
 
-    @OnClick(R2.id.bt_send)
-    void sendMassage() {
-        String info = mChatInput.getText().toString();
-        mChatInput.setText("");
-        ChatMsgEntity msg = new ChatMsgEntity();
-        msg.setMessage(info);
-        msg.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
-        // 显示自己的聊天信息
-        addMessage(msg);
-        // 将聊天信息发送给别人
-        getOnSendListener().onSend(msg);
-        showSendBt(false);
-    }
-
-    private void showSendBt(boolean visibility) {
-        if (visibility) {
-            mSendBt.setVisibility(VISIBLE);
-            mAddFunctionIv.setVisibility(GONE);
-        } else {
-            mSendBt.setVisibility(GONE);
-            mAddFunctionIv.setVisibility(VISIBLE);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void MessageEventBus(final ChatMsgEntity messageInfo) {
+        messageInfo.setSendState(Constants.CHAT_ITEM_SENDING);
+        messageInfo.setDate(Utils.getCurrentTime());
+        mAdapter.add(messageInfo);
+        chatList.scrollToPosition(mAdapter.getCount() - 1);
+        if (mOnSendListener != null) {
+            mOnSendListener.onSend(messageInfo);
         }
-    }
-
-    @OnClick(R2.id.function_add)
-    void showMoreFunction() {
-        mAdditionalFunc.setVisibility(VISIBLE);
-    }
-
-    @OnClick(R2.id.iv_gallery)
-    void loadImage() {
-        Intent i = new Intent(
-                Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        ((Activity)getContext()).startActivityForResult(i, Constants.RESULT_LOAD_IMAGE);
-    }
-
-    @OnClick(R2.id.emotion_voice)
-    void updateVoiceButtonVisibility() {
-        int currentState = mChatInput.getVisibility();
-        switch (currentState) {
-            case VISIBLE:
-                mChatInput.setVisibility(GONE);
-                mVoiceBt.setVisibility(VISIBLE);
-                break;
-            default:
-                mChatInput.setVisibility(VISIBLE);
-                mVoiceBt.setVisibility(GONE);
-        }
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                messageInfo.setSendState(Constants.CHAT_ITEM_SEND_SUCCESS);
+            }
+        }, 2000);
     }
 
     public OnSendListener getOnSendListener() {
@@ -205,6 +158,44 @@ public class ChatContentView extends LinearLayout{
 
     public void setOnSendListener(OnSendListener mOnSendListener) {
         this.mOnSendListener = mOnSendListener;
+    }
+
+    @Override
+    public void onHeaderClick(int position) {
+
+    }
+
+    @Override
+    public void onImageClick(View view) {
+
+    }
+
+    @Override
+    public void onVoiceClick(SoundView soundView) {
+        if (animView != null) {
+            animView.setImageResource(res);
+            animView = null;
+        }
+        switch (soundView.getType()) {
+            case Constants.CHAT_ITEM_TYPE_LEFT:
+                animationRes = R.drawable.voice_left;
+                res = R.mipmap.icon_voice_left3;
+                break;
+            case Constants.CHAT_ITEM_TYPE_RIGHT:
+                animationRes = R.drawable.voice_right;
+                res = R.mipmap.icon_voice_right3;
+                break;
+        }
+        animView = soundView;
+        animView.setImageResource(animationRes);
+        animationDrawable = (AnimationDrawable) animView.getDrawable();
+        animationDrawable.start();
+        MediaManager.playSound(soundView.getSoundFile().getPath(), new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                animView.setImageResource(res);
+            }
+        });
     }
 
     // 图片发送

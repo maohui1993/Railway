@@ -1,6 +1,8 @@
 package cn.dazhou.im.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,6 +14,7 @@ import cn.dazhou.im.adapter.holder.ChatSendViewHolder;
 import cn.dazhou.im.modle.ChatMsgEntity;
 import cn.dazhou.im.modle.SoundRecord;
 import cn.dazhou.im.util.Constants;
+import cn.dazhou.im.util.MediaManager;
 import cn.dazhou.im.widget.SoundView;
 
 /**
@@ -20,6 +23,8 @@ import cn.dazhou.im.widget.SoundView;
 
 public class ChatAdapter1 extends RecyclerArrayAdapter<ChatMsgEntity> {
     private SoundRecord mSoundRecord;
+
+    private OnItemClickListener onItemClickListener;
 
     public ChatAdapter1(Context context) {
         super(context);
@@ -41,26 +46,22 @@ public class ChatAdapter1 extends RecyclerArrayAdapter<ChatMsgEntity> {
     }
 
     @Override
+    public int getCount() {
+        return super.getCount();
+    }
+
+    @Override
     public int getViewType(int position) {
         return getAllData().get(position).getType();
     }
 
-    private OnItemClickListener onItemClickListener = new OnItemClickListener() {
-        @Override
-        public void onHeaderClick(int position) {
+    public OnItemClickListener getOnItemClickListener() {
+        return onItemClickListener;
+    }
 
-        }
-
-        @Override
-        public void onImageClick(View view) {
-
-        }
-
-        @Override
-        public void onVoiceClick(SoundView soundView) {
-            mSoundRecord.startPlaying(soundView.getSoundFile().getPath());
-        }
-    };
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
 
     public interface OnItemClickListener {
         void onHeaderClick(int position);

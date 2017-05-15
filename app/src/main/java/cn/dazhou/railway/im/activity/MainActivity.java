@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         mRosterAdapter = new RosterAdapter(this);
         mRosterView.setAdapter(mRosterAdapter);
 
-        IMLauncher.addFriend(Constants.SERVER_IP);
+//        IMLauncher.addFriend(Constants.SERVER_IP);
         Roster roster = IMLauncher.getRoster();
         Set<RosterEntry> entries = roster.getEntries();
         mRosterAdapter.addAll(entries);

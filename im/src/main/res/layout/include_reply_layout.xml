@@ -43,20 +43,6 @@
             android:paddingRight="@dimen/content_horizontal_margin"
             android:textSize="16sp" />
 
-        <Button
-            android:id="@+id/voice_bt"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/corners_edit_white"
-            android:maxLines="3"
-            android:minHeight="36dp"
-            android:paddingLeft="@dimen/content_horizontal_margin"
-            android:paddingRight="@dimen/content_horizontal_margin"
-            android:text="按住 录音"
-            android:textSize="16sp"
-            android:visibility="gone" />
-
         <TextView
             android:id="@+id/voice_text"
             style="@style/text_subhead_black"
@@ -80,7 +66,7 @@
             android:src="@mipmap/icon_chat_expression" />
 
         <ImageView
-            android:id="@+id/function_add"
+            android:id="@+id/emotion_add"
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:layout_marginLeft="@dimen/content_horizontal_margin"
@@ -89,34 +75,34 @@
             android:src="@mipmap/icon_chat_add" />
 
         <Button
-            android:id="@+id/bt_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/emotion_send"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="@dimen/content_horizontal_margin"
+            android:padding="1dp"
             android:text="发送"
-            android:visibility="gone" />
-    </LinearLayout>
+            android:textColor="@color/white"
+            android:visibility="gone"/>
 
-    <RelativeLayout
-        android:id="@+id/more_function"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/iv_gallery"
-            android:src="@android:drawable/ic_menu_gallery"
-            android:layout_width="45dp"
-            android:layout_height="45dp" />
-        <ImageView
-            android:id="@+id/iv_camera"
-            android:layout_toRightOf="@+id/iv_gallery"
-            android:src="@android:drawable/ic_menu_camera"
-            android:layout_width="45dp"
-            android:layout_height="45dp" />
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/divider_line" />
+
+    <RelativeLayout
+        android:id="@+id/emotion_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/bg_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <cn.dazhou.im.widget.NoScrollViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
 
 </LinearLayout>

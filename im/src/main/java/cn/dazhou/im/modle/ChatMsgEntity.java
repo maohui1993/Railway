@@ -10,10 +10,11 @@ public class ChatMsgEntity{
     private String date;//消息日期
     private String message;//消息内容
     private byte[] mesImage;//发送图片
-    private byte[] msgSoundRecord;
-    private String time;
+    private byte[] msgSoundRecord; //语音信息
     private int sendState;
     private int type;
+    private String filepath; // 录音文件
+    private long voiceTime;
 
     public int getImage() {
         return image;
@@ -54,14 +55,6 @@ public class ChatMsgEntity{
         this.msgSoundRecord = msgSoundRecord;
     }
 
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
     public int getSendState() {
         return sendState;
     }
@@ -76,6 +69,22 @@ public class ChatMsgEntity{
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public String getFilepath() {
+        return filepath;
+    }
+
+    public void setFilepath(String filepath) {
+        this.filepath = filepath;
+    }
+
+    public long getVoiceTime() {
+        return voiceTime;
+    }
+
+    public void setVoiceTime(long voiceTime) {
+        this.voiceTime = voiceTime;
     }
 
     //    @Override

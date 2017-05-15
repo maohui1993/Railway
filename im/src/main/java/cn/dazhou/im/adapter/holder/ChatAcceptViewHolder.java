@@ -52,7 +52,7 @@ public class ChatAcceptViewHolder extends BaseViewHolder<ChatMsgEntity> {
 
     @Override
     public void setData(ChatMsgEntity data) {
-        chatItemDate.setText(data.getTime() != null ? data.getTime() : "");
+        chatItemDate.setText(data.getDate() != null ? data.getDate() : "");
         Glide.with(getContext()).load( R.drawable.header_01 ).asBitmap().into(chatItemHeader);
         if (data.getMessage() != null) {
             chatItemText.setText(data.getMessage());

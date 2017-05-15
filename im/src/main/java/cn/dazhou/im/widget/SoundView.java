@@ -18,6 +18,7 @@ public class SoundView extends android.support.v7.widget.AppCompatImageView {
 
     private byte[] mSoundByte;
     private File mSoundFile;
+    private int mType;   // 与ChatMsgEntry中 的type一样
 
 
     public SoundView(Context context) {
@@ -39,6 +40,10 @@ public class SoundView extends android.support.v7.widget.AppCompatImageView {
     public void setSoundByte(byte[] mSoundByte) {
         this.mSoundByte = mSoundByte;
         initSoundDataSource();
+    }
+
+    public void setSoundFile(File mSoundFile) {
+        this.mSoundFile = mSoundFile;
     }
 
     public File getSoundFile() {
@@ -68,5 +73,13 @@ public class SoundView extends android.support.v7.widget.AppCompatImageView {
                 }
             }
         }
+    }
+
+    public void setType(int type) {
+        this.mType = type;
+    }
+
+    public int getType() {
+        return mType;
     }
 }

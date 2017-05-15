@@ -86,8 +86,4 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mPresenter.loadImageInfo(requestCode, resultCode, data);
-    }
 }

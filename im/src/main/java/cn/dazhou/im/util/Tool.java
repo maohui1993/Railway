@@ -16,6 +16,10 @@ import com.google.gson.JsonSyntaxException;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Created by hooyee on 2017/5/8.
@@ -36,6 +40,34 @@ public class Tool {
             Log.e("TAG", "load json is fail");
         }
         return obj;
+    }
+
+    public static byte[] getSoundRecord(String path) {
+        File file = new File(path);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        FileInputStream in = null;
+        byte[] bytes = new byte[1024];
+        try {
+            in = new FileInputStream(file);
+            int length = 0;
+            while ((length = in.read(bytes)) != -1) {
+                out.write(bytes, 0, length);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                out.close();
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return out.toByteArray();
     }
 
     public static String toJSON(Object obj) {
