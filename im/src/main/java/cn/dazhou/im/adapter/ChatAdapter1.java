@@ -22,13 +22,11 @@ import cn.dazhou.im.widget.SoundView;
  */
 
 public class ChatAdapter1 extends RecyclerArrayAdapter<ChatMsgEntity> {
-    private SoundRecord mSoundRecord;
 
     private OnItemClickListener onItemClickListener;
 
     public ChatAdapter1(Context context) {
         super(context);
-        mSoundRecord = new SoundRecord();
     }
 
     @Override

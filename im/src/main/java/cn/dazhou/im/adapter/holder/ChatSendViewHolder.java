@@ -33,16 +33,14 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMsgEntity> {
     TextView chatItemDate;
     @BindView(R2.id.chat_item_header)
     ImageView chatItemHeader;
-        @BindView(R2.id.chat_item_content_text)
-        GifTextView chatItemContentText;
+    @BindView(R2.id.chat_item_content_text)
+    GifTextView chatItemContentText;
     @BindView(R2.id.chat_item_content_image)
     BubbleImageView chatItemContentImage;
     @BindView(R2.id.chat_item_voice)
     SoundView chatItemVoice;
-//    @BindView(R2.id.chat_item_image)
-//    ImageView chatItemImage;
-        @BindView(R2.id.chat_item_layout_content)
-        BubbleLinearLayout chatItemLayoutContent;
+    @BindView(R2.id.chat_item_layout_content)
+    BubbleLinearLayout chatItemLayoutContent;
     @BindView(R2.id.chat_item_fail)
     ImageView chatItemFail;
     @BindView(R2.id.chat_item_voice_time)
@@ -63,7 +61,7 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMsgEntity> {
     @Override
     public void setData(ChatMsgEntity data) {
         chatItemDate.setText(data.getDate() != null ? data.getDate() : "");
-        Glide.with(getContext()).load( R.drawable.header_02 ).asBitmap().into(chatItemHeader);
+        Glide.with(getContext()).load(R.drawable.header_02).asBitmap().into(chatItemHeader);
         if (data.getMessage() != null) {
             chatItemContentText.setSpanText(null, data.getMessage(), true);
             chatItemVoice.setVisibility(View.GONE);
@@ -74,7 +72,7 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMsgEntity> {
             TextPaint paint = chatItemContentText.getPaint();
             // 计算textview在屏幕上占多宽
             int len = (int) paint.measureText(chatItemContentText.getText().toString().trim());
-            if (len < Utils.dp2px(getContext(), 200)){
+            if (len < Utils.dp2px(getContext(), 200)) {
                 layoutParams.width = len + Utils.dp2px(getContext(), 30);
                 layoutParams.height = Utils.dp2px(getContext(), 48);
             } else {
