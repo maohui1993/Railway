@@ -32,6 +32,12 @@
         <activity android:name=".im.activity.LoginActivity" />
         <activity android:name=".im.activity.ChatActivity" />
         <activity android:name=".im.activity.MainActivity"></activity>
+
+        <service
+            android:name="cn.dazhou.railway.im.service.IMChatService"
+            android:process=":remote"
+            android:exported="true"
+            android:enabled="true"></service>
     </application>
 
 </manifest>

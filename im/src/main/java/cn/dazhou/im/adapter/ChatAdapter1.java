@@ -1,8 +1,6 @@
 package cn.dazhou.im.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.AnimationDrawable;
-import android.media.MediaPlayer;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,9 +10,7 @@ import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 import cn.dazhou.im.adapter.holder.ChatAcceptViewHolder;
 import cn.dazhou.im.adapter.holder.ChatSendViewHolder;
 import cn.dazhou.im.modle.ChatMsgEntity;
-import cn.dazhou.im.modle.SoundRecord;
 import cn.dazhou.im.util.Constants;
-import cn.dazhou.im.util.MediaManager;
 import cn.dazhou.im.widget.SoundView;
 
 /**

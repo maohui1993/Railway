@@ -27,6 +27,7 @@ import cn.dazhou.im.R;
 import cn.dazhou.im.modle.ChatMsgEntity;
 import cn.dazhou.im.util.AudioRecoderUtils;
 import cn.dazhou.im.util.Constants;
+import cn.dazhou.im.util.MediaManager;
 import cn.dazhou.im.util.PopupWindowFactory;
 import cn.dazhou.im.util.Utils;
 
@@ -315,6 +316,7 @@ public class EmotionInputDetector {
                 ChatMsgEntity messageInfo = new ChatMsgEntity();
                 messageInfo.setFilepath(filePath);
                 messageInfo.setVoiceTime(time);
+                messageInfo.setMsgSoundRecord(MediaManager.getSoundRecord(filePath));
                 messageInfo.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
                 EventBus.getDefault().post(messageInfo);
             }

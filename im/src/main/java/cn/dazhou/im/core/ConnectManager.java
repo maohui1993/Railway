@@ -1,5 +1,7 @@
 package cn.dazhou.im.core;
 
+import android.content.Context;
+
 import cn.dazhou.im.core.smack.SmackImApiImpl;
 
 /**
@@ -10,11 +12,11 @@ public class ConnectManager {
     public static final byte CONNECT_PROTOCOL_XMPP = 0;
     public static final byte CONNECT_PROTOCOL_TCP = 1;
 
-    public static IMApi getConnection(int type, String ip) throws Exception {
+    public static IMApi getConnection(Context context, int type, String ip) throws Exception {
         IMApi imApi = null;
         switch (type) {
             case CONNECT_PROTOCOL_XMPP :
-                imApi = SmackImApiImpl.getInstance();
+                imApi = SmackImApiImpl.getInstance(context);
                 imApi.connect(ip);
                 break;
             case CONNECT_PROTOCOL_TCP :

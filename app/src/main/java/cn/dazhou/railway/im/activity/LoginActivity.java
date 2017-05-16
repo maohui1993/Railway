@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity implements IOnLoginListener
         ButterKnife.bind(this);
         // 设置按钮样式
         mLoginPbt.setMode(ActionProcessButton.Mode.ENDLESS);
-        mPresenter = new LoginPresenter(this);
+        mPresenter = new LoginPresenter(this, this);
     }
 
     @OnClick(R.id.btn_login)

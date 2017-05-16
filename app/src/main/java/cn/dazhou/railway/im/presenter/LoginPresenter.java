@@ -23,8 +23,10 @@ public class LoginPresenter {
     private boolean connected;
     private boolean logined;
     private IOnLoginListener mLoginListener;
+    private Context mContext;
 
-    public LoginPresenter(IOnLoginListener loginListener) {
+    public LoginPresenter(Context context, IOnLoginListener loginListener) {
+        mContext = context;
         mLoginListener = loginListener;
     }
 
@@ -33,7 +35,7 @@ public class LoginPresenter {
         Observable.create(new ObservableOnSubscribe() {
             @Override
             public void subscribe(@NonNull ObservableEmitter e) throws Exception {
-                connected = IMLauncher.connect(Constants.SERVER_IP);
+                connected = IMLauncher.connect(mContext, Constants.SERVER_IP);
             }
         })
         .subscribeOn(Schedulers.io())
@@ -50,7 +52,7 @@ public class LoginPresenter {
         Observable.create(new ObservableOnSubscribe() {
             @Override
             public void subscribe(@NonNull ObservableEmitter e) throws Exception {
-                connected = IMLauncher.connect(Constants.SERVER_IP);
+                connected = IMLauncher.connect(mContext, Constants.SERVER_IP);
                 e.onNext(1);
             }
         })

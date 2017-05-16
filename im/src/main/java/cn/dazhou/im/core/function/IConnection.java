@@ -7,6 +7,8 @@ package cn.dazhou.im.core.function;
 public interface IConnection {
     IConnection connect(String ip) throws Exception;
 
+    Object getConnection();
+
     void disconnect();
 
     void login(String username, String password) throws Exception;

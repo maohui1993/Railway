@@ -5,6 +5,12 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 /**
  * 作者：Rance on 2016/12/15 15:11
  * 邮箱：rance935@163.com
@@ -44,6 +50,34 @@ public class MediaManager {
         } catch (Exception e) {
 
         }
+    }
+
+    public static byte[] getSoundRecord(String path) {
+        File file = new File(path);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        FileInputStream in = null;
+        byte[] bytes = new byte[1024];
+        try {
+            in = new FileInputStream(file);
+            int length = 0;
+            while ((length = in.read(bytes)) != -1) {
+                out.write(bytes, 0, length);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                out.close();
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return out.toByteArray();
     }
 
     /**

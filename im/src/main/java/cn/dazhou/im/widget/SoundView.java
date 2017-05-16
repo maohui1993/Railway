@@ -51,7 +51,7 @@ public class SoundView extends android.support.v7.widget.AppCompatImageView {
     }
 
     private void initSoundDataSource() {
-        mSoundFile  = new File(DIR_PATH + System.currentTimeMillis() + ".ogg");
+        mSoundFile  = new File(DIR_PATH + System.currentTimeMillis() + ".amr");
         FileOutputStream out = null;
         try {
             out = new FileOutputStream(mSoundFile);

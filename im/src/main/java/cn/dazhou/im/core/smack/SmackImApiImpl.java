@@ -1,11 +1,14 @@
 package cn.dazhou.im.core.smack;
 
+import android.content.Context;
 import android.util.Log;
 
+import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.StanzaListener;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.chat2.IncomingChatMessageListener;
@@ -34,6 +37,8 @@ import cn.dazhou.im.core.IMApi;
 import cn.dazhou.im.core.function.IConnection;
 import cn.dazhou.im.core.function.INewMessageListener;
 import cn.dazhou.im.modle.ChatMsgEntity;
+import cn.dazhou.im.util.Constants;
+import cn.dazhou.im.util.OfflineMsgManager;
 import cn.dazhou.im.util.Tool;
 
 /**
@@ -47,9 +52,7 @@ public class SmackImApiImpl implements IMApi {
     private static SmackImApiImpl singleton = new SmackImApiImpl();
     private AbstractXMPPConnection mConnection;
     private ChatManager mChatManager;
-    private List<Message> mMsgCache = new ArrayList<>();
-
-    private INewMessageListener mMsgListener;
+    private Context mContext;
 
     private byte mState;
 
@@ -58,8 +61,14 @@ public class SmackImApiImpl implements IMApi {
     private SmackImApiImpl() {
     }
 
-    public static SmackImApiImpl getInstance() {
+    public static SmackImApiImpl getInstance(Context context) {
+        singleton.mContext = context;
         return singleton;
+    }
+
+    @Override
+    public XMPPConnection getConnection() {
+        return mConnection;
     }
 
     /**
@@ -77,6 +86,7 @@ public class SmackImApiImpl implements IMApi {
                 .setPort(5222)
                 .setConnectTimeout(5000)
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
+                .setSendPresence(false)
                 .build();
 
         mConnection = new XMPPTCPConnection(config);
@@ -108,6 +118,8 @@ public class SmackImApiImpl implements IMApi {
         try {
             mConnection.login(username, password);
             mState = LOGINED_STATE;
+            // 处理离线消息
+            OfflineMsgManager.getInstance(mContext).dealOfflineMsg(mConnection);
             listenNewMassage();
         } catch (Exception e) {
             mState = NOT_LOGIN_STATE;
@@ -122,40 +134,13 @@ public class SmackImApiImpl implements IMApi {
         mChatManager.addIncomingListener(new IncomingChatMessageListener() {
             @Override
             public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
-                // 回调，将数据传给ChatActivity显示出来
-                if (mMsgListener != null) {
-                    mMsgListener.showNewMessage(message);
-                } else {
-                    mMsgCache.add(message);
-                    handleOfflineMessage();
-                }
-                Log.i("TAG", "New message from " + from + ": " + "to " + message.getTo() + "body:" + message.getBody());
+                ChatMsgEntity msgEntity = (ChatMsgEntity) Tool.parseJSON(message.getBody(), ChatMsgEntity.class);
+                // 标志为接收到的消息
+                msgEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
+                EventBus.getDefault().post(msgEntity);
+                Log.d(Constants.TAG, "New message from " + from + ": " + "to " + message.getTo() + "body:" + message.getBody());
             }
         });
-    }
-
-    Thread thread;
-
-    void handleOfflineMessage() {
-        // 已经起了线程去处理离线消息
-        if (thread != null) {
-            return;
-        }
-        thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    if (mMsgListener != null) {
-                        for (Message msg : mMsgCache) {
-                            mMsgListener.showNewMessage(msg);
-                        }
-                        mMsgCache.clear();
-                        return;
-                    }
-                }
-            }
-        });
-        thread.start();
     }
 
     @Override
@@ -201,11 +186,6 @@ public class SmackImApiImpl implements IMApi {
         return null;
     }
 
-    @Override
-    public void setOnNewMessageListener(INewMessageListener listener) {
-        mMsgListener = listener;
-    }
-
     class MyStanzaListener implements StanzaListener {
 
         @Override
@@ -216,7 +196,7 @@ public class SmackImApiImpl implements IMApi {
                 Jid from = presence.getFrom();//发送方
                 Jid to = presence.getTo();//接收方
                 if (presence.getType().equals(Presence.Type.subscribe)) {
-                    Log.i("TAG", "收到添加请求！" + "发送方：" + from.getLocalpartOrNull() + "接收方：" + to.getLocalpartOrNull());
+                    Log.d(Constants.TAG, "收到添加请求！" + "发送方：" + from.getLocalpartOrNull() + "接收方：" + to.getLocalpartOrNull());
                 }
             }
         }

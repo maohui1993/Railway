@@ -4,6 +4,7 @@ import android.content.Context;
 
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.modle.ChatMsgEntity;
+import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.widget.ChatContentView;
 
 /**

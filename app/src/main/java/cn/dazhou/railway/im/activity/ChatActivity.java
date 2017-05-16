@@ -60,8 +60,7 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
 
         // 点击发送按钮时
         mChatContentView.setOnSendListener(mPresenter);
-        // 当有新的消息时显示出来
-        IMLauncher.setNewMessageListener(this);
+
     }
 
     public static void startItself(Context context, String data) {

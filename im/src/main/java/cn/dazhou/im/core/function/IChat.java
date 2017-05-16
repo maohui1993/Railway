@@ -18,4 +18,5 @@ public interface IChat {
     void chat(ChatMsgEntity msg) throws Exception;
 
     Roster getRoster();
+
 }

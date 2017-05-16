@@ -1,5 +1,6 @@
 package cn.dazhou.im;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.jivesoftware.smack.roster.Roster;
@@ -16,12 +17,17 @@ import cn.dazhou.im.modle.ChatMsgEntity;
 
 public final class IMLauncher {
     private static final String TAG = "IMApi";
+
+    public static IMApi getImApi() {
+        return mImApi;
+    }
+
     private static IMApi mImApi;
 
-    public static boolean connect(String ip) {
+    public static boolean connect(Context context, String ip) {
         boolean result = true;
         try {
-            mImApi = ConnectManager.getConnection(ConnectManager.CONNECT_PROTOCOL_XMPP, ip);
+            mImApi = ConnectManager.getConnection(context, ConnectManager.CONNECT_PROTOCOL_XMPP, ip);
         } catch (Exception e) {
             result = false;
             e.printStackTrace();
@@ -68,9 +74,6 @@ public final class IMLauncher {
         mImApi.chatWith(id);
     }
 
-    public static void setNewMessageListener(INewMessageListener listener) {
-        mImApi.setOnNewMessageListener(listener);
-    }
 
     public static Roster getRoster() {
         return mImApi.getRoster();

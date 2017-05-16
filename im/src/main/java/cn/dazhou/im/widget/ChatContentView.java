@@ -2,7 +2,6 @@ package cn.dazhou.im.widget;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -11,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,7 +34,6 @@ import cn.dazhou.im.adapter.ChatAdapter1;
 import cn.dazhou.im.adapter.CommonFragmentPagerAdapter;
 import cn.dazhou.im.fragment.ChatFunctionFragment;
 import cn.dazhou.im.modle.ChatMsgEntity;
-import cn.dazhou.im.modle.SoundRecord;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.MediaManager;
 import cn.dazhou.im.util.Utils;
@@ -74,7 +71,6 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
 
     private OnSendListener mOnSendListener;
     private ChatAdapter1 mAdapter;
-    private SoundRecord mSoundRecord;
 
     //录音相关
     int animationRes = 0;
@@ -124,7 +120,6 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         mAdapter.setOnItemClickListener(this);
         chatList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         chatList.setAdapter(mAdapter);
-        mSoundRecord = new SoundRecord();
     }
 
 
@@ -132,24 +127,27 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         mAdapter.add(msg);
     }
 
-    void sendMultimediaMessage(ChatMsgEntity msg) {
-        getOnSendListener().onSend(msg);
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void MessageEventBus(final ChatMsgEntity messageInfo) {
-        messageInfo.setSendState(Constants.CHAT_ITEM_SENDING);
-        messageInfo.setDate(Utils.getCurrentTime());
-        mAdapter.add(messageInfo);
-        chatList.scrollToPosition(mAdapter.getCount() - 1);
-        if (mOnSendListener != null) {
-            mOnSendListener.onSend(messageInfo);
+        switch (messageInfo.getType()) {
+            case Constants.CHAT_ITEM_TYPE_RIGHT:
+                messageInfo.setSendState(Constants.CHAT_ITEM_SENDING);
+                messageInfo.setDate(Utils.getCurrentTime());
+                mAdapter.add(messageInfo);
+                chatList.scrollToPosition(mAdapter.getCount() - 1);
+                if (mOnSendListener != null) {
+                    mOnSendListener.onSend(messageInfo);
+                }
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        messageInfo.setSendState(Constants.CHAT_ITEM_SEND_SUCCESS);
+                    }
+                }, 2000);
+                break;
+            case Constants.CHAT_ITEM_TYPE_LEFT:
+                mAdapter.add(messageInfo);
+                break;
         }
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                messageInfo.setSendState(Constants.CHAT_ITEM_SEND_SUCCESS);
-            }
-        }, 2000);
     }
 
     public OnSendListener getOnSendListener() {
