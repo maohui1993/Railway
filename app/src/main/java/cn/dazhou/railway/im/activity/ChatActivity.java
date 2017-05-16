@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
@@ -34,12 +35,13 @@ import cn.dazhou.im.widget.ChatContentView;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.adapter.ChatPagerAdapter;
 import cn.dazhou.railway.im.presenter.ChatPresenter;
+import cn.dazhou.railway.im.service.IMChatService;
 
 /**
  * 启动时需要知道是与谁聊天，故启动的时候要带一个data值传入。
  */
 public class ChatActivity extends AppCompatActivity implements INewMessageListener {
-    private static final String DATA_KEY = "jid";
+    public static final String DATA_KEY = "jid";
 
     @BindView(R.id.chat_content)
     ChatContentView mChatContentView;
@@ -60,7 +62,9 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
 
         // 点击发送按钮时
         mChatContentView.setOnSendListener(mPresenter);
-
+        String localpart = mJid.split("/")[0];
+//        IMChatService.updateCurrentJid(mJid.split("/")[0]);
+        EventBus.getDefault().post(localpart);
     }
 
     public static void startItself(Context context, String data) {
@@ -71,6 +75,12 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
 
     public void addMessage(ChatMsgEntity msg) {
         mChatContentView.addMessage(msg);
+    }
+
+    @Override
+    protected void onPause() {
+        EventBus.getDefault().post("");
+        super.onPause();
     }
 
     @Override

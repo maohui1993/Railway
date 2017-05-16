@@ -19,23 +19,17 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.roster.Roster;
-import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
-import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import cn.dazhou.im.core.IMApi;
 import cn.dazhou.im.core.function.IConnection;
-import cn.dazhou.im.core.function.INewMessageListener;
 import cn.dazhou.im.modle.ChatMsgEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.OfflineMsgManager;

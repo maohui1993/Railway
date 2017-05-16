@@ -32,6 +32,7 @@ import cn.dazhou.railway.im.adapter.ChatPagerAdapter;
 import cn.dazhou.railway.im.adapter.RosterAdapter;
 import cn.dazhou.railway.im.presenter.ChatPresenter;
 import cn.dazhou.railway.im.presenter.MainPresenter;
+import cn.dazhou.railway.im.service.IMChatService;
 
 public class MainActivity extends AppCompatActivity {
     private static final String DATA_KEY = "jid";
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        mPrensenter = new MainPresenter(this);
 
         initRoster();
 
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         ChatPagerAdapter mAdapter = new ChatPagerAdapter(mViewList, mTitles);
         mViewPager.setAdapter(mAdapter);//给ViewPager设置适配器
         mTabLayout.setupWithViewPager(mViewPager);//将TabLayout和ViewPager关联起来。
-
+        IMChatService.startItself(this);
     }
 
     private void initRoster() {
