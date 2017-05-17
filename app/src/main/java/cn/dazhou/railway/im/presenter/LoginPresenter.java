@@ -7,6 +7,7 @@ import android.widget.Toast;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.listener.IOnLoginListener;
+import cn.dazhou.railway.im.service.IMChatService;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -62,6 +63,7 @@ public class LoginPresenter {
             @Override
             public void accept(@NonNull Object o) throws Exception {
                 if (connected) {
+                    IMChatService.startItself(mContext);
                     logined = IMLauncher.login(username, password);
                     if (logined) {
                         mLoginListener.onSuccess();

@@ -31,7 +31,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".im.activity.LoginActivity" />
-        <activity android:name=".im.activity.ChatActivity" />
+        <activity android:name=".im.activity.ChatActivity"
+            android:launchMode="singleInstance"/>
         <activity android:name=".im.activity.MainActivity" />
 
         <service
@@ -39,7 +40,6 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".im.activity.BaseActivity"></activity>
     </application>
 
 </manifest>

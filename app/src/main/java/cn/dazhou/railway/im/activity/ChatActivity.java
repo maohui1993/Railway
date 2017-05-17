@@ -62,9 +62,7 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
 
         // 点击发送按钮时
         mChatContentView.setOnSendListener(mPresenter);
-        String localpart = mJid.split("/")[0];
-//        IMChatService.updateCurrentJid(mJid.split("/")[0]);
-        EventBus.getDefault().post(localpart);
+        EventBus.getDefault().post(mJid);
     }
 
     public static void startItself(Context context, String data) {

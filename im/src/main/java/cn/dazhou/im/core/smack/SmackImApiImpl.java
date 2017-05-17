@@ -111,30 +111,14 @@ public class SmackImApiImpl implements IMApi {
         }
         try {
             mConnection.login(username, password);
+            mChatManager = ChatManager.getInstanceFor(mConnection);
             mState = LOGINED_STATE;
             // 处理离线消息
             OfflineMsgManager.getInstance(mContext).dealOfflineMsg(mConnection);
-            listenNewMassage();
         } catch (Exception e) {
             mState = NOT_LOGIN_STATE;
             throw e;
         }
-    }
-
-    private void listenNewMassage() {
-        if (mChatManager == null) {
-            mChatManager = ChatManager.getInstanceFor(mConnection);
-        }
-        mChatManager.addIncomingListener(new IncomingChatMessageListener() {
-            @Override
-            public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
-                ChatMsgEntity msgEntity = (ChatMsgEntity) Tool.parseJSON(message.getBody(), ChatMsgEntity.class);
-                // 标志为接收到的消息
-                msgEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
-                EventBus.getDefault().post(msgEntity);
-                Log.d(Constants.TAG, "New message from " + from + ": " + "to " + message.getTo() + "body:" + message.getBody());
-            }
-        });
     }
 
     @Override

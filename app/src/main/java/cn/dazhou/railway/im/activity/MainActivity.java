@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         ChatPagerAdapter mAdapter = new ChatPagerAdapter(mViewList, mTitles);
         mViewPager.setAdapter(mAdapter);//给ViewPager设置适配器
         mTabLayout.setupWithViewPager(mViewPager);//将TabLayout和ViewPager关联起来。
-        IMChatService.startItself(this);
+//        IMChatService.startItself(this);
     }
 
     private void initRoster() {
