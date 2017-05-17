@@ -11,12 +11,13 @@ import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 import org.jivesoftware.smack.roster.RosterEntry;
 
 import cn.dazhou.railway.R;
+import cn.dazhou.railway.im.model.Friend;
 
 /**
  * Created by hooyee on 2017/5/11.
  */
 
-public class RosterViewHolder extends BaseViewHolder<RosterEntry> {
+public class RosterViewHolder extends BaseViewHolder<Friend> {
     private TextView mTv_name;
     private ImageView mImg_face;
     private TextView mTv_sign;
@@ -29,9 +30,10 @@ public class RosterViewHolder extends BaseViewHolder<RosterEntry> {
     }
 
     @Override
-    public void setData(final RosterEntry entry){
+    public void setData(final Friend entry){
         Log.i("ViewHolder","position"+getDataPosition());
-        mTv_name.setText(entry.getName());
+        mTv_name.setText(entry.getRosterEntry().getName());
+//        mTv_sign.setText(entry.getUnreadCount());
         Glide.with(getContext())
                 .load(R.drawable.header_01)
                 .asBitmap()

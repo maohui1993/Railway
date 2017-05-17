@@ -19,12 +19,16 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.structure.ModelAdapter;
+
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.R;
 import cn.dazhou.im.modle.ChatMsgEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.Tool;
 import cn.dazhou.railway.im.activity.ChatActivity;
+import cn.dazhou.railway.im.db.ChatMessage;
 
 /**
  * 聊天服务.
@@ -85,6 +89,14 @@ public class IMChatService extends Service {
             } else {
                 sendNotification(msgEntity, message.getTo().toString());
             }
+
+            ChatMessage chatMessage = new ChatMessage.Builder()
+                    .content(msgEntity.getMessage())
+                    .fromJid(message.getFrom().toString())
+                    .toJid(message.getTo().toString())
+                    .build();
+            ModelAdapter<ChatMessage> adapter = FlowManager.getModelAdapter(ChatMessage.class);
+            adapter.insert(chatMessage);
         }
     };
 

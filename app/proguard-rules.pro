@@ -27,3 +27,5 @@
 -keep class com.baidu.** {*;}
 -keep class vi.com.** {*;}
 -dontwarn com.baidu.**
+
+-keep class * extends com.raizlabs.android.dbflow.config.DatabaseHolder { *; }

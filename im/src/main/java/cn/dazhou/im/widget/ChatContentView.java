@@ -63,6 +63,8 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     @BindView(R2.id.emotion_layout)
     RelativeLayout emotionLayout;
 
+
+
     private EmotionInputDetector mDetector;
 
     private ArrayList<Fragment> fragments;

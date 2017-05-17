@@ -12,12 +12,13 @@ import org.jxmpp.jid.EntityBareJid;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.railway.im.activity.ChatActivity;
 import cn.dazhou.railway.im.adapter.holder.RosterViewHolder;
+import cn.dazhou.railway.im.model.Friend;
 
 /**
  * Created by hooyee on 2017/5/8.
  */
 
-public class RosterAdapter extends RecyclerArrayAdapter<RosterEntry> {
+public class RosterAdapter extends RecyclerArrayAdapter<Friend> {
 
     public RosterAdapter(Context context) {
         super(context);
@@ -33,7 +34,7 @@ public class RosterAdapter extends RecyclerArrayAdapter<RosterEntry> {
     private OnItemClickListener onItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            EntityBareJid jid = (EntityBareJid) getItem(position).getJid();
+            EntityBareJid jid = (EntityBareJid) getItem(position).getRosterEntry().getJid();
             ChatActivity.startItself(getContext(), jid.toString());
         }
     };

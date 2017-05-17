@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,8 @@ import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.jude.easyrecyclerview.decoration.DividerDecoration;
 import com.jude.rollviewpager.Util;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 
@@ -26,10 +29,13 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.dazhou.im.IMLauncher;
+import cn.dazhou.im.modle.ChatMsgEntity;
+import cn.dazhou.im.util.Utils;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.adapter.ChatPagerAdapter;
 import cn.dazhou.railway.im.adapter.RosterAdapter;
+import cn.dazhou.railway.im.model.Friend;
 import cn.dazhou.railway.im.presenter.ChatPresenter;
 import cn.dazhou.railway.im.presenter.MainPresenter;
 import cn.dazhou.railway.im.service.IMChatService;
@@ -85,7 +91,11 @@ public class MainActivity extends AppCompatActivity {
 //        IMLauncher.addFriend(Constants.SERVER_IP);
         Roster roster = IMLauncher.getRoster();
         Set<RosterEntry> entries = roster.getEntries();
-        mRosterAdapter.addAll(entries);
+        for (RosterEntry entry : entries) {
+            Friend friend = new Friend(entry);
+            mRosterAdapter.add(friend);
+        }
+//        mRosterAdapter.addAll(entries);
     }
 
     public static void startItself(Context context, String data) {
