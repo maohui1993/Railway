@@ -2,40 +2,23 @@ package cn.dazhou.railway.im.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
-import android.view.View;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.roster.Roster;
-import org.jivesoftware.smack.roster.RosterEntry;
-import org.jxmpp.jid.EntityBareJid;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.core.function.INewMessageListener;
 import cn.dazhou.im.modle.ChatMsgEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.Tool;
 import cn.dazhou.im.widget.ChatContentView;
 import cn.dazhou.railway.R;
-import cn.dazhou.railway.im.adapter.ChatPagerAdapter;
 import cn.dazhou.railway.im.presenter.ChatPresenter;
-import cn.dazhou.railway.im.service.IMChatService;
 
 /**
  * 启动时需要知道是与谁聊天，故启动的时候要带一个data值传入。

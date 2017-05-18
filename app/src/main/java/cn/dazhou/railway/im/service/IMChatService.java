@@ -95,8 +95,9 @@ public class IMChatService extends Service {
                     .fromJid(message.getFrom().toString())
                     .toJid(message.getTo().toString())
                     .build();
-            ModelAdapter<ChatMessageModel> adapter = FlowManager.getModelAdapter(ChatMessageModel.class);
-            adapter.insert(chatMessageModel);
+            chatMessageModel.save();
+//            ModelAdapter<ChatMessageModel> adapter = FlowManager.getModelAdapter(ChatMessageModel.class);
+//            adapter.insert(chatMessageModel);
         }
     };
 

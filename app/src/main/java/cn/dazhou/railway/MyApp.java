@@ -9,6 +9,7 @@ import com.raizlabs.android.dbflow.config.FlowManager;
  */
 
 public class MyApp extends Application {
+    public static String gCurrentUser;   //当前账户
     @Override
     public void onCreate() {
         super.onCreate();

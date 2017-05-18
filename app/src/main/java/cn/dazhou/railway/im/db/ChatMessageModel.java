@@ -1,11 +1,13 @@
 package cn.dazhou.railway.im.db;
 
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import cn.dazhou.im.modle.ChatMsgEntity;
+import java.util.Date;
 
 /**
  * Created by hooyee on 2017/5/17.
@@ -30,6 +32,11 @@ public class ChatMessageModel extends BaseModel{
 
     @Column
     String toJid; // 发送给谁的聊天信息
+
+    @Column
+    @ForeignKey(tableClass = FriendModel.class,
+    references = {@ForeignKeyReference(columnName = "jid", foreignKeyColumnName = "jid")})
+    String jid;
 
     public ChatMessageModel() {
 

@@ -6,19 +6,15 @@ import android.view.ViewGroup;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 
-import org.jivesoftware.smack.roster.RosterEntry;
-import org.jxmpp.jid.EntityBareJid;
-
-import cn.dazhou.im.IMLauncher;
 import cn.dazhou.railway.im.activity.ChatActivity;
 import cn.dazhou.railway.im.adapter.holder.RosterViewHolder;
-import cn.dazhou.railway.im.model.Friend;
+import cn.dazhou.railway.im.db.FriendModel;
 
 /**
  * Created by hooyee on 2017/5/8.
  */
 
-public class RosterAdapter extends RecyclerArrayAdapter<Friend> {
+public class RosterAdapter extends RecyclerArrayAdapter<FriendModel> {
 
     public RosterAdapter(Context context) {
         super(context);
@@ -34,8 +30,8 @@ public class RosterAdapter extends RecyclerArrayAdapter<Friend> {
     private OnItemClickListener onItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            EntityBareJid jid = (EntityBareJid) getItem(position).getRosterEntry().getJid();
-            ChatActivity.startItself(getContext(), jid.toString());
+            String jid = getItem(position).getJid();
+            ChatActivity.startItself(getContext(), jid);
         }
     };
 }
