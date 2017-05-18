@@ -28,7 +28,7 @@ import cn.dazhou.im.modle.ChatMsgEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.Tool;
 import cn.dazhou.railway.im.activity.ChatActivity;
-import cn.dazhou.railway.im.db.ChatMessage;
+import cn.dazhou.railway.im.db.ChatMessageModel;
 
 /**
  * 聊天服务.
@@ -90,13 +90,13 @@ public class IMChatService extends Service {
                 sendNotification(msgEntity, message.getTo().toString());
             }
 
-            ChatMessage chatMessage = new ChatMessage.Builder()
+            ChatMessageModel chatMessageModel = new ChatMessageModel.Builder()
                     .content(msgEntity.getMessage())
                     .fromJid(message.getFrom().toString())
                     .toJid(message.getTo().toString())
                     .build();
-            ModelAdapter<ChatMessage> adapter = FlowManager.getModelAdapter(ChatMessage.class);
-            adapter.insert(chatMessage);
+            ModelAdapter<ChatMessageModel> adapter = FlowManager.getModelAdapter(ChatMessageModel.class);
+            adapter.insert(chatMessageModel);
         }
     };
 

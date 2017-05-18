@@ -3,13 +3,16 @@ package cn.dazhou.railway.im.db;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
+import cn.dazhou.im.modle.ChatMsgEntity;
 
 /**
  * Created by hooyee on 2017/5/17.
  */
 
 @Table(database = RailwayDatabase.class)
-public class ChatMessage {
+public class ChatMessageModel extends BaseModel{
     @PrimaryKey(autoincrement = true)
     long id;
 
@@ -28,7 +31,11 @@ public class ChatMessage {
     @Column
     String toJid; // 发送给谁的聊天信息
 
-    private ChatMessage(long id, String imagePath, String voicePath, String content, String fromJid, String toJid) {
+    public ChatMessageModel() {
+
+    }
+
+    private ChatMessageModel(long id, String imagePath, String voicePath, String content, String fromJid, String toJid) {
         this.id = id;
         this.imagePath = imagePath;
         this.voicePath = voicePath;
@@ -45,8 +52,8 @@ public class ChatMessage {
         private String fromJid;
         private String toJid;
 
-        public ChatMessage build() {
-            return new ChatMessage(id, imagePath, voicePath, content, fromJid, toJid);
+        public ChatMessageModel build() {
+            return new ChatMessageModel(id, imagePath, voicePath, content, fromJid, toJid);
         }
 
         public Builder id(long id) {

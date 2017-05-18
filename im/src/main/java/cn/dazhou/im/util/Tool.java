@@ -26,7 +26,6 @@ import java.io.IOException;
  */
 
 public class Tool {
-    public static String gPicPath;
     private static Gson gson;
 
     public static Object parseJSON(String jsonString, Class classType) {
@@ -40,34 +39,6 @@ public class Tool {
             Log.e("TAG", "load json is fail");
         }
         return obj;
-    }
-
-    public static byte[] getSoundRecord(String path) {
-        File file = new File(path);
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        FileInputStream in = null;
-        byte[] bytes = new byte[1024];
-        try {
-            in = new FileInputStream(file);
-            int length = 0;
-            while ((length = in.read(bytes)) != -1) {
-                out.write(bytes, 0, length);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                out.close();
-                if (in != null) {
-                    in.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return out.toByteArray();
     }
 
     public static String toJSON(Object obj) {
