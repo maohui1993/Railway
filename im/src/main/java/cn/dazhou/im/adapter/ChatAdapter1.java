@@ -9,7 +9,7 @@ import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 
 import cn.dazhou.im.adapter.holder.ChatAcceptViewHolder;
 import cn.dazhou.im.adapter.holder.ChatSendViewHolder;
-import cn.dazhou.im.modle.ChatMsgEntity;
+import cn.dazhou.im.modle.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.widget.SoundView;
 
@@ -17,7 +17,7 @@ import cn.dazhou.im.widget.SoundView;
  * Created by hooyee on 2017/5/10.
  */
 
-public class ChatAdapter1 extends RecyclerArrayAdapter<ChatMsgEntity> {
+public class ChatAdapter1 extends RecyclerArrayAdapter<ChatMessageEntity> {
 
     private OnItemClickListener onItemClickListener;
 

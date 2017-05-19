@@ -31,6 +31,7 @@ import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.adapter.ChatPagerAdapter;
 import cn.dazhou.railway.im.adapter.RosterAdapter;
 import cn.dazhou.railway.im.db.FriendModel;
+import cn.dazhou.railway.im.db.FriendModel_Table;
 import cn.dazhou.railway.im.presenter.ChatPresenter;
 import cn.dazhou.railway.im.presenter.MainPresenter;
 
@@ -45,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
     String[] mTitles;
 
     private EasyRecyclerView mRosterView;
-    private ChatPresenter mPresenter;
     private List<View> mViewList = new ArrayList<View>();
     private MainPresenter mPrensenter;
     private RosterAdapter mRosterAdapter;
@@ -84,14 +84,22 @@ public class MainActivity extends AppCompatActivity {
         mRosterView.setAdapter(mRosterAdapter);
 
 //        IMLauncher.addFriend(Constants.SERVER_IP);
-        Roster roster = IMLauncher.getRoster();
-        Set<RosterEntry> entries = roster.getEntries();
-        for (RosterEntry entry : entries) {
-            FriendModel friend = new FriendModel();
-            friend.setJid(entry.getJid().toString());
-            friend.setName(entry.getName());
-            friend.setPossessor(MyApp.gCurrentUser);
-            mRosterAdapter.add(friend);
+        if (MyApp.gCurrentUser.isFirstLogin()) {
+            Roster roster = IMLauncher.getRoster();
+            Set<RosterEntry> entries = roster.getEntries();
+            for (RosterEntry entry : entries) {
+                FriendModel friend = new FriendModel();
+                friend.setJid(entry.getJid().toString());
+                friend.setName(entry.getName());
+                friend.setPossessor(MyApp.gCurrentUser.getUsername());
+                mRosterAdapter.add(friend);
+                MyApp.gCurrentUser.getMyFriends().add(friend);
+            }
+            MyApp.gCurrentUser.setFirstLogin(false);
+            MyApp.gCurrentUser.save();
+        } else {
+            List<FriendModel> friendModels = MyApp.gCurrentUser.getMyFriends();
+            mRosterAdapter.addAll(friendModels);
         }
 //        mRosterAdapter.addAll(entries);
     }

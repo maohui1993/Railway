@@ -7,17 +7,26 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+
 import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smack.packet.Message;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.dazhou.im.core.function.INewMessageListener;
-import cn.dazhou.im.modle.ChatMsgEntity;
+import cn.dazhou.im.modle.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.Tool;
 import cn.dazhou.im.widget.ChatContentView;
+import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
+import cn.dazhou.railway.im.db.ChatMessageModel;
+import cn.dazhou.railway.im.db.ChatMessageModel_Table;
+import cn.dazhou.railway.im.db.FriendModel;
+import cn.dazhou.railway.im.db.FriendModel_Table;
 import cn.dazhou.railway.im.presenter.ChatPresenter;
 
 /**
@@ -43,6 +52,17 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
         mJid = getIntent().getStringExtra(DATA_KEY);
         mPresenter = new ChatPresenter(this, mJid);
 
+        FriendModel friend = SQLite.select()
+                .from(FriendModel.class)
+                .leftOuterJoin(ChatMessageModel.class)
+                .on(FriendModel_Table.jid.withTable().eq(ChatMessageModel_Table.jid.withTable()))
+                .where(FriendModel_Table.possessor.eq(MyApp.gCurrentUser.getUsername()))
+                .querySingle();
+        if(friend != null) {
+            List<ChatMessageModel> chatMessageModels = friend.getMyChatMessages();
+            mChatContentView.initChatDatas(ChatMessageModel.toChatMessageEntity(chatMessageModels));
+        }
+
         // 点击发送按钮时
         mChatContentView.setOnSendListener(mPresenter);
         EventBus.getDefault().post(mJid);
@@ -54,7 +74,7 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
         context.startActivity(intent);
     }
 
-    public void addMessage(ChatMsgEntity msg) {
+    public void addMessage(ChatMessageEntity msg) {
         mChatContentView.addMessage(msg);
     }
 
@@ -69,7 +89,7 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ChatMsgEntity msgEntity = (ChatMsgEntity) Tool.parseJSON(msg.getBody(), ChatMsgEntity.class);
+                ChatMessageEntity msgEntity = (ChatMessageEntity) Tool.parseJSON(msg.getBody(), ChatMessageEntity.class);
                 msgEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
                 mChatContentView.addMessage(msgEntity);
             }

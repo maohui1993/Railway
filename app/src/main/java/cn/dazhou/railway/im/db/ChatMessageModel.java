@@ -7,7 +7,10 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.dazhou.im.modle.ChatMessageEntity;
 
 /**
  * Created by hooyee on 2017/5/17.
@@ -16,7 +19,7 @@ import java.util.Date;
 @Table(database = RailwayDatabase.class)
 public class ChatMessageModel extends BaseModel{
     @PrimaryKey(autoincrement = true)
-    long id;
+    int id;
 
     @Column
     String imagePath;  // 图片消息，记录图片的位置
@@ -31,39 +34,150 @@ public class ChatMessageModel extends BaseModel{
     String fromJid;  // 来自谁的聊天信息
 
     @Column
-    String toJid; // 发送给谁的聊天信息
+    String toJid;   // 发送给谁的聊天信息
+
+    @Column
+    boolean state;  // 是否已读
+
+    @Column
+    int type;       // 是发送还是接收消息
+    @Column
+    String date;    //消息日期
 
     @Column
     @ForeignKey(tableClass = FriendModel.class,
     references = {@ForeignKeyReference(columnName = "jid", foreignKeyColumnName = "jid")})
-    String jid;
+    String jid;    // 当前用户为发送方，则记录接收方jid，为接收方则记录发送方jid
 
     public ChatMessageModel() {
 
     }
 
-    private ChatMessageModel(long id, String imagePath, String voicePath, String content, String fromJid, String toJid) {
+    public boolean isState() {
+        return state;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
+    }
+
+    public static List<ChatMessageEntity> toChatMessageEntity(List<ChatMessageModel> models) {
+        if (models == null) {
+            return null;
+        }
+        List<ChatMessageEntity> messages = new ArrayList<ChatMessageEntity>();
+        for(ChatMessageModel model : models) {
+            ChatMessageEntity message = new ChatMessageEntity();
+            message.setImagePath(model.imagePath);
+            message.setVoicePath(model.voicePath);
+            message.setContent(model.content);
+            message.setState(model.state);
+            message.setDate(model.date);
+            message.setJid(model.jid);
+            message.setToJid(model.toJid);
+            message.setFromJid(model.fromJid);
+//            message.setVoiceTime(model.time);
+            messages.add(message);
+        }
+        return messages;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public String getVoicePath() {
+        return voicePath;
+    }
+
+    public void setVoicePath(String voicePath) {
+        this.voicePath = voicePath;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getFromJid() {
+        return fromJid;
+    }
+
+    public void setFromJid(String fromJid) {
+        this.fromJid = fromJid;
+    }
+
+    public String getToJid() {
+        return toJid;
+    }
+
+    public void setToJid(String toJid) {
+        this.toJid = toJid;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getJid() {
+        return jid;
+    }
+
+    public void setJid(String jid) {
+        this.jid = jid;
+    }
+
+    private ChatMessageModel(int id, String imagePath, String voicePath, String content, String fromJid, String toJid, String jid) {
         this.id = id;
         this.imagePath = imagePath;
         this.voicePath = voicePath;
         this.content = content;
         this.fromJid = fromJid;
         this.toJid = toJid;
+        this.jid = jid;
     }
 
     public static class Builder {
-        private long id;
+        private int id;
         private String imagePath;
         private String voicePath;
         private String content;
         private String fromJid;
         private String toJid;
+        private String jid;
 
         public ChatMessageModel build() {
-            return new ChatMessageModel(id, imagePath, voicePath, content, fromJid, toJid);
+            return new ChatMessageModel(id, imagePath, voicePath, content, fromJid, toJid, jid);
         }
 
-        public Builder id(long id) {
+        public Builder id(int id) {
             this.id = id;
             return this;
         }
@@ -90,6 +204,11 @@ public class ChatMessageModel extends BaseModel{
 
         public Builder toJid(String toJid) {
             this.toJid = toJid;
+            return this;
+        }
+
+        public Builder jid(String jid) {
+            this.jid = jid;
             return this;
         }
     }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +26,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,9 +35,10 @@ import cn.dazhou.im.R2;
 import cn.dazhou.im.adapter.ChatAdapter1;
 import cn.dazhou.im.adapter.CommonFragmentPagerAdapter;
 import cn.dazhou.im.fragment.ChatFunctionFragment;
-import cn.dazhou.im.modle.ChatMsgEntity;
+import cn.dazhou.im.modle.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.MediaManager;
+import cn.dazhou.im.util.Tool;
 import cn.dazhou.im.util.Utils;
 
 /**
@@ -124,13 +127,16 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         chatList.setAdapter(mAdapter);
     }
 
+    public void initChatDatas(List<ChatMessageEntity> chatDatas) {
+        mAdapter.addAll(chatDatas);
+    }
 
-    public void addMessage(ChatMsgEntity msg) {
+    public void addMessage(ChatMessageEntity msg) {
         mAdapter.add(msg);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void MessageEventBus(final ChatMsgEntity messageInfo) {
+    public void MessageEventBus(final ChatMessageEntity messageInfo) {
         switch (messageInfo.getType()) {
             case Constants.CHAT_ITEM_TYPE_RIGHT:
                 messageInfo.setSendState(Constants.CHAT_ITEM_SENDING);
@@ -147,6 +153,16 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
                 }, 2000);
                 break;
             case Constants.CHAT_ITEM_TYPE_LEFT:
+                if (messageInfo.getVoiceBtyes() != null) {
+                    // 需要异步加载声音文件
+                    String voicePath = Tool.saveByteToLocalFile(messageInfo.getVoiceBtyes(), +System.currentTimeMillis()+".aar");
+                    messageInfo.setVoicePath(voicePath);
+                    messageInfo.setVoiceBtyes(null);
+                } else if(messageInfo.getImageBytes() != null) {
+                    String imagePath = Tool.saveByteToLocalFile(messageInfo.getImageBytes(), System.currentTimeMillis()+".png");
+                    messageInfo.setImagePath(imagePath);
+                    messageInfo.setImageBytes(null);
+                }
                 mAdapter.add(messageInfo);
                 break;
         }
@@ -190,7 +206,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         animView.setImageResource(animationRes);
         animationDrawable = (AnimationDrawable) animView.getDrawable();
         animationDrawable.start();
-        MediaManager.playSound(soundView.getSoundFile().getPath(), new MediaPlayer.OnCompletionListener() {
+        MediaManager.playSound(soundView.getVoicePath(), new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 animView.setImageResource(res);
@@ -200,7 +216,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
 
     // 图片发送
     public interface OnSendListener {
-        void onSend(ChatMsgEntity msg);
+        void onSend(ChatMessageEntity msg);
     }
 
 }

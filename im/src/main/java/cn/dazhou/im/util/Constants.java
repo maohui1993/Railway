@@ -1,5 +1,7 @@
 package cn.dazhou.im.util;
 
+import android.os.Environment;
+
 /**
  * Created by hooyee on 2017/5/10.
  */
@@ -14,4 +16,6 @@ public class Constants {
     public static final int CHAT_ITEM_SEND_ERROR = 0x004;
     public static final int CHAT_ITEM_SEND_SUCCESS = 0x005;
     public static final int RESULT_LOAD_IMAGE = 200;
+
+    public static final String MEDIA_PATH = Environment.getExternalStorageDirectory() + "/railway/mediafile/";
 }

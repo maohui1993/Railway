@@ -19,12 +19,9 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.structure.ModelAdapter;
-
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.R;
-import cn.dazhou.im.modle.ChatMsgEntity;
+import cn.dazhou.im.modle.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.Tool;
 import cn.dazhou.railway.im.activity.ChatActivity;
@@ -76,37 +73,41 @@ public class IMChatService extends Service {
         chatManager.addIncomingListener(incomingChatMessageListener);
     }
 
+    // 收到新消息统一在这里处理
     IncomingChatMessageListener incomingChatMessageListener = new IncomingChatMessageListener() {
         @Override
         public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
-            ChatMsgEntity msgEntity = (ChatMsgEntity) Tool.parseJSON(message.getBody(), ChatMsgEntity.class);
+            ChatMessageEntity msgEntity = (ChatMessageEntity) Tool.parseJSON(message.getBody(), ChatMessageEntity.class);
             // 标志为接收到的消息
             msgEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
             String fromUser = from.getLocalpart().toString().split("@")[0];
+            ChatMessageModel chatMessageModel = new ChatMessageModel.Builder()
+                    .content(msgEntity.getContent())
+                    .fromJid(message.getFrom().toString())
+                    .toJid(message.getTo().toString())
+                    .jid(message.getFrom().toString())
+                    .build();
             if (checkJid(fromUser)) {
+                chatMessageModel.setState(true);
                 EventBus.getDefault().post(msgEntity);
                 Log.d(Constants.TAG, "New message from " + from + ": " + "to " + message.getFrom() + "body:" + message.getBody());
             } else {
+                chatMessageModel.setState(false);
                 sendNotification(msgEntity, message.getTo().toString());
             }
-
-            ChatMessageModel chatMessageModel = new ChatMessageModel.Builder()
-                    .content(msgEntity.getMessage())
-                    .fromJid(message.getFrom().toString())
-                    .toJid(message.getTo().toString())
-                    .build();
             chatMessageModel.save();
+
 //            ModelAdapter<ChatMessageModel> adapter = FlowManager.getModelAdapter(ChatMessageModel.class);
 //            adapter.insert(chatMessageModel);
         }
     };
 
-    private void sendNotification(ChatMsgEntity msg, String jid) {
+    private void sendNotification(ChatMessageEntity msg, String jid) {
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                 context).setSmallIcon(R.drawable.emotion_aini)
                 .setContentTitle("薪消息")
-                .setContentText(msg.getMessage())
+                .setContentText(msg.getContent())
                 .setOngoing(true);
         mBuilder.setTicker("一个新来的消息");//第一次提示消息的时候显示在通知栏上
         mBuilder.setAutoCancel(true);//自己维护通知的消失

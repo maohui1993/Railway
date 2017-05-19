@@ -3,7 +3,7 @@ package cn.dazhou.im.core.function;
 import org.jivesoftware.smack.roster.Roster;
 import org.jxmpp.jid.EntityBareJid;
 
-import cn.dazhou.im.modle.ChatMsgEntity;
+import cn.dazhou.im.modle.ChatMessageEntity;
 
 /**
  * Created by Hooyee on 2017/5/7.
@@ -11,11 +11,11 @@ import cn.dazhou.im.modle.ChatMsgEntity;
  */
 
 public interface IChat {
-    void chatWith(String jid, ChatMsgEntity msg) throws Exception;
+    void chatWith(String jid, ChatMessageEntity msg) throws Exception;
 
     void chatWith(EntityBareJid jid);
 
-    void chat(ChatMsgEntity msg) throws Exception;
+    void chat(ChatMessageEntity msg) throws Exception;
 
     Roster getRoster();
 

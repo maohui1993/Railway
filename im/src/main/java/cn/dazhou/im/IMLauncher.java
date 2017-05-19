@@ -8,8 +8,7 @@ import org.jxmpp.jid.EntityBareJid;
 
 import cn.dazhou.im.core.ConnectManager;
 import cn.dazhou.im.core.IMApi;
-import cn.dazhou.im.core.function.INewMessageListener;
-import cn.dazhou.im.modle.ChatMsgEntity;
+import cn.dazhou.im.modle.ChatMessageEntity;
 
 /**
  * Created by hooyee on 2017/5/5.
@@ -58,7 +57,7 @@ public final class IMLauncher {
         return result;
     }
 
-    public static boolean chatWith(String id, ChatMsgEntity msg) {
+    public static boolean chatWith(String id, ChatMessageEntity msg) {
         boolean result;
         try {
             mImApi.chatWith(id, msg);

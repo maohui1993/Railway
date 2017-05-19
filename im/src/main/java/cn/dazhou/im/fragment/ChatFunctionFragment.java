@@ -1,6 +1,5 @@
 package cn.dazhou.im.fragment;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,8 +10,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
-import cn.dazhou.im.modle.ChatMsgEntity;
+import cn.dazhou.im.modle.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.Tool;
 
@@ -111,10 +108,10 @@ public class ChatFunctionFragment extends BaseFragment {
             case CROP_PHOTO:
                 if (res == Activity.RESULT_OK) {
                     try {
-                        ChatMsgEntity messageInfo = new ChatMsgEntity();
+                        ChatMessageEntity messageInfo = new ChatMessageEntity();
                         Bitmap bmp = Tool.createBitmapByPath(imageUri.getPath(), 300, 400);
                         byte[] bytes = Tool.compressImage(bmp, 200, 100);
-                        messageInfo.setMesImage(bytes);
+                        messageInfo.setImageBytes(bytes);
                         EventBus.getDefault().post(messageInfo);
                     } catch (Exception e) {
                     }
@@ -132,10 +129,11 @@ public class ChatFunctionFragment extends BaseFragment {
                         String picturePath = cursor.getString(columnIndex);
                         cursor.close();
 
-                        ChatMsgEntity messageInfo = new ChatMsgEntity();
+                        ChatMessageEntity messageInfo = new ChatMessageEntity();
                         Bitmap bmp = Tool.createBitmapByPath(picturePath, 300, 400);
                         byte[] bytes = Tool.compressImage(bmp, 200, 100);
-                        messageInfo.setMesImage(bytes);
+                        messageInfo.setImageBytes(bytes);
+                        messageInfo.setImagePath(picturePath);
                         // 标记为自己发送的消息，显示在右边
                         messageInfo.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
                         EventBus.getDefault().post(messageInfo);

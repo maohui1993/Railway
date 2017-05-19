@@ -11,9 +11,6 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.List;
 
-import cn.dazhou.railway.im.db.ChatMessageModel;
-import cn.dazhou.railway.im.db.RailwayDatabase;
-
 /**
  * Created by hooyee on 2017/5/17.
  */
@@ -22,16 +19,15 @@ import cn.dazhou.railway.im.db.RailwayDatabase;
 public class FriendModel extends BaseModel{
     @PrimaryKey
     @Column
-    private long id;
-    @Column
-    private String possessor;   // 好友的持有者（持有人账号）
-    @PrimaryKey
-    @Column
     private String jid;         // 好友账号
     @Column
     private String name;        // 好友名称
     @Column
     private String chatMessageJid;
+    @Column
+    @ForeignKey(tableClass = UserModel.class,
+            references = {@ForeignKeyReference(columnName = "possessor", foreignKeyColumnName = "username")})
+    private String possessor;   // 好友的持有者（持有人账号）
 
     List<ChatMessageModel> chatMessages;
 
@@ -44,14 +40,6 @@ public class FriendModel extends BaseModel{
                     .queryList();
         }
         return chatMessages;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getPossessor() {

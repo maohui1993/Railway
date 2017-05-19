@@ -14,10 +14,8 @@ import java.io.IOException;
  */
 
 public class SoundView extends android.support.v7.widget.AppCompatImageView {
-    private static String DIR_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
 
-    private byte[] mSoundByte;
-    private File mSoundFile;
+    private String voicePath;
     private int mType;   // 与ChatMsgEntry中 的type一样
 
 
@@ -33,46 +31,12 @@ public class SoundView extends android.support.v7.widget.AppCompatImageView {
         super(context, attrs, defStyleAttr);
     }
 
-    public byte[] getSoundByte() {
-        return mSoundByte;
+    public String getVoicePath() {
+        return voicePath;
     }
 
-    public void setSoundByte(byte[] mSoundByte) {
-        this.mSoundByte = mSoundByte;
-        initSoundDataSource();
-    }
-
-    public void setSoundFile(File mSoundFile) {
-        this.mSoundFile = mSoundFile;
-    }
-
-    public File getSoundFile() {
-        return mSoundFile;
-    }
-
-    private void initSoundDataSource() {
-        mSoundFile  = new File(DIR_PATH + System.currentTimeMillis() + ".amr");
-        FileOutputStream out = null;
-        try {
-            out = new FileOutputStream(mSoundFile);
-            out.write(mSoundByte);
-            out.flush();
-            if (!mSoundFile.exists()) {
-                mSoundFile.createNewFile();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+    public void setVoicePath(String voicePath) {
+        this.voicePath = voicePath;
     }
 
     public void setType(int type) {

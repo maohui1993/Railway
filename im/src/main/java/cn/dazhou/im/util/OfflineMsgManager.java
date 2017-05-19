@@ -17,7 +17,7 @@ import org.jivesoftware.smackx.offline.OfflineMessageManager;
 
 import java.util.List;
 
-import cn.dazhou.im.modle.ChatMsgEntity;
+import cn.dazhou.im.modle.ChatMessageEntity;
 
 /**
  * 离线信息管理类.
@@ -57,7 +57,7 @@ public class OfflineMsgManager {
 
                     String from = message.getFrom().toString().split("/")[0];
                     message.setSubject(from);
-                    ChatMsgEntity msgEntity = (ChatMsgEntity) Tool.parseJSON(message.getBody(), ChatMsgEntity.class);
+                    ChatMessageEntity msgEntity = (ChatMessageEntity) Tool.parseJSON(message.getBody(), ChatMessageEntity.class);
                     // 标志为接收到的消息
                     msgEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
                     EventBus.getDefault().post(msgEntity);

@@ -2,9 +2,13 @@ package cn.dazhou.railway.im.presenter;
 
 import android.content.Context;
 
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.config.Constants;
+import cn.dazhou.railway.im.db.UserModel;
+import cn.dazhou.railway.im.db.UserModel_Table;
 import cn.dazhou.railway.im.listener.IOnLoginListener;
 import cn.dazhou.railway.im.service.IMChatService;
 import io.reactivex.Observable;
@@ -66,7 +70,19 @@ public class LoginPresenter {
                     logined = IMLauncher.login(username, password);
                     if (logined) {
                         mLoginListener.onSuccess();
-                        MyApp.gCurrentUser = username;
+                        UserModel userModel = SQLite.select()
+                                .from(UserModel.class)
+                                .where(UserModel_Table.username.eq(username))
+                                .querySingle();
+
+                        if (userModel == null) {
+                            userModel = new UserModel();
+                            userModel.setUsername(username);
+                            userModel.setPassword(password);
+                            userModel.setFirstLogin(true);
+                            userModel.save();
+                        }
+                        MyApp.gCurrentUser = userModel;
                     } else {
                         mLoginListener.onFail("账号或密码错误");
                     }

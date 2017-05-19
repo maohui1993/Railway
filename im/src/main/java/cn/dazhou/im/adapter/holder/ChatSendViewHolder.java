@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
 import cn.dazhou.im.adapter.ChatAdapter1;
-import cn.dazhou.im.modle.ChatMsgEntity;
+import cn.dazhou.im.modle.ChatMessageEntity;
 import cn.dazhou.im.util.Utils;
 import cn.dazhou.im.widget.BubbleImageView;
 import cn.dazhou.im.widget.BubbleLinearLayout;
@@ -28,7 +28,7 @@ import cn.dazhou.im.widget.SoundView;
  * Created by hooyee on 2017/5/10.
  */
 
-public class ChatSendViewHolder extends BaseViewHolder<ChatMsgEntity> {
+public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
     @BindView(R2.id.chat_item_date)
     TextView chatItemDate;
     @BindView(R2.id.chat_item_header)
@@ -59,11 +59,11 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMsgEntity> {
     }
 
     @Override
-    public void setData(ChatMsgEntity data) {
+    public void setData(ChatMessageEntity data) {
         chatItemDate.setText(data.getDate() != null ? data.getDate() : "");
         Glide.with(getContext()).load(R.drawable.header_02).asBitmap().into(chatItemHeader);
-        if (data.getMessage() != null) {
-            chatItemContentText.setSpanText(null, data.getMessage(), true);
+        if (data.getContent() != null) {
+            chatItemContentText.setSpanText(null, data.getContent(), true);
             chatItemVoice.setVisibility(View.GONE);
             chatItemContentText.setVisibility(View.VISIBLE);
             chatItemLayoutContent.setVisibility(View.VISIBLE);
@@ -80,7 +80,7 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMsgEntity> {
                 layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
             }
             chatItemLayoutContent.setLayoutParams(layoutParams);
-        } else if (data.getFilepath() != null) {
+        } else if (data.getVoicePath() != null) {
             chatItemVoice.setVisibility(View.VISIBLE);
             chatItemLayoutContent.setVisibility(View.VISIBLE);
             chatItemContentText.setVisibility(View.GONE);
@@ -96,13 +96,13 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMsgEntity> {
             layoutParams.width = Utils.dp2px(getContext(), 120);
             layoutParams.height = Utils.dp2px(getContext(), 48);
             chatItemLayoutContent.setLayoutParams(layoutParams);
-        } else if (data.getMesImage() != null) {
+        } else if (data.getImagePath() != null) {
             chatItemVoice.setVisibility(View.GONE);
             chatItemLayoutContent.setVisibility(View.GONE);
             chatItemVoiceTime.setVisibility(View.GONE);
             chatItemContentText.setVisibility(View.GONE);
             chatItemContentImage.setVisibility(View.VISIBLE);
-            Glide.with(getContext()).load(data.getMesImage()).into(chatItemContentImage);
+            Glide.with(getContext()).load(data.getImagePath()).into(chatItemContentImage);
 //            chatItemContentImage.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {

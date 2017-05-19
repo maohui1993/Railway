@@ -21,7 +21,7 @@ public class AudioRecoderUtils {
     private String FolderPath;
 
     private MediaRecorder mMediaRecorder;
-    private final String TAG = "fan";
+    private final String TAG = "railway-voice";
     public static final int MAX_LENGTH = 1000 * 60 * 10;// 最大录音时长1000*60*10;
 
     private OnAudioStatusUpdateListener audioStatusUpdateListener;
@@ -32,7 +32,7 @@ public class AudioRecoderUtils {
     public AudioRecoderUtils() {
 
         //默认保存路径为/sdcard/record/下
-        this(Environment.getExternalStorageDirectory() + "/railway/record/");
+        this(Constants.MEDIA_PATH);
     }
 
     public AudioRecoderUtils(String filePath) {

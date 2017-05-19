@@ -3,8 +3,7 @@ package cn.dazhou.railway.im.presenter;
 import android.content.Context;
 
 import cn.dazhou.im.IMLauncher;
-import cn.dazhou.im.modle.ChatMsgEntity;
-import cn.dazhou.im.util.Constants;
+import cn.dazhou.im.modle.ChatMessageEntity;
 import cn.dazhou.im.widget.ChatContentView;
 
 /**
@@ -21,7 +20,7 @@ public class ChatPresenter implements ChatContentView.OnSendListener {
     }
 
     @Override
-    public void onSend(ChatMsgEntity msg) {
+    public void onSend(ChatMessageEntity msg) {
         IMLauncher.chatWith(mJid, msg);
     }
 }

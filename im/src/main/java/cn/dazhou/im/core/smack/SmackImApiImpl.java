@@ -3,7 +3,6 @@ package cn.dazhou.im.core.smack;
 import android.content.Context;
 import android.util.Log;
 
-import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;
@@ -11,11 +10,9 @@ import org.jivesoftware.smack.StanzaListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
-import org.jivesoftware.smack.chat2.IncomingChatMessageListener;
 import org.jivesoftware.smack.filter.AndFilter;
 import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.filter.StanzaFilter;
-import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.roster.Roster;
@@ -30,7 +27,7 @@ import java.net.InetAddress;
 
 import cn.dazhou.im.core.IMApi;
 import cn.dazhou.im.core.function.IConnection;
-import cn.dazhou.im.modle.ChatMsgEntity;
+import cn.dazhou.im.modle.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.OfflineMsgManager;
 import cn.dazhou.im.util.Tool;
@@ -122,7 +119,7 @@ public class SmackImApiImpl implements IMApi {
     }
 
     @Override
-    public void chatWith(String jid, ChatMsgEntity msg) throws XmppStringprepException, SmackException.NotConnectedException, InterruptedException {
+    public void chatWith(String jid, ChatMessageEntity msg) throws XmppStringprepException, SmackException.NotConnectedException, InterruptedException {
         EntityBareJid id = JidCreate.entityBareFrom(jid);
         mChat = mChatManager.chatWith(id);
         String msgJson = Tool.toJSON(msg);
@@ -135,7 +132,7 @@ public class SmackImApiImpl implements IMApi {
     }
 
     @Override
-    public void chat(ChatMsgEntity msg) throws Exception {
+    public void chat(ChatMessageEntity msg) throws Exception {
         if (mChat == null) {
             return;
         }

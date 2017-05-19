@@ -24,7 +24,7 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.EventBus;
 
 import cn.dazhou.im.R;
-import cn.dazhou.im.modle.ChatMsgEntity;
+import cn.dazhou.im.modle.ChatMessageEntity;
 import cn.dazhou.im.util.AudioRecoderUtils;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.MediaManager;
@@ -191,8 +191,8 @@ public class EmotionInputDetector {
             public void onClick(View v) {
                 mAddButton.setVisibility(View.VISIBLE);
                 mSendButton.setVisibility(View.GONE);
-                ChatMsgEntity messageInfo = new ChatMsgEntity();
-                messageInfo.setMessage(mEditText.getText().toString());
+                ChatMessageEntity messageInfo = new ChatMessageEntity();
+                messageInfo.setContent(mEditText.getText().toString());
                 messageInfo.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
                 EventBus.getDefault().post(messageInfo);
                 mEditText.setText("");
@@ -313,10 +313,10 @@ public class EmotionInputDetector {
             @Override
             public void onStop(long time, String filePath) {
                 mTextView.setText(Utils.long2String(0));
-                ChatMsgEntity messageInfo = new ChatMsgEntity();
-                messageInfo.setFilepath(filePath);
+                ChatMessageEntity messageInfo = new ChatMessageEntity();
+                messageInfo.setVoicePath(filePath);
                 messageInfo.setVoiceTime(time);
-                messageInfo.setMsgSoundRecord(MediaManager.getSoundRecord(filePath));
+                messageInfo.setVoiceBtyes(MediaManager.getSoundRecord(filePath));
                 messageInfo.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
                 EventBus.getDefault().post(messageInfo);
             }
