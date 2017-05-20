@@ -85,7 +85,7 @@ public class IMChatService extends Service {
                     .content(msgEntity.getContent())
                     .fromJid(message.getFrom().toString())
                     .toJid(message.getTo().toString())
-                    .jid(message.getFrom().toString())
+                    .jid(fromUser.toString())
                     .build();
             if (checkJid(fromUser)) {
                 chatMessageModel.setState(true);

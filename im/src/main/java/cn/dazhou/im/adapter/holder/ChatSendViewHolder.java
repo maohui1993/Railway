@@ -18,6 +18,7 @@ import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
 import cn.dazhou.im.adapter.ChatAdapter1;
 import cn.dazhou.im.modle.ChatMessageEntity;
+import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.Utils;
 import cn.dazhou.im.widget.BubbleImageView;
 import cn.dazhou.im.widget.BubbleLinearLayout;
@@ -82,6 +83,8 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
             chatItemLayoutContent.setLayoutParams(layoutParams);
         } else if (data.getVoicePath() != null) {
             chatItemVoice.setVisibility(View.VISIBLE);
+            chatItemVoice.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
+            chatItemVoice.setVoicePath(data.getVoicePath());
             chatItemLayoutContent.setVisibility(View.VISIBLE);
             chatItemContentText.setVisibility(View.GONE);
             chatItemVoiceTime.setVisibility(View.VISIBLE);

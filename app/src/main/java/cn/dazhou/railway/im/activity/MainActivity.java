@@ -31,7 +31,6 @@ import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.adapter.ChatPagerAdapter;
 import cn.dazhou.railway.im.adapter.RosterAdapter;
 import cn.dazhou.railway.im.db.FriendModel;
-import cn.dazhou.railway.im.db.FriendModel_Table;
 import cn.dazhou.railway.im.presenter.ChatPresenter;
 import cn.dazhou.railway.im.presenter.MainPresenter;
 
@@ -89,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             Set<RosterEntry> entries = roster.getEntries();
             for (RosterEntry entry : entries) {
                 FriendModel friend = new FriendModel();
-                friend.setJid(entry.getJid().toString());
+                friend.setJid(entry.getJid().toString().split("@")[0]);    // jid形式为  username@hostname
                 friend.setName(entry.getName());
                 friend.setPossessor(MyApp.gCurrentUser.getUsername());
                 mRosterAdapter.add(friend);

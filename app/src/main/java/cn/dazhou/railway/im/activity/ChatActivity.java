@@ -52,12 +52,18 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
         mJid = getIntent().getStringExtra(DATA_KEY);
         mPresenter = new ChatPresenter(this, mJid);
 
+//        FriendModel friend = SQLite.select()
+//                .from(FriendModel.class)
+//                .leftOuterJoin(ChatMessageModel.class)
+//                .on(FriendModel_Table.jid.withTable().eq(ChatMessageModel_Table.jid.withTable()))
+//                .where(FriendModel_Table.possessor.eq(MyApp.gCurrentUser.getUsername()))
+//                .querySingle();
         FriendModel friend = SQLite.select()
                 .from(FriendModel.class)
-                .leftOuterJoin(ChatMessageModel.class)
-                .on(FriendModel_Table.jid.withTable().eq(ChatMessageModel_Table.jid.withTable()))
                 .where(FriendModel_Table.possessor.eq(MyApp.gCurrentUser.getUsername()))
+                .and(FriendModel_Table.jid.eq(mJid))
                 .querySingle();
+
         if(friend != null) {
             List<ChatMessageModel> chatMessageModels = friend.getMyChatMessages();
             mChatContentView.initChatDatas(ChatMessageModel.toChatMessageEntity(chatMessageModels));

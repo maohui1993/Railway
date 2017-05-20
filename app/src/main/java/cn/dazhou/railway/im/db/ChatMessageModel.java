@@ -76,6 +76,7 @@ public class ChatMessageModel extends BaseModel{
             message.setJid(model.jid);
             message.setToJid(model.toJid);
             message.setFromJid(model.fromJid);
+            message.setType(model.getType());
 //            message.setVoiceTime(model.time);
             messages.add(message);
         }

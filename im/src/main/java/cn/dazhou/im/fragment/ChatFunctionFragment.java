@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,6 +113,8 @@ public class ChatFunctionFragment extends BaseFragment {
                         Bitmap bmp = Tool.createBitmapByPath(imageUri.getPath(), 300, 400);
                         byte[] bytes = Tool.compressImage(bmp, 200, 100);
                         messageInfo.setImageBytes(bytes);
+                        messageInfo.setImagePath(imageUri.getPath());
+                        messageInfo.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
                         EventBus.getDefault().post(messageInfo);
                     } catch (Exception e) {
                     }
