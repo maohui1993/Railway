@@ -27,7 +27,7 @@ import java.net.InetAddress;
 
 import cn.dazhou.im.core.IMApi;
 import cn.dazhou.im.core.function.IConnection;
-import cn.dazhou.im.modle.ChatMessageEntity;
+import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.OfflineMsgManager;
 import cn.dazhou.im.util.Tool;

@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
-import cn.dazhou.im.modle.ChatMessageEntity;
+import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.Tool;
 

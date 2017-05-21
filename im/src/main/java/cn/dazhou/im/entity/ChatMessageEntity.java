@@ -1,4 +1,4 @@
-package cn.dazhou.im.modle;
+package cn.dazhou.im.entity;
 
 
 /**

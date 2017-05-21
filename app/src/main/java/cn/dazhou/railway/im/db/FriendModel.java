@@ -19,7 +19,9 @@ import java.util.List;
 public class FriendModel extends BaseModel{
     @PrimaryKey
     @Column
-    private String jid;         // 好友账号
+    private String jid;         // 好友账号@所属人账号<好友username@所属人username>
+    @Column
+    private String rawJid;      // 好友jid<username@hostname>
     @Column
     private String name;        // 好友名称
     @Column
@@ -72,5 +74,13 @@ public class FriendModel extends BaseModel{
 
     public void setChatMessageJid(String chatMessageJid) {
         this.chatMessageJid = chatMessageJid;
+    }
+
+    public String getRawJid() {
+        return rawJid;
+    }
+
+    public void setRawJid(String rawJid) {
+        this.rawJid = rawJid;
     }
 }

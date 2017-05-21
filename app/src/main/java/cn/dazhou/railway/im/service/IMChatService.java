@@ -21,7 +21,7 @@ import android.util.Log;
 
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.R;
-import cn.dazhou.im.modle.ChatMessageEntity;
+import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.Tool;
 import cn.dazhou.railway.im.activity.ChatActivity;
@@ -96,9 +96,6 @@ public class IMChatService extends Service {
                 sendNotification(msgEntity, message.getTo().toString());
             }
             chatMessageModel.save();
-
-//            ModelAdapter<ChatMessageModel> adapter = FlowManager.getModelAdapter(ChatMessageModel.class);
-//            adapter.insert(chatMessageModel);
         }
     };
 

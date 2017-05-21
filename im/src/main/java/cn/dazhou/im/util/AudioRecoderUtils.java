@@ -54,10 +54,10 @@ public class AudioRecoderUtils {
      * @return
      */
     public void startRecord(Context context) {
-        if (!CheckPermissionUtils.isHasPermission(context)) {
-            audioStatusUpdateListener.onError();
-            return;
-        }
+//        if (!CheckPermissionUtils.isHasPermission(context)) {
+//            audioStatusUpdateListener.onError();
+//            return;
+//        }
         // 开始录音
         /* ①Initial：实例化MediaRecorder对象 */
         if (mMediaRecorder == null)

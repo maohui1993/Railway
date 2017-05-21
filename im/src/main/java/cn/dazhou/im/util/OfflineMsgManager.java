@@ -17,7 +17,7 @@ import org.jivesoftware.smackx.offline.OfflineMessageManager;
 
 import java.util.List;
 
-import cn.dazhou.im.modle.ChatMessageEntity;
+import cn.dazhou.im.entity.ChatMessageEntity;
 
 /**
  * 离线信息管理类.

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,7 +34,7 @@ import cn.dazhou.im.R2;
 import cn.dazhou.im.adapter.ChatAdapter1;
 import cn.dazhou.im.adapter.CommonFragmentPagerAdapter;
 import cn.dazhou.im.fragment.ChatFunctionFragment;
-import cn.dazhou.im.modle.ChatMessageEntity;
+import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.MediaManager;
 import cn.dazhou.im.util.Tool;
@@ -144,6 +143,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
                 messageInfo.setSendState(Constants.CHAT_ITEM_SENDING);
                 messageInfo.setDate(Utils.getCurrentTime());
                 mAdapter.add(messageInfo);
+                // 将光标移动到最新的消息处
                 chatList.scrollToPosition(mAdapter.getCount() - 1);
                 if (mOnSendListener != null) {
                     mOnSendListener.onSend(messageInfo);
@@ -159,6 +159,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
                     // 需要异步加载声音文件
                     String voicePath = Tool.saveByteToLocalFile(messageInfo.getVoiceBtyes(), +System.currentTimeMillis()+".aar");
                     messageInfo.setVoicePath(voicePath);
+                    messageInfo.setVoiceTime(messageInfo.getVoiceTime());
                     messageInfo.setVoiceBtyes(null);
                 } else if(messageInfo.getImageBytes() != null) {
                     String imagePath = Tool.saveByteToLocalFile(messageInfo.getImageBytes(), System.currentTimeMillis()+".png");

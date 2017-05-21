@@ -24,7 +24,7 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.EventBus;
 
 import cn.dazhou.im.R;
-import cn.dazhou.im.modle.ChatMessageEntity;
+import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.AudioRecoderUtils;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.MediaManager;

@@ -15,12 +15,8 @@ import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.jude.easyrecyclerview.decoration.DividerDecoration;
 import com.jude.rollviewpager.Util;
 
-import org.jivesoftware.smack.roster.Roster;
-import org.jivesoftware.smack.roster.RosterEntry;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.BindArray;
 import butterknife.BindView;
@@ -28,13 +24,14 @@ import butterknife.ButterKnife;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
+import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.adapter.ChatPagerAdapter;
 import cn.dazhou.railway.im.adapter.RosterAdapter;
 import cn.dazhou.railway.im.db.FriendModel;
-import cn.dazhou.railway.im.presenter.ChatPresenter;
+import cn.dazhou.railway.im.listener.OnDataUpdateListener;
 import cn.dazhou.railway.im.presenter.MainPresenter;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnDataUpdateListener<FriendModel>{
     private static final String DATA_KEY = "jid";
 
     @BindView(R.id.tabs)
@@ -54,16 +51,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mPrensenter = new MainPresenter(this);
-
         initRoster();
-
+        mPrensenter = new MainPresenter(this);
+        mPrensenter.setOnDataUpdateListener(this);
+        mPrensenter.init();
 
         mViewList.add(mRosterView);
-//        mViewList.add(mRosterView);
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);//设置tab模式，当前为系统默认模式
         mTabLayout.addTab(mTabLayout.newTab().setText(mTitles[0]));//添加tab选项卡
-//        mTabLayout.addTab(mTabLayout.newTab().setText(mTitles[1]));
 
         ChatPagerAdapter mAdapter = new ChatPagerAdapter(mViewList, mTitles);
         mViewPager.setAdapter(mAdapter);//给ViewPager设置适配器
@@ -82,25 +77,8 @@ public class MainActivity extends AppCompatActivity {
         mRosterAdapter = new RosterAdapter(this);
         mRosterView.setAdapter(mRosterAdapter);
 
+        // 添加测试用户好友关系
 //        IMLauncher.addFriend(Constants.SERVER_IP);
-        if (MyApp.gCurrentUser.isFirstLogin()) {
-            Roster roster = IMLauncher.getRoster();
-            Set<RosterEntry> entries = roster.getEntries();
-            for (RosterEntry entry : entries) {
-                FriendModel friend = new FriendModel();
-                friend.setJid(entry.getJid().toString().split("@")[0]);    // jid形式为  username@hostname
-                friend.setName(entry.getName());
-                friend.setPossessor(MyApp.gCurrentUser.getUsername());
-                mRosterAdapter.add(friend);
-                MyApp.gCurrentUser.getMyFriends().add(friend);
-            }
-            MyApp.gCurrentUser.setFirstLogin(false);
-            MyApp.gCurrentUser.save();
-        } else {
-            List<FriendModel> friendModels = MyApp.gCurrentUser.getMyFriends();
-            mRosterAdapter.addAll(friendModels);
-        }
-//        mRosterAdapter.addAll(entries);
     }
 
     public static void startItself(Context context, String data) {
@@ -109,9 +87,14 @@ public class MainActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
+
+    /**
+     * 当presenter中有friend数据更新时调用
+     * @param datas
+     */
     @Override
-    public void onBackPressed() {
-//        IMLauncher.disconnect();
-        super.onBackPressed();
+    public void onUpdateData(List<FriendModel> datas) {
+        mRosterAdapter.clear();
+        mRosterAdapter.addAll(datas);
     }
 }

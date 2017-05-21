@@ -10,7 +10,8 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.dazhou.im.modle.ChatMessageEntity;
+import cn.dazhou.im.entity.ChatMessageEntity;
+import cn.dazhou.railway.config.Constants;
 
 /**
  * Created by hooyee on 2017/5/17.
@@ -22,10 +23,13 @@ public class ChatMessageModel extends BaseModel{
     int id;
 
     @Column
-    String imagePath;  // 图片消息，记录图片的位置
+    String imagePath; // 图片消息，记录图片的位置
 
     @Column
     String voicePath; // 语音消息，记录语音的位置
+
+    @Column
+    long voiceTime;   // 语音时长
 
     @Column
     String content;  // 普通文本消息
@@ -42,7 +46,7 @@ public class ChatMessageModel extends BaseModel{
     @Column
     int type;       // 是发送还是接收消息
     @Column
-    String date;    //消息日期
+    String date;    // 消息日期
 
     @Column
     @ForeignKey(tableClass = FriendModel.class,
@@ -73,11 +77,13 @@ public class ChatMessageModel extends BaseModel{
             message.setContent(model.content);
             message.setState(model.state);
             message.setDate(model.date);
-            message.setJid(model.jid);
+            // model存储的为 聊天对象的jid + @ +自身的jid
+            // 发送的消息应该只要包含接受方的jid
+            message.setJid(model.jid.split(Constants.JID_SEPARATOR)[0]);
             message.setToJid(model.toJid);
             message.setFromJid(model.fromJid);
             message.setType(model.getType());
-//            message.setVoiceTime(model.time);
+            message.setVoiceTime(model.voiceTime);
             messages.add(message);
         }
         return messages;
@@ -153,6 +159,14 @@ public class ChatMessageModel extends BaseModel{
 
     public void setJid(String jid) {
         this.jid = jid;
+    }
+
+    public long getVoiceTime() {
+        return voiceTime;
+    }
+
+    public void setVoiceTime(long voiceTime) {
+        this.voiceTime = voiceTime;
     }
 
     private ChatMessageModel(int id, String imagePath, String voicePath, String content, String fromJid, String toJid, String jid) {

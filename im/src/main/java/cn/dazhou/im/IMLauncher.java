@@ -8,7 +8,7 @@ import org.jxmpp.jid.EntityBareJid;
 
 import cn.dazhou.im.core.ConnectManager;
 import cn.dazhou.im.core.IMApi;
-import cn.dazhou.im.modle.ChatMessageEntity;
+import cn.dazhou.im.entity.ChatMessageEntity;
 
 /**
  * Created by hooyee on 2017/5/5.

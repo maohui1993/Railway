@@ -17,14 +17,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.dazhou.im.core.function.INewMessageListener;
-import cn.dazhou.im.modle.ChatMessageEntity;
+import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.Tool;
 import cn.dazhou.im.widget.ChatContentView;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.db.ChatMessageModel;
-import cn.dazhou.railway.im.db.ChatMessageModel_Table;
 import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.im.db.FriendModel_Table;
 import cn.dazhou.railway.im.presenter.ChatPresenter;
@@ -39,7 +38,7 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
     ChatContentView mChatContentView;
     private ChatPresenter mPresenter;
     /**
-     * 正在chat的用户jid
+     * 正在chat的用户jid 形式为【正在聊天的用户jid+@+自身jid】
      */
     private String mJid;
 
@@ -51,16 +50,11 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
         ButterKnife.bind(this);
         mJid = getIntent().getStringExtra(DATA_KEY);
         mPresenter = new ChatPresenter(this, mJid);
-
-//        FriendModel friend = SQLite.select()
-//                .from(FriendModel.class)
-//                .leftOuterJoin(ChatMessageModel.class)
-//                .on(FriendModel_Table.jid.withTable().eq(ChatMessageModel_Table.jid.withTable()))
-//                .where(FriendModel_Table.possessor.eq(MyApp.gCurrentUser.getUsername()))
-//                .querySingle();
+        String possessor = MyApp.gCurrentUser.getUsername();
         FriendModel friend = SQLite.select()
                 .from(FriendModel.class)
-                .where(FriendModel_Table.possessor.eq(MyApp.gCurrentUser.getUsername()))
+                .where(FriendModel_Table.possessor.eq(possessor))
+                // 存储的jid形式为  username@possessor
                 .and(FriendModel_Table.jid.eq(mJid))
                 .querySingle();
 
@@ -86,8 +80,14 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
 
     @Override
     protected void onPause() {
+        // 账号切换
         EventBus.getDefault().post("");
         super.onPause();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     @Override

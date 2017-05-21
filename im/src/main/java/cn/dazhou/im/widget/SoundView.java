@@ -18,7 +18,6 @@ public class SoundView extends android.support.v7.widget.AppCompatImageView {
     private String voicePath;
     private int mType;   // 与ChatMsgEntry中 的type一样
 
-
     public SoundView(Context context) {
         this(context, null);
     }
