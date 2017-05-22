@@ -15,6 +15,7 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smackx.offline.OfflineMessageManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.dazhou.im.entity.ChatMessageEntity;
@@ -24,6 +25,7 @@ import cn.dazhou.im.entity.ChatMessageEntity;
  */
 public class OfflineMsgManager {
     private static OfflineMsgManager offlineMsgManager = null;
+    private static List<ChatMessageEntity> chatMessageEntities;
     private Context context;
 
     private OfflineMsgManager(Context context) {
@@ -38,6 +40,10 @@ public class OfflineMsgManager {
         return offlineMsgManager;
     }
 
+    public static List<ChatMessageEntity> getChatMessageEntities() {
+        return chatMessageEntities;
+    }
+
     /**
      * 处理离线消息.
      *
@@ -49,6 +55,9 @@ public class OfflineMsgManager {
 
         try {
             List<Message> messages = offlineManager.getMessages();
+            if (messages != null && messages.size() > 0) {
+                chatMessageEntities = new ArrayList();
+            }
             Log.i("离线消息数量: ", "" + offlineManager.getMessageCount());
             for (Message message : messages){
                 Log.i("收到离线消息", "Received from 【" + message.getFrom() + "】 message: " + message.getBody());
@@ -57,10 +66,14 @@ public class OfflineMsgManager {
 
                     String from = message.getFrom().toString().split("/")[0];
                     message.setSubject(from);
-                    ChatMessageEntity msgEntity = (ChatMessageEntity) Tool.parseJSON(message.getBody(), ChatMessageEntity.class);
+                    ChatMessageEntity chatMessageEntity = (ChatMessageEntity) Tool.parseJSON(message.getBody(), ChatMessageEntity.class);
                     // 标志为接收到的消息
-                    msgEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
-                    EventBus.getDefault().post(msgEntity);
+                    chatMessageEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
+                    chatMessageEntity.setFromJid(from);
+                    // 标识为未读信息
+                    chatMessageEntity.setState(false);
+                    chatMessageEntities.add(chatMessageEntity);
+//                    EventBus.getDefault().post(chatMessageEntity);
                 }
             }
             offlineManager.deleteMessages();

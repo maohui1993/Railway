@@ -19,11 +19,14 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import java.util.List;
+
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.R;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.Tool;
+import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.im.activity.ChatActivity;
 import cn.dazhou.railway.im.db.ChatMessageModel;
 
@@ -45,6 +48,29 @@ public class IMChatService extends Service {
         EventBus.getDefault().register(this);
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 //		initChatManager();
+        handleOfflineMessage();
+    }
+
+    private void handleOfflineMessage() {
+        List<ChatMessageEntity> chatMessageEntities = IMLauncher.getOfflineMessage();
+        if (chatMessageEntities != null && chatMessageEntities.size() > 0) {
+            for (ChatMessageEntity message : chatMessageEntities) {
+                // 标志为接收到的消息
+                message.setType(Constants.CHAT_ITEM_TYPE_LEFT);
+                String fromUser = message.getFromJid().split("@")[0];
+                ChatMessageModel chatMessageModel = new ChatMessageModel.Builder()
+                        .content(message.getContent())
+                        .voicePath(message.getVoicePath())
+                        .imagePath(message.getImagePath())
+                        .jid(fromUser + "@" + MyApp.gCurrentUser.getUsername())
+                        .build();
+                chatMessageModel.setVoiceTime(message.getVoiceTime());
+
+                chatMessageModel.setState(false);
+                sendNotification(message, message.getFromJid());
+                chatMessageModel.save();
+            }
+        }
     }
 
     private boolean checkJid(String jid) {
@@ -71,6 +97,7 @@ public class IMChatService extends Service {
         XMPPConnection conn = (XMPPConnection) IMLauncher.getImApi().getConnection();
         chatManager = ChatManager.getInstanceFor(conn);
         chatManager.addIncomingListener(incomingChatMessageListener);
+
     }
 
     // 收到新消息统一在这里处理

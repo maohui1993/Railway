@@ -14,6 +14,7 @@ import butterknife.OnClick;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.listener.IOnLoginListener;
 import cn.dazhou.railway.im.presenter.LoginPresenter;
+import cn.dazhou.railway.util.LogUtil;
 
 public class LoginActivity extends AppCompatActivity implements IOnLoginListener {
 
@@ -60,9 +61,10 @@ public class LoginActivity extends AppCompatActivity implements IOnLoginListener
 
     @Override
     public void onSuccess() {
+//        LogUtil.write("登录成功".getBytes());
         mLoginPbt.setProgress(0);
         changeEditEnable();
-        MainActivity.startItself(this, "hooyee@10.0.0.2");
+        MainActivity.startItself(this, "");
         finish();
     }
 

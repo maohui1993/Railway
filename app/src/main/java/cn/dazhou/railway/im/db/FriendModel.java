@@ -11,6 +11,9 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.List;
 
+import cn.dazhou.railway.MyApp;
+import cn.dazhou.railway.config.Constants;
+
 /**
  * Created by hooyee on 2017/5/17.
  */

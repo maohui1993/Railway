@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.dazhou.im.entity.ChatMessageEntity;
+import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.config.Constants;
 
 /**

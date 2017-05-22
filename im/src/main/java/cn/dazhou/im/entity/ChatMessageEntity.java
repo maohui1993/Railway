@@ -15,7 +15,7 @@ public class ChatMessageEntity {
     private int type;       // 是发送还是接收消息
     private String date;    //消息日期
     private byte[] imageBytes;     // 图片的字节信息，传输时使用
-    private byte[] voiceBtyes;     //语音的字节信息，传输时使用
+    private byte[] voiceBytes;     //语音的字节信息，传输时使用
     private long voiceTime;
     private String jid;  // 当前用户为发送方，则记录接收方jid，为接收方则记录发送方jid
     private int sendState;
@@ -92,12 +92,12 @@ public class ChatMessageEntity {
         this.imageBytes = imageBytes;
     }
 
-    public byte[] getVoiceBtyes() {
-        return voiceBtyes;
+    public byte[] getVoiceBytes() {
+        return voiceBytes;
     }
 
-    public void setVoiceBtyes(byte[] voiceBtyes) {
-        this.voiceBtyes = voiceBtyes;
+    public void setVoiceBytes(byte[] voiceBytes) {
+        this.voiceBytes = voiceBytes;
     }
 
     public long getVoiceTime() {

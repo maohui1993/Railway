@@ -141,6 +141,10 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         mAdapter.add(msg);
     }
 
+    /**
+     * 负责展示消息
+     * @param messageInfo
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void MessageEventBus(final ChatMessageEntity messageInfo) {
         Log.i("TAG", "event-onsend" + "   ok");
@@ -162,12 +166,12 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
                 }, 2000);
                 break;
             case Constants.CHAT_ITEM_TYPE_LEFT:
-                if (messageInfo.getVoiceBtyes() != null) {
+                if (messageInfo.getVoiceBytes() != null) {
                     // 需要异步加载声音文件
-                    String voicePath = Tool.saveByteToLocalFile(messageInfo.getVoiceBtyes(), +System.currentTimeMillis()+".aar");
+                    String voicePath = Tool.saveByteToLocalFile(messageInfo.getVoiceBytes(), +System.currentTimeMillis()+".aar");
                     messageInfo.setVoicePath(voicePath);
                     messageInfo.setVoiceTime(messageInfo.getVoiceTime());
-                    messageInfo.setVoiceBtyes(null);
+                    messageInfo.setVoiceBytes(null);
                 } else if(messageInfo.getImageBytes() != null) {
                     String imagePath = Tool.saveByteToLocalFile(messageInfo.getImageBytes(), System.currentTimeMillis()+".png");
                     messageInfo.setImagePath(imagePath);

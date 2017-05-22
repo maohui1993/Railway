@@ -316,7 +316,7 @@ public class EmotionInputDetector {
                 ChatMessageEntity messageInfo = new ChatMessageEntity();
                 messageInfo.setVoicePath(filePath);
                 messageInfo.setVoiceTime(time);
-                messageInfo.setVoiceBtyes(MediaManager.getSoundRecord(filePath));
+                messageInfo.setVoiceBytes(MediaManager.getSoundRecord(filePath));
                 messageInfo.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
                 EventBus.getDefault().post(messageInfo);
             }

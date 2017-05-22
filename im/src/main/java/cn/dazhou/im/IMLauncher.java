@@ -6,9 +6,12 @@ import android.util.Log;
 import org.jivesoftware.smack.roster.Roster;
 import org.jxmpp.jid.EntityBareJid;
 
+import java.util.List;
+
 import cn.dazhou.im.core.ConnectManager;
 import cn.dazhou.im.core.IMApi;
 import cn.dazhou.im.entity.ChatMessageEntity;
+import cn.dazhou.im.util.OfflineMsgManager;
 
 /**
  * Created by hooyee on 2017/5/5.
@@ -76,6 +79,10 @@ public final class IMLauncher {
 
     public static Roster getRoster() {
         return mImApi.getRoster();
+    }
+
+    public static List<ChatMessageEntity> getOfflineMessage() {
+        return OfflineMsgManager.getChatMessageEntities();
     }
 
     public static Roster addFriend(String jid) {

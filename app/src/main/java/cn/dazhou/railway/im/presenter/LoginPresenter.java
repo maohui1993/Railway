@@ -66,7 +66,6 @@ public class LoginPresenter {
             @Override
             public void accept(@NonNull Object o) throws Exception {
                 if (connected) {
-                    IMChatService.startItself(mContext);
                     logined = IMLauncher.login(username, password);
                     if (logined) {
                         mLoginListener.onSuccess();

@@ -86,9 +86,9 @@ import cn.dazhou.railway.im.presenter.ChatPresenter;
     }
 
     @Override
-    public void onBackPressed() {
+    protected void onDestroy() {
         mChatContentView.unregister();
-        super.onBackPressed();
+        super.onDestroy();
     }
 
     @Override
