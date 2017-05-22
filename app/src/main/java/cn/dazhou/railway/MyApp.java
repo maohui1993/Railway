@@ -14,10 +14,10 @@ import cn.dazhou.railway.util.LogUtil;
 
 public class MyApp extends Application {
     public static UserModel gCurrentUser; // 当前用户
+    public static String gCurrentUsername; // 当前账号
     @Override
     public void onCreate() {
         super.onCreate();
-        LogUtil.init();
         FlowManager.init(new FlowConfig.Builder(getApplicationContext()).build());
     }
 }

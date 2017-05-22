@@ -98,7 +98,10 @@ public class ChatMessageModel extends BaseModel{
     }
 
     public void setId(int id) {
-        this.id = id;
+        if (jid.contains(Constants.JID_SEPARATOR)) {
+            jid = jid.split(Constants.JID_SEPARATOR)[0];
+        }
+        this.jid = jid + Constants.JID_SEPARATOR +  MyApp.gCurrentUsername;
     }
 
     public String getImagePath() {
@@ -173,14 +176,18 @@ public class ChatMessageModel extends BaseModel{
         this.voiceTime = voiceTime;
     }
 
-    private ChatMessageModel(int id, String imagePath, String voicePath, String content, String fromJid, String toJid, String jid) {
+    private ChatMessageModel(int id, String imagePath, String voicePath, String content, String fromJid, String toJid, String jid, int type) {
         this.id = id;
         this.imagePath = imagePath;
         this.voicePath = voicePath;
         this.content = content;
         this.fromJid = fromJid;
         this.toJid = toJid;
-        this.jid = jid;
+        if (jid.contains(Constants.JID_SEPARATOR)) {
+            jid = jid.split(Constants.JID_SEPARATOR)[0];
+        }
+        this.jid = jid + Constants.JID_SEPARATOR + MyApp.gCurrentUsername;
+        this.type = type;
     }
 
     public static class Builder {
@@ -191,9 +198,10 @@ public class ChatMessageModel extends BaseModel{
         private String fromJid;
         private String toJid;
         private String jid;
+        private int type;
 
         public ChatMessageModel build() {
-            return new ChatMessageModel(id, imagePath, voicePath, content, fromJid, toJid, jid);
+            return new ChatMessageModel(id, imagePath, voicePath, content, fromJid, toJid, jid, type);
         }
 
         public Builder id(int id) {
@@ -227,7 +235,15 @@ public class ChatMessageModel extends BaseModel{
         }
 
         public Builder jid(String jid) {
-            this.jid = jid;
+            if (jid.contains(Constants.JID_SEPARATOR)) {
+                jid = jid.split(Constants.JID_SEPARATOR)[0];
+            }
+            this.jid = jid + Constants.JID_SEPARATOR +  MyApp.gCurrentUsername;
+            return this;
+        }
+
+        public Builder type(int type) {
+            this.type = type;
             return this;
         }
     }

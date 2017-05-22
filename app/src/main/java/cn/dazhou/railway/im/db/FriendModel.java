@@ -60,7 +60,10 @@ public class FriendModel extends BaseModel{
     }
 
     public void setJid(String jid) {
-        this.jid = jid;
+        if (jid.contains(Constants.JID_SEPARATOR)) {
+            jid = jid.split(Constants.JID_SEPARATOR)[0];
+        }
+        this.jid = jid + Constants.JID_SEPARATOR + MyApp.gCurrentUsername;
     }
 
     public String getName() {

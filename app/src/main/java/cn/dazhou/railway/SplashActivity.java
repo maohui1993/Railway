@@ -14,6 +14,7 @@ import butterknife.OnClick;
 import cn.dazhou.im.util.Tool;
 import cn.dazhou.maputil.MapLauncher;
 import cn.dazhou.railway.im.activity.LoginActivity;
+import cn.dazhou.railway.util.LogUtil;
 
 public class SplashActivity extends AppCompatActivity {
     @BindView(R.id.content)
@@ -30,6 +31,8 @@ public class SplashActivity extends AppCompatActivity {
         Tool.checkPermission(this, Manifest.permission.RECORD_AUDIO);
         Tool.checkPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         Tool.checkPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+//        Tool.checkPermission(this);
+        LogUtil.init();
 
         ButterKnife.bind(this);
     }

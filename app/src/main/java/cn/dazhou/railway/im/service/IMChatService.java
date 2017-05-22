@@ -62,13 +62,13 @@ public class IMChatService extends Service {
                         .content(message.getContent())
                         .voicePath(message.getVoicePath())
                         .imagePath(message.getImagePath())
-                        .jid(fromUser + "@" + MyApp.gCurrentUser.getUsername())
+                        .jid(fromUser)
+                        .type(message.getType())
                         .build();
                 chatMessageModel.setVoiceTime(message.getVoiceTime());
-
                 chatMessageModel.setState(false);
-                sendNotification(message, message.getFromJid());
                 chatMessageModel.save();
+                sendNotification(message, chatMessageModel.getJid());
             }
         }
     }
@@ -104,23 +104,26 @@ public class IMChatService extends Service {
     IncomingChatMessageListener incomingChatMessageListener = new IncomingChatMessageListener() {
         @Override
         public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
-            ChatMessageEntity msgEntity = (ChatMessageEntity) Tool.parseJSON(message.getBody(), ChatMessageEntity.class);
+            ChatMessageEntity chatMessageEntity = (ChatMessageEntity) Tool.parseJSON(message.getBody(), ChatMessageEntity.class);
             // 标志为接收到的消息
-            msgEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
+            chatMessageEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
             String fromUser = from.getLocalpart().toString().split("@")[0];
             ChatMessageModel chatMessageModel = new ChatMessageModel.Builder()
-                    .content(msgEntity.getContent())
+                    .content(chatMessageEntity.getContent())
                     .fromJid(message.getFrom().toString())
                     .toJid(message.getTo().toString())
+                    .voicePath(chatMessageEntity.getVoicePath())
+                    .imagePath(chatMessageEntity.getImagePath())
+                    .type(chatMessageEntity.getType())
                     .jid(fromUser.toString())
                     .build();
             if (checkJid(fromUser)) {
                 chatMessageModel.setState(true);
-                EventBus.getDefault().post(msgEntity);
+                EventBus.getDefault().post(chatMessageEntity);
                 Log.d(Constants.TAG, "New message from " + from + ": " + "to " + message.getFrom() + "body:" + message.getBody());
             } else {
                 chatMessageModel.setState(false);
-                sendNotification(msgEntity, message.getTo().toString());
+                sendNotification(chatMessageEntity, chatMessageModel.getJid());
             }
             chatMessageModel.save();
         }
