@@ -1,6 +1,7 @@
 package cn.dazhou.railway.im.presenter;
 
 import android.content.Context;
+import android.util.Log;
 
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ChatMessageEntity;
@@ -28,6 +29,8 @@ public class ChatPresenter implements ChatContentView.OnSendListener {
      */
     @Override
     public void onSend(ChatMessageEntity msg) {
+        Log.i("TAG", "event-onsend" + "   chat");
+
         ChatMessageModel model = new ChatMessageModel();
         model.setType(msg.getType());
         model.setDate(msg.getDate());
@@ -40,7 +43,8 @@ public class ChatPresenter implements ChatContentView.OnSendListener {
         // model保存的jid应该是 【接收方+@+当前用户】
         model.setJid(mJid);         // 正在聊天的人
         model.setState(msg.isState());
-        model.save();
+        Log.i("TAG", "model" + ""+model.save());
+//        model.save();
         String jid = mJid.split(Constants.JID_SEPARATOR)[0] + "@" + Constants.SERVER_IP;
         IMLauncher.chatWith(jid, msg);
     }

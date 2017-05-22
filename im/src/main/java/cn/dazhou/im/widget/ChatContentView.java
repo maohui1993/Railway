@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -97,6 +98,10 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         init(context);
     }
 
+    public void unregister() {
+        EventBus.getDefault().unregister(this);
+    }
+
     private void init(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.chat_content_view, this);
@@ -138,6 +143,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void MessageEventBus(final ChatMessageEntity messageInfo) {
+        Log.i("TAG", "event-onsend" + "   ok");
         switch (messageInfo.getType()) {
             case Constants.CHAT_ITEM_TYPE_RIGHT:
                 messageInfo.setSendState(Constants.CHAT_ITEM_SENDING);
@@ -146,6 +152,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
                 // 将光标移动到最新的消息处
                 chatList.scrollToPosition(mAdapter.getCount() - 1);
                 if (mOnSendListener != null) {
+                    Log.i("Log","==="+messageInfo.getJid());
                     mOnSendListener.onSend(messageInfo);
                 }
                 new Handler().postDelayed(new Runnable() {

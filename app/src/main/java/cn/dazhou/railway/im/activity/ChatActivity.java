@@ -30,9 +30,9 @@ import cn.dazhou.railway.im.presenter.ChatPresenter;
 
 /**
  * 启动时需要知道是与谁聊天，故启动的时候要带一个data值传入。
- */
-public class ChatActivity extends AppCompatActivity implements INewMessageListener {
-    public static final String DATA_KEY = "jid";
+ */public class ChatActivity extends AppCompatActivity implements INewMessageListener {
+
+        public static final String DATA_KEY = "jid";
 
     @BindView(R.id.chat_content)
     ChatContentView mChatContentView;
@@ -87,6 +87,7 @@ public class ChatActivity extends AppCompatActivity implements INewMessageListen
 
     @Override
     public void onBackPressed() {
+        mChatContentView.unregister();
         super.onBackPressed();
     }
 

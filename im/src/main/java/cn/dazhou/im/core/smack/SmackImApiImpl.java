@@ -153,8 +153,9 @@ public class SmackImApiImpl implements IMApi {
 
         try {
             // 添加好友
-            roster.createEntry(JidCreate.entityBareFrom("maohui@"+jid), "MAOHUI", new String[]{"Friends"});
-            roster.createEntry(JidCreate.entityBareFrom("hooyee@"+jid), "HOOYEE", new String[]{"Friends"});
+//            roster.createEntry(JidCreate.entityBareFrom("maohui@"+jid), "MAOHUI", new String[]{"Friends"});
+//            roster.createEntry(JidCreate.entityBareFrom("hooyee@"+jid), "HOOYEE", new String[]{"Friends"});
+            roster.createEntry(JidCreate.entityBareFrom("pwq@"+jid), "PWQ", new String[]{"Friends"});
         } catch (Exception e) {
 
         }

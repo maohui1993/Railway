@@ -1,5 +1,7 @@
 package cn.dazhou.railway.im.db;
 
+import android.util.Log;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
@@ -70,6 +72,7 @@ public class ChatMessageModel extends BaseModel{
             return null;
         }
         List<ChatMessageEntity> messages = new ArrayList<ChatMessageEntity>();
+        Log.i("TAG", "models.size = " + models.size());
         for(ChatMessageModel model : models) {
             ChatMessageEntity message = new ChatMessageEntity();
             message.setImagePath(model.imagePath);
