@@ -3,7 +3,9 @@ package cn.dazhou.im;
 import android.content.Context;
 import android.util.Log;
 
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smackx.search.ReportedData;
 import org.jxmpp.jid.EntityBareJid;
 
 import java.util.List;
@@ -85,7 +87,11 @@ public final class IMLauncher {
         return OfflineMsgManager.getChatMessageEntities();
     }
 
-    public static Roster addFriend(String jid) {
+    public static Roster addFriend(String jid) throws SmackException.NoResponseException {
         return mImApi.addFriend(jid);
+    }
+
+    public static List<ReportedData.Row> searchUserFromServer(String username) {
+        return mImApi.searchUserFromServer(username);
     }
 }

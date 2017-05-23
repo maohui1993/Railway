@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:orientation="vertical">
+
+    <cn.dazhou.railway.widget.RippleButton
+        android:id="@+id/new_friend"
+        android:drawableLeft="@mipmap/ic_launcher"
+        android:textSize="16sp"
+        android:text="新的朋友"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+    <LinearLayout
+        android:background="@color/colorPrimaryDark"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+    <cn.dazhou.railway.widget.RippleButton
+        android:id="@+id/chat_group"
+        android:drawableLeft="@mipmap/ic_launcher"
+        android:textSize="16sp"
+        android:text="群聊"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+</LinearLayout>

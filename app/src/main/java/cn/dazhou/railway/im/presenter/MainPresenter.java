@@ -1,17 +1,23 @@
 package cn.dazhou.railway.im.presenter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.view.View;
+import android.widget.Toast;
 
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.railway.MyApp;
+import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
+import cn.dazhou.railway.im.activity.AddFriendActivity;
 import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.im.listener.OnDataUpdateListener;
 
@@ -19,7 +25,7 @@ import cn.dazhou.railway.im.listener.OnDataUpdateListener;
  * Created by hooyee on 2017/5/11.
  */
 
-public class MainPresenter {
+public class MainPresenter implements View.OnClickListener{
     private Context mContext;
     private OnDataUpdateListener mOnDataUpdateListener;
 
@@ -58,7 +64,21 @@ public class MainPresenter {
             friends = MyApp.gCurrentUser.getMyFriends();
         }
         if (mOnDataUpdateListener != null && friends != null && friends.size() > 0) {
+            Collections.sort(friends);
             mOnDataUpdateListener.onUpdateData(friends);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.new_friend:
+                Toast.makeText(mContext, "new Friend", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, AddFriendActivity.class);
+                mContext.startActivity(intent);
+                break;
+            case R.id.chat_group:
+                Toast.makeText(mContext, "Group Chat", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -10,23 +10,29 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.jude.easyrecyclerview.EasyRecyclerView;
+import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 import com.jude.easyrecyclerview.decoration.DividerDecoration;
+import com.jude.easyrecyclerview.decoration.StickyHeaderDecoration;
 import com.jude.rollviewpager.Util;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.dazhou.im.IMLauncher;
-import cn.dazhou.railway.MyApp;
+import butterknife.OnClick;
+import butterknife.Optional;
 import cn.dazhou.railway.R;
-import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.adapter.ChatPagerAdapter;
 import cn.dazhou.railway.im.adapter.RosterAdapter;
+import cn.dazhou.railway.im.adapter.StickyHeaderAdapter;
 import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.im.listener.OnDataUpdateListener;
 import cn.dazhou.railway.im.presenter.MainPresenter;
@@ -44,18 +50,19 @@ public class MainActivity extends AppCompatActivity implements OnDataUpdateListe
 
     private EasyRecyclerView mRosterView;
     private List<View> mViewList = new ArrayList<View>();
-    private MainPresenter mPrensenter;
+    private MainPresenter mPresenter;
     private RosterAdapter mRosterAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setTitle("通讯录");
         ButterKnife.bind(this);
         initRoster();
-        mPrensenter = new MainPresenter(this);
-        mPrensenter.setOnDataUpdateListener(this);
-        mPrensenter.init();
+        mPresenter = new MainPresenter(this);
+        mPresenter.setOnDataUpdateListener(this);
+        mPresenter.init();
 
         mViewList.add(mRosterView);
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);//设置tab模式，当前为系统默认模式
@@ -77,6 +84,26 @@ public class MainActivity extends AppCompatActivity implements OnDataUpdateListe
         mRosterView.addItemDecoration(itemDecoration);
         mRosterAdapter = new RosterAdapter(this);
         mRosterView.setAdapter(mRosterAdapter);
+        mRosterAdapter.addHeader(new RecyclerArrayAdapter.ItemView() {
+            @Override
+            public View onCreateView(ViewGroup parent) {
+                LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+                View v = inflater.inflate(R.layout.header_item, null);
+                v.findViewById(R.id.new_friend).setOnClickListener(mPresenter);
+                v.findViewById(R.id.chat_group).setOnClickListener(mPresenter);
+                return v;
+            }
+
+            @Override
+            public void onBindView(View headerView) {
+
+            }
+        });
+
+        // StickyHeader
+        StickyHeaderDecoration decoration = new StickyHeaderDecoration(new StickyHeaderAdapter(this));
+        decoration.setIncludeHeader(false);
+        mRosterView.addItemDecoration(decoration);
 
         // 添加测试用户好友关系
 //        IMLauncher.addFriend(Constants.SERVER_IP);
@@ -87,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements OnDataUpdateListe
         intent.putExtra(DATA_KEY, data);
         context.startActivity(intent);
     }
-
 
     /**
      * 当presenter中有friend数据更新时调用

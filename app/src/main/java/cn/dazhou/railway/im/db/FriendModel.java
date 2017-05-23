@@ -1,5 +1,7 @@
 package cn.dazhou.railway.im.db;
 
+import android.support.annotation.NonNull;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
@@ -9,6 +11,7 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import java.util.Comparator;
 import java.util.List;
 
 import cn.dazhou.railway.MyApp;
@@ -19,7 +22,7 @@ import cn.dazhou.railway.config.Constants;
  */
 
 @Table(database = RailwayDatabase.class)
-public class FriendModel extends BaseModel{
+public class FriendModel extends BaseModel implements Comparable<FriendModel>{
     @PrimaryKey
     @Column
     private String jid;         // 好友账号@所属人账号<好友username@所属人username>
@@ -88,5 +91,10 @@ public class FriendModel extends BaseModel{
 
     public void setRawJid(String rawJid) {
         this.rawJid = rawJid;
+    }
+
+    @Override
+    public int compareTo(@NonNull FriendModel o) {
+        return this.getName().compareTo(o.getName());
     }
 }

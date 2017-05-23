@@ -52,7 +52,7 @@
 //    @Override
 //    protected void onCreate(Bundle savedInstanceState) {
 //        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.addfriend);
+//        setContentView(R.layout.activity_add_friend);
 //
 //        edit_addfriend = (EditText) findViewById(R.id.edit_addfriend);
 //        btn_searchfriend = (Button) findViewById(R.id.btn_searchfriend);

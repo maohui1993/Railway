@@ -2,6 +2,7 @@ package cn.dazhou.im.core.smack;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -18,12 +19,17 @@ import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.search.ReportedData;
+import org.jivesoftware.smackx.search.UserSearchManager;
+import org.jivesoftware.smackx.xdata.Form;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.net.InetAddress;
+import java.util.Iterator;
+import java.util.List;
 
 import cn.dazhou.im.core.IMApi;
 import cn.dazhou.im.core.function.IConnection;
@@ -146,18 +152,42 @@ public class SmackImApiImpl implements IMApi {
     }
 
     @Override
-    public Roster addFriend(String jid) {
+    public Roster addFriend(String jid) throws SmackException.NoResponseException {
         if (mConnection == null) return null;
         Roster roster = Roster.getInstanceFor(mConnection);
         roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
 
         try {
             // 添加好友
+            roster.createEntry(JidCreate.entityBareFrom(jid), "PWQ", new String[]{"Friends"});
 //            roster.createEntry(JidCreate.entityBareFrom("maohui@"+jid), "MAOHUI", new String[]{"Friends"});
 //            roster.createEntry(JidCreate.entityBareFrom("hooyee@"+jid), "HOOYEE", new String[]{"Friends"});
-            roster.createEntry(JidCreate.entityBareFrom("pwq@"+jid), "PWQ", new String[]{"Friends"});
+        } catch (SmackException.NoResponseException e) {
+            throw e;
         } catch (Exception e) {
 
+        }
+        return null;
+    }
+
+    @Override
+    public List<ReportedData.Row> searchUserFromServer(String username) {
+        try{
+            UserSearchManager search = new UserSearchManager(mConnection);
+            Form searchForm = search.getSearchForm(search.getSearchServices().get(0));
+            Form answerForm = searchForm.createAnswerForm();
+            answerForm.setAnswer("Username", true);
+            answerForm.setAnswer("search", username);
+            ReportedData data = search.getSearchResults(answerForm, search.getSearchServices().get(0));
+
+            String anS = "";
+            for (ReportedData.Row row : data.getRows()) {
+                Log.i("TAG","SmackImApiImpl.class: " + "username = " + row.getValues("Username").toString());
+            }
+//            Toast.makeText(this,ansS, Toast.LENGTH_SHORT).show();
+            return data.getRows();
+        }catch(Exception e){
+            Log.i("TAG", "SmackImApiImpl.class : " + e.getMessage());
         }
         return null;
     }

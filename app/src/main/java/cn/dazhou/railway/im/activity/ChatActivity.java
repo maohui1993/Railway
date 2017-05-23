@@ -37,7 +37,6 @@ import cn.dazhou.railway.im.presenter.ChatPresenter;
      */
     private String mJid;
 
-    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +61,7 @@ import cn.dazhou.railway.im.presenter.ChatPresenter;
         mChatContentView.setOnSendListener(mPresenter);
         mChatContentView.setOnImageClickListener(mPresenter);
         EventBus.getDefault().post(mJid);
+
     }
 
     public static void startItself(Context context, String data) {
