@@ -58,11 +58,11 @@ public class Tool {
     }
 
     public static void checkPermission(Context context, String permission) {
-        if( Build.VERSION.SDK_INT>=23){
+        if (Build.VERSION.SDK_INT >= 23) {
             //android 6.0权限问题
-            if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED){
+            if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
                 // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity)context, permission)) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, permission)) {
                     Toast.makeText(context, "由于您拒绝授予权限，应用可能无法正常运行", Toast.LENGTH_LONG).show();
                 } else {
                     // No explanation needed, we can request the permission.
@@ -80,19 +80,19 @@ public class Tool {
     }
 
     public static void checkPermission(Context context) {
-        if( Build.VERSION.SDK_INT>=23){
+        if (Build.VERSION.SDK_INT >= 23) {
             //android 6.0权限问题
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                     || ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                     || ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED
                     || ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    || ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ){
+                    || ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity)context, Manifest.permission.READ_EXTERNAL_STORAGE)
-                        || ActivityCompat.shouldShowRequestPermissionRationale((Activity)context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        || ActivityCompat.shouldShowRequestPermissionRationale((Activity)context, Manifest.permission.RECORD_AUDIO)
-                        || ActivityCompat.shouldShowRequestPermissionRationale((Activity)context, Manifest.permission.ACCESS_FINE_LOCATION)
-                        || ActivityCompat.shouldShowRequestPermissionRationale((Activity)context, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        || ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        || ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.RECORD_AUDIO)
+                        || ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.ACCESS_FINE_LOCATION)
+                        || ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.ACCESS_COARSE_LOCATION)) {
                     Toast.makeText(context, "由于您拒绝授予权限，应用可能无法正常运行", Toast.LENGTH_LONG).show();
                 } else {
                     // No explanation needed, we can request the permission.
@@ -130,12 +130,13 @@ public class Tool {
 
     /**
      * 质量压缩
+     *
      * @param image
-     * @param size  最大kb
+     * @param size    最大kb
      * @param options
      * @return
      */
-    public static byte[] compressImage(Bitmap image,int size,int options) {
+    public static byte[] compressImage(Bitmap image, int size, int options) {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         // 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
@@ -152,7 +153,7 @@ public class Tool {
 
 
     private static int calculateInSampleSize(BitmapFactory.Options options,
-                                            int reqWidth, int reqHeight) {
+                                             int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;
@@ -169,7 +170,7 @@ public class Tool {
     }
 
     private static Bitmap decodeSampledBitmapFromFile(String filename,
-                                                     int reqWidth, int reqHeight) {
+                                                      int reqWidth, int reqHeight) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -187,7 +188,6 @@ public class Tool {
 
     public static String saveByteToLocalFile(byte[] bytes, String fileName) {
         File file = new File(Constants.MEDIA_PATH, fileName);
-
         if (!file.exists()) {
             try {
                 file.createNewFile();
@@ -212,7 +212,6 @@ public class Tool {
                 e.printStackTrace();
             }
         }
-
         return file.getAbsolutePath();
     }
 }

@@ -60,7 +60,7 @@ public class ChatAdapter1 extends RecyclerArrayAdapter<ChatMessageEntity> {
     public interface OnItemClickListener {
         void onHeaderClick(int position);
 
-        void onImageClick(View view);
+        void onImageClick(View view, ChatMessageEntity message);
 
         void onVoiceClick(SoundView soundView);
     }

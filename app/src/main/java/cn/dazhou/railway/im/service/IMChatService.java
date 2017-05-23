@@ -108,15 +108,25 @@ public class IMChatService extends Service {
             // 标志为接收到的消息
             chatMessageEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
             String fromUser = from.getLocalpart().toString().split("@")[0];
+            String imagePath = null;
+            String voicePath = null;
+            if (chatMessageEntity.getImageBytes() != null) {
+                imagePath = Tool.saveByteToLocalFile(chatMessageEntity.getImageBytes(), System.currentTimeMillis() + ".png");
+            } else if (chatMessageEntity.getVoiceBytes() != null) {
+                voicePath = Tool.saveByteToLocalFile(chatMessageEntity.getVoiceBytes(), System.currentTimeMillis() + ".aar");
+            }
             ChatMessageModel chatMessageModel = new ChatMessageModel.Builder()
                     .content(chatMessageEntity.getContent())
-                    .fromJid(message.getFrom().toString())
-                    .toJid(message.getTo().toString())
-                    .voicePath(chatMessageEntity.getVoicePath())
-                    .imagePath(chatMessageEntity.getImagePath())
+                    .fromJid(chatMessageEntity.getFromJid())
+                    .toJid(chatMessageEntity.getToJid())
+                    .voicePath(voicePath)
+                    .voiceTime(chatMessageEntity.getVoiceTime())
+                    .imagePath(imagePath)
                     .type(chatMessageEntity.getType())
                     .jid(fromUser.toString())
                     .build();
+            chatMessageEntity.setVoicePath(voicePath);
+            chatMessageEntity.setImagePath(imagePath);
             if (checkJid(fromUser)) {
                 chatMessageModel.setState(true);
                 EventBus.getDefault().post(chatMessageEntity);

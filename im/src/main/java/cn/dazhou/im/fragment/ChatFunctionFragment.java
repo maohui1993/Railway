@@ -110,7 +110,7 @@ public class ChatFunctionFragment extends BaseFragment {
                     try {
                         ChatMessageEntity messageInfo = new ChatMessageEntity();
                         Bitmap bmp = Tool.createBitmapByPath(imageUri.getPath(), 300, 400);
-                        byte[] bytes = Tool.compressImage(bmp, 200, 100);
+                        byte[] bytes = Tool.compressImage(bmp, 1024, 100);
                         messageInfo.setImageBytes(bytes);
                         messageInfo.setImagePath(imageUri.getPath());
                         messageInfo.setType(Constants.CHAT_ITEM_TYPE_RIGHT);

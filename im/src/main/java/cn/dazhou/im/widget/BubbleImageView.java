@@ -197,7 +197,7 @@ public class BubbleImageView extends android.support.v7.widget.AppCompatImageVie
                         dp2px(mContext, defaultSize), Bitmap.Config.ARGB_8888);
             }
             Canvas canvas = new Canvas(bitmap);
-            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.setBounds(0, 0, width, height);
             drawable.draw(canvas);
             return bitmap;
         } catch (OutOfMemoryError e) {

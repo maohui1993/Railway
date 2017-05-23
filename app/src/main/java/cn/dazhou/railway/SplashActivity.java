@@ -26,8 +26,8 @@ public class SplashActivity extends AppCompatActivity {
         MapLauncher.init(getApplicationContext());
         ViewGroup content = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.activity_splash, null);
         setContentView(content);
-        Tool.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
         Tool.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        Tool.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
         Tool.checkPermission(this, Manifest.permission.RECORD_AUDIO);
         Tool.checkPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         Tool.checkPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);

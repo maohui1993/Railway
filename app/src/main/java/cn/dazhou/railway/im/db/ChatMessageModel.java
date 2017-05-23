@@ -176,7 +176,7 @@ public class ChatMessageModel extends BaseModel{
         this.voiceTime = voiceTime;
     }
 
-    private ChatMessageModel(int id, String imagePath, String voicePath, String content, String fromJid, String toJid, String jid, int type) {
+    private ChatMessageModel(int id, String imagePath, String voicePath, String content, String fromJid, String toJid, String jid, int type, long voiceTime) {
         this.id = id;
         this.imagePath = imagePath;
         this.voicePath = voicePath;
@@ -188,6 +188,7 @@ public class ChatMessageModel extends BaseModel{
         }
         this.jid = jid + Constants.JID_SEPARATOR + MyApp.gCurrentUsername;
         this.type = type;
+        this.voiceTime = voiceTime;
     }
 
     public static class Builder {
@@ -199,9 +200,10 @@ public class ChatMessageModel extends BaseModel{
         private String toJid;
         private String jid;
         private int type;
+        private long voiceTime;
 
         public ChatMessageModel build() {
-            return new ChatMessageModel(id, imagePath, voicePath, content, fromJid, toJid, jid, type);
+            return new ChatMessageModel(id, imagePath, voicePath, content, fromJid, toJid, jid, type, voiceTime);
         }
 
         public Builder id(int id) {
@@ -244,6 +246,11 @@ public class ChatMessageModel extends BaseModel{
 
         public Builder type(int type) {
             this.type = type;
+            return this;
+        }
+
+        public Builder voiceTime(long voiceTime) {
+            this.voiceTime = voiceTime;
             return this;
         }
     }

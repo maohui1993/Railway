@@ -2,6 +2,7 @@ package cn.dazhou.im.widget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -34,6 +35,7 @@ import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
 import cn.dazhou.im.adapter.ChatAdapter1;
 import cn.dazhou.im.adapter.CommonFragmentPagerAdapter;
+import cn.dazhou.im.entity.FullImageInfo;
 import cn.dazhou.im.fragment.ChatFunctionFragment;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
@@ -68,8 +70,6 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     @BindView(R2.id.emotion_layout)
     RelativeLayout emotionLayout;
 
-
-
     private EmotionInputDetector mDetector;
 
     private ArrayList<Fragment> fragments;
@@ -77,6 +77,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     private CommonFragmentPagerAdapter fragementAdapter;
 
     private OnSendListener mOnSendListener;
+    private OnImageClickListener mOnImageClickListener;
     private ChatAdapter1 mAdapter;
 
     //录音相关
@@ -96,6 +97,10 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     public ChatContentView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
+    }
+
+    public void setOnImageClickListener(OnImageClickListener onImageClickListener) {
+        this.mOnImageClickListener = onImageClickListener;
     }
 
     public void unregister() {
@@ -152,11 +157,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
             case Constants.CHAT_ITEM_TYPE_RIGHT:
                 messageInfo.setSendState(Constants.CHAT_ITEM_SENDING);
                 messageInfo.setDate(Utils.getCurrentTime());
-                mAdapter.add(messageInfo);
-                // 将光标移动到最新的消息处
-                chatList.scrollToPosition(mAdapter.getCount() - 1);
                 if (mOnSendListener != null) {
-                    Log.i("Log","==="+messageInfo.getJid());
                     mOnSendListener.onSend(messageInfo);
                 }
                 new Handler().postDelayed(new Runnable() {
@@ -168,18 +169,20 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
             case Constants.CHAT_ITEM_TYPE_LEFT:
                 if (messageInfo.getVoiceBytes() != null) {
                     // 需要异步加载声音文件
-                    String voicePath = Tool.saveByteToLocalFile(messageInfo.getVoiceBytes(), +System.currentTimeMillis()+".aar");
-                    messageInfo.setVoicePath(voicePath);
-                    messageInfo.setVoiceTime(messageInfo.getVoiceTime());
+//                    String voicePath = Tool.saveByteToLocalFile(messageInfo.getVoiceBytes(), +System.currentTimeMillis()+".aar");
+//                    messageInfo.setVoicePath(voicePath);
                     messageInfo.setVoiceBytes(null);
                 } else if(messageInfo.getImageBytes() != null) {
-                    String imagePath = Tool.saveByteToLocalFile(messageInfo.getImageBytes(), System.currentTimeMillis()+".png");
-                    messageInfo.setImagePath(imagePath);
+//                    String imagePath = Tool.saveByteToLocalFile(messageInfo.getImageBytes(), System.currentTimeMillis()+".png");
+//                    messageInfo.setImagePath(imagePath);
                     messageInfo.setImageBytes(null);
                 }
-                mAdapter.add(messageInfo);
                 break;
         }
+        mAdapter.add(messageInfo);
+        // 将光标移动到最新的消息处
+        chatList.scrollToPosition(mAdapter.getCount() - 1);
+
     }
 
     public OnSendListener getOnSendListener() {
@@ -196,8 +199,19 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     }
 
     @Override
-    public void onImageClick(View view) {
-
+    public void onImageClick(View view, ChatMessageEntity message) {
+        int location[] = new int[2];
+        view.getLocationOnScreen(location);
+        FullImageInfo fullImageInfo = new FullImageInfo();
+        fullImageInfo.setLocationX(location[0]);
+        fullImageInfo.setLocationY(location[1]);
+        fullImageInfo.setWidth(view.getWidth());
+        fullImageInfo.setHeight(view.getHeight());
+        fullImageInfo.setImageUrl(message.getImagePath());
+        EventBus.getDefault().postSticky(fullImageInfo);
+        if (mOnImageClickListener != null) {
+            mOnImageClickListener.onClick();
+        }
     }
 
     @Override
@@ -228,9 +242,17 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         });
     }
 
+    public boolean interceptBackPress() {
+        return mDetector.interceptBackPress();
+    }
+
     // 当发送时，回调到ChatActivity，由其确认目前正在跟谁聊天
     public interface OnSendListener {
         void onSend(ChatMessageEntity msg);
     }
 
+    // 当发送时，回调到ChatActivity，由其确认目前正在跟谁聊天
+    public interface OnImageClickListener {
+        void onClick();
+    }
 }

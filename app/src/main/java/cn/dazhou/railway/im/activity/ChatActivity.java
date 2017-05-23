@@ -10,16 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.greenrobot.eventbus.EventBus;
-import org.jivesoftware.smack.packet.Message;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.dazhou.im.core.function.INewMessageListener;
-import cn.dazhou.im.entity.ChatMessageEntity;
-import cn.dazhou.im.util.Constants;
-import cn.dazhou.im.util.Tool;
 import cn.dazhou.im.widget.ChatContentView;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
@@ -30,9 +25,9 @@ import cn.dazhou.railway.im.presenter.ChatPresenter;
 
 /**
  * 启动时需要知道是与谁聊天，故启动的时候要带一个data值传入。
- */public class ChatActivity extends AppCompatActivity implements INewMessageListener {
+ */public class ChatActivity extends AppCompatActivity{
 
-        public static final String DATA_KEY = "jid";
+    public static final String DATA_KEY = "jid";
 
     @BindView(R.id.chat_content)
     ChatContentView mChatContentView;
@@ -65,6 +60,7 @@ import cn.dazhou.railway.im.presenter.ChatPresenter;
 
         // 点击发送按钮时
         mChatContentView.setOnSendListener(mPresenter);
+        mChatContentView.setOnImageClickListener(mPresenter);
         EventBus.getDefault().post(mJid);
     }
 
@@ -72,10 +68,6 @@ import cn.dazhou.railway.im.presenter.ChatPresenter;
         Intent intent = new Intent(context, ChatActivity.class);
         intent.putExtra(DATA_KEY, data);
         context.startActivity(intent);
-    }
-
-    public void addMessage(ChatMessageEntity msg) {
-        mChatContentView.addMessage(msg);
     }
 
     @Override
@@ -86,21 +78,16 @@ import cn.dazhou.railway.im.presenter.ChatPresenter;
     }
 
     @Override
-    protected void onDestroy() {
-        mChatContentView.unregister();
-        super.onDestroy();
+    public void onBackPressed() {
+        if (!mChatContentView.interceptBackPress()) {
+            super.onBackPressed();
+        }
     }
 
     @Override
-    public void showNewMessage(final Message msg) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ChatMessageEntity msgEntity = (ChatMessageEntity) Tool.parseJSON(msg.getBody(), ChatMessageEntity.class);
-                msgEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
-                mChatContentView.addMessage(msgEntity);
-            }
-        });
+    protected void onDestroy() {
+        mChatContentView.unregister();
+        super.onDestroy();
     }
 
 }
