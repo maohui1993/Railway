@@ -15,17 +15,20 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.widget.ChatContentView;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.db.ChatMessageModel;
 import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.im.db.FriendModel_Table;
+import cn.dazhou.railway.im.listener.OnDataUpdateListener;
 import cn.dazhou.railway.im.presenter.ChatPresenter;
 
 /**
  * 启动时需要知道是与谁聊天，故启动的时候要带一个data值传入。
- */public class ChatActivity extends AppCompatActivity{
+ */
+public class ChatActivity extends AppCompatActivity implements OnDataUpdateListener<ChatMessageEntity> {
 
     public static final String DATA_KEY = "jid";
 
@@ -44,19 +47,8 @@ import cn.dazhou.railway.im.presenter.ChatPresenter;
         ButterKnife.bind(this);
         mJid = getIntent().getStringExtra(DATA_KEY);
         mPresenter = new ChatPresenter(this, mJid);
-        String possessor = MyApp.gCurrentUser.getUsername();
-        FriendModel friend = SQLite.select()
-                .from(FriendModel.class)
-                .where(FriendModel_Table.possessor.eq(possessor))
-                // 存储的jid形式为  username@possessor
-                .and(FriendModel_Table.jid.eq(mJid))
-                .querySingle();
-
-        if(friend != null) {
-            List<ChatMessageModel> chatMessageModels = friend.getMyChatMessages();
-            mChatContentView.initChatDatas(ChatMessageModel.toChatMessageEntity(chatMessageModels));
-        }
-
+        mPresenter.setOnDataUpdateListener(this);
+        mPresenter.init();
         // 点击发送按钮时
         mChatContentView.setOnSendListener(mPresenter);
         mChatContentView.setOnImageClickListener(mPresenter);
@@ -88,6 +80,11 @@ import cn.dazhou.railway.im.presenter.ChatPresenter;
     protected void onDestroy() {
         mChatContentView.unregister();
         super.onDestroy();
+    }
+
+    @Override
+    public void onUpdateData(List<ChatMessageEntity> datas) {
+        mChatContentView.initChatDatas(datas);
     }
 
 }

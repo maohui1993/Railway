@@ -13,6 +13,7 @@ import java.util.List;
 import cn.dazhou.im.core.ConnectManager;
 import cn.dazhou.im.core.IMApi;
 import cn.dazhou.im.entity.ChatMessageEntity;
+import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.im.util.OfflineMsgManager;
 
 /**
@@ -87,11 +88,11 @@ public final class IMLauncher {
         return OfflineMsgManager.getChatMessageEntities();
     }
 
-    public static Roster addFriend(String jid) throws SmackException.NoResponseException {
+    public static Roster addFriend(String jid){
         return mImApi.addFriend(jid);
     }
 
-    public static List<ReportedData.Row> searchUserFromServer(String username) {
+    public static List<UserBean> searchUserFromServer(String username) {
         return mImApi.searchUserFromServer(username);
     }
 }

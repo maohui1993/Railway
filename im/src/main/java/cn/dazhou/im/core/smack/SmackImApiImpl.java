@@ -2,8 +2,8 @@ package cn.dazhou.im.core.smack;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;
@@ -12,8 +12,8 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.filter.AndFilter;
-import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.filter.StanzaFilter;
+import org.jivesoftware.smack.filter.StanzaTypeFilter;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.roster.Roster;
@@ -28,13 +28,14 @@ import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.net.InetAddress;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.dazhou.im.core.IMApi;
 import cn.dazhou.im.core.function.IConnection;
 import cn.dazhou.im.entity.ChatMessageEntity;
-import cn.dazhou.im.util.Constants;
+import cn.dazhou.im.entity.FriendRequest;
+import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.im.util.OfflineMsgManager;
 import cn.dazhou.im.util.Tool;
 
@@ -52,7 +53,6 @@ public class SmackImApiImpl implements IMApi {
     private Context mContext;
 
     private byte mState;
-
     private Chat mChat;
 
     private SmackImApiImpl() {
@@ -100,7 +100,7 @@ public class SmackImApiImpl implements IMApi {
 
     public void addPacketSendListener(StanzaListener stanzaListener) {
         //条件过滤器
-        StanzaFilter filter = (StanzaFilter) new AndFilter(new PacketTypeFilter(Presence.class));
+        StanzaFilter filter = new AndFilter(new StanzaTypeFilter(Presence.class));
         addPacketSendListener(stanzaListener, filter);
     }
 
@@ -152,41 +152,39 @@ public class SmackImApiImpl implements IMApi {
     }
 
     @Override
-    public Roster addFriend(String jid) throws SmackException.NoResponseException {
+    public Roster addFriend(String jid) {
         if (mConnection == null) return null;
         Roster roster = Roster.getInstanceFor(mConnection);
         roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
-
         try {
-            // 添加好友
             roster.createEntry(JidCreate.entityBareFrom(jid), "PWQ", new String[]{"Friends"});
-//            roster.createEntry(JidCreate.entityBareFrom("maohui@"+jid), "MAOHUI", new String[]{"Friends"});
-//            roster.createEntry(JidCreate.entityBareFrom("hooyee@"+jid), "HOOYEE", new String[]{"Friends"});
-        } catch (SmackException.NoResponseException e) {
-            throw e;
         } catch (Exception e) {
-
+            Log.e("TAG", "SmackImApiImpl.class: " + "好友添加失败");
+            Log.e("TAG", "SmackImApiImpl.class: " + e.getMessage());
         }
         return null;
     }
 
     @Override
-    public List<ReportedData.Row> searchUserFromServer(String username) {
-        try{
+    public List<UserBean> searchUserFromServer(String username) {
+        try {
+            List<UserBean> users = new ArrayList();
             UserSearchManager search = new UserSearchManager(mConnection);
             Form searchForm = search.getSearchForm(search.getSearchServices().get(0));
             Form answerForm = searchForm.createAnswerForm();
             answerForm.setAnswer("Username", true);
             answerForm.setAnswer("search", username);
             ReportedData data = search.getSearchResults(answerForm, search.getSearchServices().get(0));
-
-            String anS = "";
             for (ReportedData.Row row : data.getRows()) {
-                Log.i("TAG","SmackImApiImpl.class: " + "username = " + row.getValues("Username").toString());
+                Log.i("TAG", "SmackImApiImpl.class: " + "username = " + row.getValues("Username").toString());
+                UserBean user = new UserBean();
+                user.setUsername(row.getValues("Username").get(0));
+                user.setName(row.getValues("Name").get(0));
+                user.setEmail(row.getValues("Email").get(0));
+                users.add(user);
             }
-//            Toast.makeText(this,ansS, Toast.LENGTH_SHORT).show();
-            return data.getRows();
-        }catch(Exception e){
+            return users;
+        } catch (Exception e) {
             Log.i("TAG", "SmackImApiImpl.class : " + e.getMessage());
         }
         return null;
@@ -196,13 +194,16 @@ public class SmackImApiImpl implements IMApi {
 
         @Override
         public void processStanza(Stanza packet) throws SmackException.NotConnectedException, InterruptedException {
-            Log.i("TAG", "processStanza");
+            Log.i("TAG", "PresenceService-" + packet.toXML());
             if (packet instanceof Presence) {
                 Presence presence = (Presence) packet;
-                Jid from = presence.getFrom();//发送方
                 Jid to = presence.getTo();//接收方
-                if (presence.getType().equals(Presence.Type.subscribe)) {
-                    Log.d(Constants.TAG, "收到添加请求！" + "发送方：" + from.getLocalpartOrNull() + "接收方：" + to.getLocalpartOrNull());
+                FriendRequest friendRequest = null;
+                // 未经处理的好友请求
+                if (presence.getType().equals(Presence.Type.unsubscribed)) {
+                    friendRequest = new FriendRequest(to.toString(), FriendRequest.Type.unsubscribed);
+                    // 处理好友添加请求
+                    EventBus.getDefault().post(friendRequest);
                 }
             }
         }

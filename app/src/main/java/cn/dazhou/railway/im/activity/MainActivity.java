@@ -37,6 +37,7 @@ import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.im.listener.OnDataUpdateListener;
 import cn.dazhou.railway.im.presenter.MainPresenter;
 import cn.dazhou.railway.im.service.IMChatService;
+import cn.dazhou.railway.im.service.IMFriendRequestService;
 
 public class MainActivity extends AppCompatActivity implements OnDataUpdateListener<FriendModel>{
     private static final String DATA_KEY = "jid";
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements OnDataUpdateListe
         mViewPager.setAdapter(mAdapter);//给ViewPager设置适配器
         mTabLayout.setupWithViewPager(mViewPager);//将TabLayout和ViewPager关联起来。
         IMChatService.startItself(this);
+        IMFriendRequestService.startItself(this);
     }
 
     private void initRoster() {

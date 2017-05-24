@@ -50,7 +50,12 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".im.activity.AddFriendActivity"></activity>
+        <activity android:name=".im.activity.AddFriendActivity" />
+
+        <service
+            android:name=".im.service.IMFriendRequestService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

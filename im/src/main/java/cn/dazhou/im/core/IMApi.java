@@ -1,14 +1,12 @@
 package cn.dazhou.im.core;
 
-import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.roster.Roster;
-import org.jivesoftware.smackx.search.ReportedData;
 
 import java.util.List;
 
 import cn.dazhou.im.core.function.IChat;
 import cn.dazhou.im.core.function.IConnection;
-import cn.dazhou.im.core.function.INewMessageListener;
+import cn.dazhou.im.entity.UserBean;
 
 /**
  * Created by Hooyee on 2017/5/7.
@@ -16,7 +14,7 @@ import cn.dazhou.im.core.function.INewMessageListener;
  */
 
 public interface IMApi extends IChat, IConnection{
-    Roster addFriend(String jid) throws SmackException.NoResponseException;
+    Roster addFriend(String jid);
 
-    List<ReportedData.Row> searchUserFromServer(String username);
+    List<UserBean> searchUserFromServer(String username);
 }

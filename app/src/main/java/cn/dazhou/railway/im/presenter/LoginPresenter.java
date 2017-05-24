@@ -68,7 +68,6 @@ public class LoginPresenter {
                 if (connected) {
                     logined = IMLauncher.login(username, password);
                     MyApp.gCurrentUsername = username;
-                    mLoginListener.onSuccess();
                     if (logined) {
                         UserModel userModel = SQLite.select()
                                 .from(UserModel.class)
@@ -84,6 +83,7 @@ public class LoginPresenter {
                         }
                         // 先初始化全局user
                         MyApp.gCurrentUser = userModel;
+                        mLoginListener.onSuccess();
                     } else {
                         mLoginListener.onFail("账号或密码错误");
                     }
