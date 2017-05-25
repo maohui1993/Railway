@@ -16,5 +16,7 @@ import cn.dazhou.im.entity.UserBean;
 public interface IMApi extends IChat, IConnection{
     Roster addFriend(String jid);
 
+    boolean acceptFriendRequest(String jid);
+
     List<UserBean> searchUserFromServer(String username);
 }

@@ -2,12 +2,8 @@ package cn.dazhou.railway.im.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-
-import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -17,20 +13,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.widget.ChatContentView;
-import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
-import cn.dazhou.railway.im.db.ChatMessageModel;
-import cn.dazhou.railway.im.db.FriendModel;
-import cn.dazhou.railway.im.db.FriendModel_Table;
 import cn.dazhou.railway.im.listener.OnDataUpdateListener;
 import cn.dazhou.railway.im.presenter.ChatPresenter;
+
+import static cn.dazhou.railway.config.Constants.DATA_KEY;
 
 /**
  * 启动时需要知道是与谁聊天，故启动的时候要带一个data值传入。
  */
 public class ChatActivity extends AppCompatActivity implements OnDataUpdateListener<ChatMessageEntity> {
-
-    public static final String DATA_KEY = "jid";
 
     @BindView(R.id.chat_content)
     ChatContentView mChatContentView;

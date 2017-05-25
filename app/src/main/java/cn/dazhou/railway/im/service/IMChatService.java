@@ -28,6 +28,7 @@ import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.Tool;
 import cn.dazhou.railway.im.activity.ChatActivity;
 import cn.dazhou.railway.im.db.ChatMessageModel;
+import cn.dazhou.railway.util.LogUtil;
 
 /**
  * 聊天服务.
@@ -46,7 +47,7 @@ public class IMChatService extends Service {
         super.onCreate();
         EventBus.getDefault().register(this);
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//		initChatManager();
+		initChatManager();
         handleOfflineMessage();
     }
 
@@ -77,12 +78,6 @@ public class IMChatService extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        initChatManager();
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
@@ -94,6 +89,9 @@ public class IMChatService extends Service {
 
     private void initChatManager() {
         XMPPConnection conn = (XMPPConnection) IMLauncher.getImApi().getConnection();
+        if (conn == null) {
+            LogUtil.write("IMChatService#initChatManager(),获取服务器连接为null".getBytes());
+        }
         chatManager = ChatManager.getInstanceFor(conn);
         chatManager.addIncomingListener(incomingChatMessageListener);
 
@@ -148,7 +146,7 @@ public class IMChatService extends Service {
         mBuilder.setTicker("一个新来的消息");//第一次提示消息的时候显示在通知栏上
         mBuilder.setAutoCancel(true);//自己维护通知的消失
         Intent intent = new Intent(context, ChatActivity.class);
-        intent.putExtra(ChatActivity.DATA_KEY, jid);
+        intent.putExtra(cn.dazhou.railway.config.Constants.DATA_KEY, jid);
 //        //使用TaskStackBuilder为“通知页面”设置返回关系
 //        TaskStackBuilder stackBuilder = TaskStackBuilder.create(mActivity);
 //        //为点击通知后打开的页面设定 返回 页面。（在manifest中指定）

@@ -1,6 +1,7 @@
 package cn.dazhou.railway.util;
 
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,7 +14,7 @@ import java.io.IOException;
 
 public class LogUtil {
     private static final String LOG_PATH = Environment.getExternalStorageDirectory() + "/railway/log/";
-    private static final String LOG_NAME = "railway.log";
+    private static final String LOG_NAME = "railway.log1";
     private static FileOutputStream out;
     public static void init() {
         File path = new File(LOG_PATH);
@@ -27,13 +28,18 @@ public class LogUtil {
             }
             out = new FileOutputStream(file);
         } catch (FileNotFoundException e) {
+            Log.i("TAG", "LogUtil error1");
             e.printStackTrace();
         } catch (IOException e) {
+            Log.i("TAG", "LogUtil error2");
             e.printStackTrace();
         }
     }
 
     public static void write(byte[] bytes) {
+        if (out == null) {
+            return;
+        }
         try {
             out.write(bytes);
             out.flush();

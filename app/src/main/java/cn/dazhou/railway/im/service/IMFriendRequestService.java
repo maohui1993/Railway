@@ -1,18 +1,22 @@
 package cn.dazhou.railway.im.service;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.FriendRequest;
+import cn.dazhou.railway.config.Constants;
+import cn.dazhou.railway.im.activity.AddFriendActivity;
+import cn.dazhou.railway.im.broadcast.FriendRequestReceiver;
 
 public class IMFriendRequestService extends Service {
     private Context context;
@@ -35,9 +39,34 @@ public class IMFriendRequestService extends Service {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleFriendRequest(FriendRequest request) {
         Log.i("TAG", "IMFriendRequestService: " + request.getJid());
-        if (request.getType() == FriendRequest.Type.unsubscribed) {
-            IMLauncher.addFriend(request.getJid());
+        if (request.getType() == FriendRequest.Type.subscribe) {
+            sendNotification(request.getJid());
+        } else if (request.getType() == FriendRequest.Type.unsubscribed) {
+            sendNotification(request.getJid());
         }
+    }
+
+    private void sendNotification(String jid) {
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        Intent broadcast = new Intent(context, FriendRequestReceiver.class);
+        broadcast.putExtra(Constants.DATA_KEY, jid);
+        broadcast.putExtra(Constants.NOTIFICATION_ACTION_TYPE, Constants.NOTIFICATION_ACTION_TYPE_ACCEPT);
+        broadcast.putExtra(Constants.NOTIFICATION_ID_KEY, Constants.NOTIFICATION_ID_VALUE_ONE);
+        broadcast.setAction("friend.request.accept");
+        PendingIntent actionIntent = PendingIntent.getBroadcast(context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+                context).setSmallIcon(cn.dazhou.im.R.drawable.emotion_aini)
+                .setContentTitle("好友请求")
+                .setContentText(jid + "发来好友请求")
+                .addAction(new NotificationCompat.Action(cn.dazhou.im.R.mipmap.icon_chat_add, "接收", actionIntent))
+                .setOngoing(true);
+        mBuilder.setTicker("一个新来的消息");//第一次提示消息的时候显示在通知栏上
+        mBuilder.setAutoCancel(true);//自己维护通知的消失
+        Intent intent = new Intent(context, AddFriendActivity.class);
+        intent.putExtra(Constants.DATA_KEY, jid);
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(pIntent);
+        notificationManager.notify(Constants.NOTIFICATION_ID_VALUE_ONE, mBuilder.build());
     }
 
     public static void startItself(Context context) {

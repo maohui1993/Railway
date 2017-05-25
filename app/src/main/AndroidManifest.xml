@@ -55,7 +55,16 @@
         <service
             android:name=".im.service.IMFriendRequestService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <receiver
+            android:name=".im.broadcast.FriendRequestReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="friend.request.accept"></action>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

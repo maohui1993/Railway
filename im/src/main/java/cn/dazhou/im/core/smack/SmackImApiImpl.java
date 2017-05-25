@@ -23,6 +23,7 @@ import org.jivesoftware.smackx.search.ReportedData;
 import org.jivesoftware.smackx.search.UserSearchManager;
 import org.jivesoftware.smackx.xdata.Form;
 import org.jxmpp.jid.EntityBareJid;
+import org.jxmpp.jid.EntityJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
@@ -81,7 +82,7 @@ public class SmackImApiImpl implements IMApi {
                 .setXmppDomain(JidCreate.from(ip).asDomainBareJid())
                 .setHostAddress(inetAddress)
                 .setPort(5222)
-                .setConnectTimeout(5000)
+                .setConnectTimeout(10000)
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                 .setSendPresence(false)
                 .build();
@@ -155,14 +156,37 @@ public class SmackImApiImpl implements IMApi {
     public Roster addFriend(String jid) {
         if (mConnection == null) return null;
         Roster roster = Roster.getInstanceFor(mConnection);
-        roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
+//        roster.setSubscriptionMode(Roster.SubscriptionMode.manual);
+        Presence presenceRes = new Presence(Presence.Type.subscribe);
+        presenceRes.setTo(jid);
         try {
-            roster.createEntry(JidCreate.entityBareFrom(jid), "PWQ", new String[]{"Friends"});
+            mConnection.sendStanza(presenceRes);
+//            roster.createEntry(JidCreate.entityBareFrom(jid), jid, new String[]{"Friends"});
         } catch (Exception e) {
             Log.e("TAG", "SmackImApiImpl.class: " + "好友添加失败");
             Log.e("TAG", "SmackImApiImpl.class: " + e.getMessage());
         }
         return null;
+    }
+
+    public void sendSubscribe(String jid) {
+
+    }
+
+    public boolean acceptFriendRequest(String jid) {
+        Presence presenceRes = new Presence(Presence.Type.subscribed);
+        try {
+            presenceRes.setTo(JidCreate.entityBareFrom(jid));
+            mConnection.sendStanza(presenceRes);
+            return true;
+        } catch (XmppStringprepException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (SmackException.NotConnectedException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
@@ -200,7 +224,11 @@ public class SmackImApiImpl implements IMApi {
                 Jid to = presence.getTo();//接收方
                 FriendRequest friendRequest = null;
                 // 未经处理的好友请求
+
+                Log.i("TAG", "Type = " + presence.getType());
+
                 if (presence.getType().equals(Presence.Type.unsubscribed)) {
+                    Log.i("TAG", "Type.UNsubscribe");
                     friendRequest = new FriendRequest(to.toString(), FriendRequest.Type.unsubscribed);
                     // 处理好友添加请求
                     EventBus.getDefault().post(friendRequest);

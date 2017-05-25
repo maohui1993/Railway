@@ -95,4 +95,8 @@ public final class IMLauncher {
     public static List<UserBean> searchUserFromServer(String username) {
         return mImApi.searchUserFromServer(username);
     }
+
+    public static boolean acceptFriendRequest(String jid) {
+        return mImApi.acceptFriendRequest(jid);
+    }
 }

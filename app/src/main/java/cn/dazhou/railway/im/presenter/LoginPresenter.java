@@ -10,7 +10,6 @@ import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.db.UserModel;
 import cn.dazhou.railway.im.db.UserModel_Table;
 import cn.dazhou.railway.im.listener.IOnLoginListener;
-import cn.dazhou.railway.im.service.IMChatService;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
