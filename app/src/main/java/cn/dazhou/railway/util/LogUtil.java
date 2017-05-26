@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class LogUtil {
     private static final String LOG_PATH = Environment.getExternalStorageDirectory() + "/railway/log/";
-    private static final String LOG_NAME = "railway.log1";
+    private static final String LOG_NAME = "railway.log";
     private static FileOutputStream out;
     public static void init() {
         File path = new File(LOG_PATH);

@@ -33,6 +33,8 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel>{
     @Column
     private String chatMessageJid;
     @Column
+    private int relation;       // remove:-1 ; none:0 ; to:1 ; from:2 ; both:3
+    @Column
     @ForeignKey(tableClass = UserModel.class,
             references = {@ForeignKeyReference(columnName = "possessor", foreignKeyColumnName = "username")})
     private String possessor;   // 好友的持有者（持有人账号）
@@ -93,8 +95,36 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel>{
         this.rawJid = rawJid;
     }
 
+    public int getRelation() {
+        return relation;
+    }
+
+    public void setRelation(int relation) {
+        this.relation = relation;
+    }
+
+    public static int typeToInt(String type) {
+        switch (type) {
+            case "remove" :
+                return -1;
+            case "none" :
+                return 0;
+            case "to" :
+                return 1;
+            case "from" :
+                return 2;
+            case "both" :
+                return 3;
+            default:
+                return 0;
+        }
+    }
+
     @Override
-    public int compareTo(@NonNull FriendModel o) {
+    public int compareTo(FriendModel o) {
+        if (o == null) {
+            return 1;
+        }
         return this.getName().compareTo(o.getName());
     }
 }

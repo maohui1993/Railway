@@ -87,6 +87,7 @@ public class MainPresenter implements View.OnClickListener{
             String possessor = MyApp.gCurrentUser.getUsername();
             // 存储的jid形式为  username@possessor
             friend.setJid(rawJid.split(Constants.JID_SEPARATOR)[0] + Constants.JID_SEPARATOR + possessor);
+            friend.setRelation(FriendModel.typeToInt(entry.getType().name()));
             friend.setRawJid(rawJid);
             friend.setName(entry.getName());
             friend.setPossessor(possessor);

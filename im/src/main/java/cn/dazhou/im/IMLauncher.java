@@ -99,4 +99,8 @@ public final class IMLauncher {
     public static boolean acceptFriendRequest(String jid) {
         return mImApi.acceptFriendRequest(jid);
     }
+
+    public static boolean rejectFriendRequest(String jid) {
+        return mImApi.rejectFriendRequest(jid);
+    }
 }

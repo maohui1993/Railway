@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements OnDataUpdateListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().setTitle("通讯录");
+//        getSupportActionBar().setTitle("通讯录");
         ButterKnife.bind(this);
         initRoster();
         mPresenter = new MainPresenter(this);

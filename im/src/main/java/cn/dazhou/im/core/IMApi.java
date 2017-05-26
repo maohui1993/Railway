@@ -18,5 +18,7 @@ public interface IMApi extends IChat, IConnection{
 
     boolean acceptFriendRequest(String jid);
 
+    boolean rejectFriendRequest(String jid);
+
     List<UserBean> searchUserFromServer(String username);
 }

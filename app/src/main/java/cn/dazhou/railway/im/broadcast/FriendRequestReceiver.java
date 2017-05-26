@@ -7,9 +7,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import cn.dazhou.im.IMLauncher;
-import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.config.Constants;
-import cn.dazhou.railway.im.db.FriendModel;
 
 public class FriendRequestReceiver extends BroadcastReceiver {
 
@@ -34,12 +32,13 @@ public class FriendRequestReceiver extends BroadcastReceiver {
     }
 
     private void acceptFriendRequest(String jid) {
-        IMLauncher.addFriend(jid);
-        FriendModel friend = new FriendModel();
-        friend.setJid(jid);
-        friend.setPossessor(MyApp.gCurrentUsername);
-        friend.setName("你好");
-        MyApp.gCurrentUser.getMyFriends().add(friend);
-        MyApp.gCurrentUser.save();
+//        IMLauncher.addFriend(jid);
+//        FriendModel friend = new FriendModel();
+//        friend.setJid(jid);
+//        friend.setPossessor(MyApp.gCurrentUsername);
+//        friend.setName("你好");
+//        MyApp.gCurrentUser.getMyFriends().add(friend);
+//        MyApp.gCurrentUser.save();
+        IMLauncher.acceptFriendRequest(jid);
     }
 }
