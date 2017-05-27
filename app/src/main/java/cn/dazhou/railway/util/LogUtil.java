@@ -3,10 +3,14 @@ package cn.dazhou.railway.util;
 import android.os.Environment;
 import android.util.Log;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 
 /**
  * Created by hooyee on 2017/5/22.
@@ -15,7 +19,8 @@ import java.io.IOException;
 public class LogUtil {
     private static final String LOG_PATH = Environment.getExternalStorageDirectory() + "/railway/log/";
     private static final String LOG_NAME = "railway.log";
-    private static FileOutputStream out;
+    private static PrintWriter print = null;
+
     public static void init() {
         File path = new File(LOG_PATH);
         if (!path.exists()) {
@@ -26,7 +31,7 @@ public class LogUtil {
             if (!file.exists()) {
                 file.createNewFile();
             }
-            out = new FileOutputStream(file);
+            print = new PrintWriter(new BufferedWriter(new FileWriter(file)), true);
         } catch (FileNotFoundException e) {
             Log.i("TAG", "LogUtil error1");
             e.printStackTrace();
@@ -36,25 +41,33 @@ public class LogUtil {
         }
     }
 
-    public static void write(byte[] bytes) {
-        if (out == null) {
+    public static void write(String data) {
+        if (print == null) {
             return;
         }
-        try {
-            out.write(bytes);
-            out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
+        print.write(data);
+        print.flush();
+    }
+
+    public static void write(Throwable ex) {
+        if (print == null) {
+            return;
         }
+        // 导出发生异常的时间
+        print.println(getCurrentTime());
+        print.println();
+        // 导出异常的调用栈信息
+        ex.printStackTrace(print);
+    }
+
+    public static String getCurrentTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+        return sdf.format(System.currentTimeMillis());
     }
 
     public static void destroy() {
-        if (out != null) {
-            try {
-                out.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (print != null) {
+            print.close();
         }
     }
 }

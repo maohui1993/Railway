@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity implements IOnLoginListener
 
     @Override
     public void onSuccess() {
-        LogUtil.write("登录成功".getBytes());
+        LogUtil.write("登录成功");
         mLoginPbt.setProgress(0);
         changeEditEnable();
         MainActivity.startItself(this, "");

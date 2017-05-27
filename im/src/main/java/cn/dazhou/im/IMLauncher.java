@@ -21,7 +21,7 @@ import cn.dazhou.im.util.OfflineMsgManager;
  */
 
 public final class IMLauncher {
-    private static final String TAG = "IMApi";
+    private static final String TAG = "TAG";
 
     public static IMApi getImApi() {
         return mImApi;
@@ -29,14 +29,13 @@ public final class IMLauncher {
 
     private static IMApi mImApi;
 
-    public static boolean connect(Context context, String ip) {
+    public static boolean connect(Context context, String ip) throws Exception {
         boolean result = true;
         try {
             mImApi = ConnectManager.getConnection(context, ConnectManager.CONNECT_PROTOCOL_XMPP, ip);
         } catch (Exception e) {
-            result = false;
-            e.printStackTrace();
             Log.d(TAG, e.getMessage());
+            throw e;
         }
         return result;
     }
@@ -51,14 +50,14 @@ public final class IMLauncher {
      * @param password
      * @return 登录是否成功
      */
-    public static boolean login(String username, String password) {
+    public static boolean login(String username, String password) throws Exception {
         Log.d("TAG", "登录中··");
         boolean result = true;
         try {
             mImApi.login(username, password);
         } catch (Exception e) {
-            result = false;
             Log.w("TAG", "登录失败:" + e.getMessage());
+            throw e;
         }
         return result;
     }

@@ -88,13 +88,17 @@ public class IMChatService extends Service {
     }
 
     private void initChatManager() {
-        XMPPConnection conn = (XMPPConnection) IMLauncher.getImApi().getConnection();
-        if (conn == null) {
-            Log.i("TAG", "IMChatService#initChatManager(),获取服务器连接为null");
-            LogUtil.write("IMChatService#initChatManager(),获取服务器连接为null".getBytes());
+        try {
+            XMPPConnection conn = (XMPPConnection) IMLauncher.getImApi().getConnection();
+            if (conn == null) {
+                Log.i("TAG", "IMChatService#initChatManager(),获取服务器连接为null");
+            }
+            chatManager = ChatManager.getInstanceFor(conn);
+            chatManager.addIncomingListener(incomingChatMessageListener);
+        }catch (Exception e) {
+            Log.i("TAG", "IMChatService#initChatManager(),获取服务器连接失败");
+            LogUtil.write(e);
         }
-        chatManager = ChatManager.getInstanceFor(conn);
-        chatManager.addIncomingListener(incomingChatMessageListener);
 
     }
 

@@ -4,12 +4,15 @@ import android.content.Context;
 
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import org.jivesoftware.smack.util.FileUtils;
+
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.db.UserModel;
 import cn.dazhou.railway.im.db.UserModel_Table;
 import cn.dazhou.railway.im.listener.IOnLoginListener;
+import cn.dazhou.railway.util.LogUtil;
 import cn.dazhou.railway.util.SharedPreferenceUtil;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -57,7 +60,12 @@ public class LoginPresenter {
             @Override
             public void subscribe(@NonNull ObservableEmitter e) throws Exception {
                 MyApp.gServerIp = SharedPreferenceUtil.getString(mContext, Constants.SERVER_IP,  Constants.SERVER_IP_DEFAULT);
-                connected = IMLauncher.connect(mContext, MyApp.gServerIp);
+                try {
+                    connected = IMLauncher.connect(mContext, MyApp.gServerIp);
+                } catch (Exception ex) {
+                    connected = false;
+                    LogUtil.write(ex);
+                }
                 e.onNext(1);
             }
         })
@@ -67,7 +75,12 @@ public class LoginPresenter {
             @Override
             public void accept(@NonNull Object o) throws Exception {
                 if (connected) {
-                    logined = IMLauncher.login(username, password);
+                    try {
+                        logined = IMLauncher.login(username, password);
+                    } catch (Exception e) {
+                        logined = false;
+                        LogUtil.write(e);
+                    }
                     MyApp.gCurrentUsername = username;
                     if (logined) {
                         UserModel userModel = SQLite.select()

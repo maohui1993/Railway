@@ -2,7 +2,6 @@ package cn.dazhou.im.widget;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -36,14 +35,13 @@ import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
 import cn.dazhou.im.adapter.ChatAdapter1;
 import cn.dazhou.im.adapter.CommonFragmentPagerAdapter;
+import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.entity.FullImageInfo;
 import cn.dazhou.im.fragment.ChatEmotionFragment;
 import cn.dazhou.im.fragment.ChatFunctionFragment;
-import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.GlobalOnItemClickManagerUtils;
 import cn.dazhou.im.util.MediaManager;
-import cn.dazhou.im.util.Tool;
 import cn.dazhou.im.util.Utils;
 
 /**
@@ -182,12 +180,13 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
      * @param messageInfo
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void MessageEventBus(final ChatMessageEntity messageInfo) {
+    public void showMessage(final ChatMessageEntity messageInfo) {
         Log.i("TAG", "event-onsend" + "   ok");
         switch (messageInfo.getType()) {
             case Constants.CHAT_ITEM_TYPE_RIGHT:
                 messageInfo.setSendState(Constants.CHAT_ITEM_SENDING);
                 messageInfo.setDate(Utils.getCurrentTime());
+                // 发送按钮点击时，由上层决定消息是发送给谁，ChatContentView只做消息的展示，不做逻辑控制
                 if (mOnSendListener != null) {
                     mOnSendListener.onSend(messageInfo);
                 }
@@ -199,13 +198,10 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
                 break;
             case Constants.CHAT_ITEM_TYPE_LEFT:
                 if (messageInfo.getVoiceBytes() != null) {
-                    // 需要异步加载声音文件
-//                    String voicePath = Tool.saveByteToLocalFile(messageInfo.getVoiceBytes(), +System.currentTimeMillis()+".aar");
-//                    messageInfo.setVoicePath(voicePath);
+                    // 释放资源
                     messageInfo.setVoiceBytes(null);
                 } else if(messageInfo.getImageBytes() != null) {
-//                    String imagePath = Tool.saveByteToLocalFile(messageInfo.getImageBytes(), System.currentTimeMillis()+".png");
-//                    messageInfo.setImagePath(imagePath);
+                    // 资源释放
                     messageInfo.setImageBytes(null);
                 }
                 break;
