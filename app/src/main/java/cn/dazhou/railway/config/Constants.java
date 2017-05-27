@@ -5,7 +5,8 @@ package cn.dazhou.railway.config;
  */
 
 public class Constants {
-    public static final String SERVER_IP = "192.168.1.39";
+    public static final String SERVER_IP = "server_ip";
+    public static final String SERVER_IP_DEFAULT = "192.168.1.39";
     public static final String JID_SEPARATOR = "@";
     public static final String DATA_KEY = "jid";
     public static final String NOTIFICATION_ACTION_TYPE = "notificationActionType";

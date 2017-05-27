@@ -19,6 +19,7 @@ import cn.dazhou.railway.im.db.ChatMessageModel;
 import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.im.db.FriendModel_Table;
 import cn.dazhou.railway.im.listener.OnDataUpdateListener;
+import cn.dazhou.railway.util.SharedPreferenceUtil;
 
 /**
  * Created by hooyee on 2017/5/8.
@@ -76,7 +77,7 @@ public class ChatPresenter implements ChatContentView.OnSendListener, ChatConten
         model.setState(msg.isState());
         Log.i("TAG", "model" + ""+model.save());
 //        model.save();
-        String jid = mJid.split(Constants.JID_SEPARATOR)[0] + "@" + Constants.SERVER_IP;
+        String jid = mJid.split(Constants.JID_SEPARATOR)[0] + Constants.JID_SEPARATOR + MyApp.gServerIp;
         IMLauncher.chatWith(jid, msg);
     }
 

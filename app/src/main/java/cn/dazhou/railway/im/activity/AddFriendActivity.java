@@ -27,6 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.UserBean;
+import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.adapter.UserAdapter;
@@ -107,7 +108,7 @@ public class AddFriendActivity extends AppCompatActivity {
             public void onItemClick(int position) {
                 StringBuilder sb = new StringBuilder(datas.get(position).getUsername());
                 // 拼写jid
-                sb.append(Constants.JID_SEPARATOR).append(Constants.SERVER_IP);
+                sb.append(Constants.JID_SEPARATOR).append(MyApp.gServerIp);
                 Log.i("TAG", "添加的用户Jid: " + sb.toString());
                 IMLauncher.addFriend(sb.toString());
             }

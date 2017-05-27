@@ -10,6 +10,7 @@ import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.db.UserModel;
 import cn.dazhou.railway.im.db.UserModel_Table;
 import cn.dazhou.railway.im.listener.IOnLoginListener;
+import cn.dazhou.railway.util.SharedPreferenceUtil;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -38,7 +39,7 @@ public class LoginPresenter {
         Observable.create(new ObservableOnSubscribe() {
             @Override
             public void subscribe(@NonNull ObservableEmitter e) throws Exception {
-                connected = IMLauncher.connect(mContext, Constants.SERVER_IP);
+                connected = IMLauncher.connect(mContext, SharedPreferenceUtil.getString(mContext, Constants.SERVER_IP, Constants.SERVER_IP_DEFAULT));
             }
         })
         .subscribeOn(Schedulers.io())
@@ -55,7 +56,8 @@ public class LoginPresenter {
         Observable.create(new ObservableOnSubscribe() {
             @Override
             public void subscribe(@NonNull ObservableEmitter e) throws Exception {
-                connected = IMLauncher.connect(mContext, Constants.SERVER_IP);
+                MyApp.gServerIp = SharedPreferenceUtil.getString(mContext, Constants.SERVER_IP,  Constants.SERVER_IP_DEFAULT);
+                connected = IMLauncher.connect(mContext, MyApp.gServerIp);
                 e.onNext(1);
             }
         })

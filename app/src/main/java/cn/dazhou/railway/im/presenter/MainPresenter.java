@@ -6,8 +6,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.raizlabs.android.dbflow.sql.language.SQLite;
-
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 
@@ -21,8 +19,6 @@ import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.activity.AddFriendActivity;
 import cn.dazhou.railway.im.db.FriendModel;
-import cn.dazhou.railway.im.db.UserModel;
-import cn.dazhou.railway.im.db.UserModel_Table;
 import cn.dazhou.railway.im.listener.OnDataUpdateListener;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
