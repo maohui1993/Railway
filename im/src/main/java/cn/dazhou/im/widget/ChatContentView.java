@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,9 +37,11 @@ import cn.dazhou.im.R2;
 import cn.dazhou.im.adapter.ChatAdapter1;
 import cn.dazhou.im.adapter.CommonFragmentPagerAdapter;
 import cn.dazhou.im.entity.FullImageInfo;
+import cn.dazhou.im.fragment.ChatEmotionFragment;
 import cn.dazhou.im.fragment.ChatFunctionFragment;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
+import cn.dazhou.im.util.GlobalOnItemClickManagerUtils;
 import cn.dazhou.im.util.MediaManager;
 import cn.dazhou.im.util.Tool;
 import cn.dazhou.im.util.Utils;
@@ -74,6 +77,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
 
     private ArrayList<Fragment> fragments;
     private ChatFunctionFragment chatFunctionFragment;
+    private ChatEmotionFragment chatEmotionFragment;
     private CommonFragmentPagerAdapter fragementAdapter;
 
     private OnSendListener mOnSendListener;
@@ -113,6 +117,8 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         ButterKnife.bind(this);
 
         fragments = new ArrayList<>();
+        chatEmotionFragment = new ChatEmotionFragment();
+        fragments.add(chatEmotionFragment);
         chatFunctionFragment = new ChatFunctionFragment();
         fragments.add(chatFunctionFragment);
         fragementAdapter = new CommonFragmentPagerAdapter(((AppCompatActivity)context).getSupportFragmentManager(), fragments);
@@ -132,10 +138,35 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
                 .bindToVoiceText(voiceText)
                 .build();
 
+        // 将表情框的表情选取绑定到editText中显示
+        GlobalOnItemClickManagerUtils globalOnItemClickListener = GlobalOnItemClickManagerUtils.getInstance(context);
+        globalOnItemClickListener.attachToEditText(editText);
+
         mAdapter = new ChatAdapter1(context);
         mAdapter.setOnItemClickListener(this);
         chatList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         chatList.setAdapter(mAdapter);
+        chatList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                switch (newState) {
+                    case RecyclerView.SCROLL_STATE_IDLE:
+                        mAdapter.notifyDataSetChanged();
+                        break;
+                    case RecyclerView.SCROLL_STATE_DRAGGING:
+                        mDetector.hideEmotionLayout(false);
+                        mDetector.hideSoftInput();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
     }
 
     public void initChatDatas(List<ChatMessageEntity> chatDatas) {

@@ -1,6 +1,7 @@
 package cn.dazhou.im.adapter;
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,9 +21,11 @@ import cn.dazhou.im.widget.SoundView;
 public class ChatAdapter1 extends RecyclerArrayAdapter<ChatMessageEntity> {
 
     private OnItemClickListener onItemClickListener;
+    private Handler handler;
 
     public ChatAdapter1(Context context) {
         super(context);
+        handler = new Handler();
     }
 
     @Override
@@ -30,10 +33,10 @@ public class ChatAdapter1 extends RecyclerArrayAdapter<ChatMessageEntity> {
         BaseViewHolder viewHolder = null;
         switch (viewType) {
             case Constants.CHAT_ITEM_TYPE_LEFT:
-                viewHolder = new ChatAcceptViewHolder(parent, onItemClickListener);
+                viewHolder = new ChatAcceptViewHolder(parent, onItemClickListener, handler);
                 break;
             case Constants.CHAT_ITEM_TYPE_RIGHT:
-                viewHolder = new ChatSendViewHolder(parent, onItemClickListener);
+                viewHolder = new ChatSendViewHolder(parent, onItemClickListener, handler);
                 break;
         }
         return viewHolder;

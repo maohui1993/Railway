@@ -90,6 +90,7 @@ public class IMChatService extends Service {
     private void initChatManager() {
         XMPPConnection conn = (XMPPConnection) IMLauncher.getImApi().getConnection();
         if (conn == null) {
+            Log.i("TAG", "IMChatService#initChatManager(),获取服务器连接为null");
             LogUtil.write("IMChatService#initChatManager(),获取服务器连接为null".getBytes());
         }
         chatManager = ChatManager.getInstanceFor(conn);

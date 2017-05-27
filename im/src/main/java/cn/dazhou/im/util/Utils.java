@@ -38,33 +38,33 @@ public class Utils {
      * @param source
      * @return
      */
-//    public static SpannableString getEmotionContent(final Context context, final TextView tv, String source) {
-//        SpannableString spannableString = new SpannableString(source);
-//        Resources res = context.getResources();
-//
-//        String regexEmotion = "\\[([\u4e00-\u9fa5\\w])+\\]";
-//        Pattern patternEmotion = Pattern.compile(regexEmotion);
-//        Matcher matcherEmotion = patternEmotion.matcher(spannableString);
-//
-//        while (matcherEmotion.find()) {
-//            // 获取匹配到的具体字符
-//            String key = matcherEmotion.group();
-//            // 匹配字符串的开始位置
-//            int start = matcherEmotion.start();
-//            // 利用表情名字获取到对应的图片
-//            Integer imgRes = EmotionUtils.EMOTION_STATIC_MAP.get(key);
-//            if (imgRes != null) {
-//                // 压缩表情图片
-//                int size = (int) tv.getTextSize() * 13 / 8;
-//                Bitmap bitmap = BitmapFactory.decodeResource(res, imgRes);
-//                Bitmap scaleBitmap = Bitmap.createScaledBitmap(bitmap, size, size, true);
-//
-//                ImageSpan span = new ImageSpan(context, scaleBitmap);
-//                spannableString.setSpan(span, start, start + key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//            }
-//        }
-//        return spannableString;
-//    }
+    public static SpannableString getEmotionContent(final Context context, final TextView tv, String source) {
+        SpannableString spannableString = new SpannableString(source);
+        Resources res = context.getResources();
+
+        String regexEmotion = "\\[([\u4e00-\u9fa5\\w])+\\]";
+        Pattern patternEmotion = Pattern.compile(regexEmotion);
+        Matcher matcherEmotion = patternEmotion.matcher(spannableString);
+
+        while (matcherEmotion.find()) {
+            // 获取匹配到的具体字符
+            String key = matcherEmotion.group();
+            // 匹配字符串的开始位置
+            int start = matcherEmotion.start();
+            // 利用表情名字获取到对应的图片
+            Integer imgRes = EmotionUtils.EMOTION_STATIC_MAP.get(key);
+            if (imgRes != null) {
+                // 压缩表情图片
+                int size = (int) tv.getTextSize() * 13 / 8;
+                Bitmap bitmap = BitmapFactory.decodeResource(res, imgRes);
+                Bitmap scaleBitmap = Bitmap.createScaledBitmap(bitmap, size, size, true);
+
+                ImageSpan span = new ImageSpan(context, scaleBitmap);
+                spannableString.setSpan(span, start, start + key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+        return spannableString;
+    }
 
     /**
      * 返回当前时间的格式为 yyyyMMddHHmmss

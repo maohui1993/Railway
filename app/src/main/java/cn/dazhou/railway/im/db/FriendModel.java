@@ -122,8 +122,11 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel>{
 
     @Override
     public int compareTo(FriendModel o) {
-        if (o == null) {
+        if (o == null || o.getName() == null) {
             return 1;
+        }
+        if (getName() == null) {
+            return -1;
         }
         return this.getName().compareTo(o.getName());
     }

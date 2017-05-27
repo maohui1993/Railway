@@ -1,5 +1,6 @@
 package cn.dazhou.im.adapter.holder;
 
+import android.os.Handler;
 import android.text.TextPaint;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,11 +48,13 @@ public class ChatAcceptViewHolder extends BaseViewHolder<ChatMessageEntity> {
     private RelativeLayout.LayoutParams layoutParams;
 
     private ChatAdapter1.OnItemClickListener onItemClickListener;
+    private Handler handler;
 
-    public ChatAcceptViewHolder(ViewGroup parent, ChatAdapter1.OnItemClickListener onItemClickListener) {
+    public ChatAcceptViewHolder(ViewGroup parent, ChatAdapter1.OnItemClickListener onItemClickListener, Handler handler) {
         super(parent, R.layout.item_chat_accept);
         ButterKnife.bind(this, itemView);
         this.onItemClickListener = onItemClickListener;
+        this.handler = handler;
         layoutParams = (RelativeLayout.LayoutParams) chatItemLayoutContent.getLayoutParams();
     }
 
@@ -60,7 +63,7 @@ public class ChatAcceptViewHolder extends BaseViewHolder<ChatMessageEntity> {
         chatItemDate.setText(data.getDate() != null ? data.getDate() : "");
         Glide.with(getContext()).load(R.drawable.header_01).asBitmap().into(chatItemHeader);
         if (data.getContent() != null) {
-            chatItemContentText.setSpanText(null, data.getContent(), true);
+            chatItemContentText.setSpanText(handler, data.getContent(), true);
             chatItemVoice.setVisibility(View.GONE);
             chatItemContentText.setVisibility(View.VISIBLE);
             chatItemLayoutContent.setVisibility(View.VISIBLE);
