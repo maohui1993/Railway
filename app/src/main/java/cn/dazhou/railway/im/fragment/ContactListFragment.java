@@ -1,11 +1,9 @@
-package cn.dazhou.railway.im.activity;
+package cn.dazhou.railway.im.fragment;
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,53 +16,65 @@ import com.jude.rollviewpager.Util;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.adapter.RosterAdapter;
 import cn.dazhou.railway.im.adapter.StickyHeaderAdapter;
 import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.im.listener.OnDataUpdateListener;
-import cn.dazhou.railway.im.presenter.MainPresenter;
-import cn.dazhou.railway.im.service.IMChatService;
-import cn.dazhou.railway.im.service.IMFriendRequestService;
-@Deprecated
-public class MainActivity extends AppCompatActivity implements OnDataUpdateListener<FriendModel>{
+import cn.dazhou.railway.im.presenter.ContactListPresenter;
+
+public class ContactListFragment extends BaseFragment implements OnDataUpdateListener<FriendModel> {
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
     private static final String DATA_KEY = "jid";
 
-    @BindView(R.id.roster_easy_recycler_view)
-    EasyRecyclerView mRosterView;
-    private MainPresenter mPresenter;
+    private EasyRecyclerView mRosterView;
     private RosterAdapter mRosterAdapter;
+    private ContactListPresenter mPresenter;
+
+    public static ContactListFragment newInstance(boolean param1) {
+        ContactListFragment fragment = new ContactListFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_PARAM1, param1);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        initRoster();
-        mPresenter = new MainPresenter(this);
+        mPresenter = new ContactListPresenter(getContext());
         mPresenter.setOnDataUpdateListener(this);
-        mPresenter.init();
+    }
 
-        IMChatService.startItself(this);
-        IMFriendRequestService.startItself(this);
+    @Override
+    public void onResume() {
+        mPresenter.init();
+        super.onResume();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_contact_list, container, false);
+        mRosterView = (EasyRecyclerView) root.findViewById(R.id.roster_easy_recycler_view);
+        initRoster();
+        return root;
     }
 
     private void initRoster() {
-        LayoutInflater mInflater = LayoutInflater.from(this);
-        mRosterView = (EasyRecyclerView) mInflater.inflate(R.layout.roster_view, null);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRosterView.setLayoutManager(layoutManager);
-        DividerDecoration itemDecoration = new DividerDecoration(Color.GRAY, Util.dip2px(this,0.5f), Util.dip2px(this,72),0);
+        DividerDecoration itemDecoration = new DividerDecoration(Color.GRAY, Util.dip2px(getContext(),0.5f), Util.dip2px(getContext(),72),0);
         itemDecoration.setDrawLastItem(false);
         mRosterView.addItemDecoration(itemDecoration);
-        mRosterAdapter = new RosterAdapter(this);
+        mRosterAdapter = new RosterAdapter(getContext());
         mRosterView.setAdapter(mRosterAdapter);
         mRosterAdapter.addHeader(new RecyclerArrayAdapter.ItemView() {
             @Override
             public View onCreateView(ViewGroup parent) {
-                LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+                LayoutInflater inflater = LayoutInflater.from(getContext());
                 View v = inflater.inflate(R.layout.header_item, null);
                 v.findViewById(R.id.new_friend).setOnClickListener(mPresenter);
                 v.findViewById(R.id.chat_group).setOnClickListener(mPresenter);
@@ -78,15 +88,9 @@ public class MainActivity extends AppCompatActivity implements OnDataUpdateListe
         });
 
         // StickyHeader
-        StickyHeaderDecoration decoration = new StickyHeaderDecoration(new StickyHeaderAdapter(this));
+        StickyHeaderDecoration decoration = new StickyHeaderDecoration(new StickyHeaderAdapter(getContext()));
         decoration.setIncludeHeader(false);
         mRosterView.addItemDecoration(decoration);
-    }
-
-    public static void startItself(Context context, String data) {
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.putExtra(DATA_KEY, data);
-        context.startActivity(intent);
     }
 
     /**

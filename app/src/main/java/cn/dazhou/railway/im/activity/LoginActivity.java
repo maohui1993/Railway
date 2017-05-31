@@ -1,5 +1,7 @@
 package cn.dazhou.railway.im.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,8 +14,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.dazhou.railway.R;
+import cn.dazhou.railway.SplashActivity;
 import cn.dazhou.railway.im.listener.IOnLoginListener;
 import cn.dazhou.railway.im.presenter.LoginPresenter;
+import cn.dazhou.railway.im.service.IMChatService;
+import cn.dazhou.railway.im.service.IMFriendRequestService;
 import cn.dazhou.railway.util.LogUtil;
 
 public class LoginActivity extends AppCompatActivity implements IOnLoginListener {
@@ -64,7 +69,8 @@ public class LoginActivity extends AppCompatActivity implements IOnLoginListener
         LogUtil.write("登录成功");
         mLoginPbt.setProgress(0);
         changeEditEnable();
-        MainActivity.startItself(this, "");
+        IMChatService.startItself(this);
+        IMFriendRequestService.startItself(this);
         finish();
     }
 
@@ -73,5 +79,10 @@ public class LoginActivity extends AppCompatActivity implements IOnLoginListener
         mLoginPbt.setProgress(0);
         changeEditEnable();
         Toast.makeText(this, info, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void startItself(Context context) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
     }
 }

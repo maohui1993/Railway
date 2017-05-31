@@ -15,10 +15,13 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import cn.dazhou.im.entity.FriendRequest;
 import cn.dazhou.railway.config.Constants;
-import cn.dazhou.railway.im.activity.AddFriendActivity;
 import cn.dazhou.railway.im.activity.FriendRequestActivity;
-import cn.dazhou.railway.im.broadcast.FriendRequestReceiver;
 
+/**
+ * 好友请求服务.
+ *
+ * @author hooyee
+ */
 public class IMFriendRequestService extends Service {
     private Context context;
     private NotificationManager notificationManager;
@@ -68,6 +71,12 @@ public class IMFriendRequestService extends Service {
         mBuilder.setContentIntent(pIntent);
 //        mBuilder.setFullScreenIntent(pIntent,true);
         notificationManager.notify(Constants.NOTIFICATION_ID_VALUE_ONE, mBuilder.build());
+    }
+
+    @Override
+    public boolean stopService(Intent name) {
+        EventBus.getDefault().unregister(this);
+        return super.stopService(name);
     }
 
     public static void startItself(Context context) {

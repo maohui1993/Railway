@@ -33,7 +33,7 @@ import cn.dazhou.railway.util.LogUtil;
 /**
  * 聊天服务.
  *
- * @author shimiso
+ * @author hooyee
  */
 public class IMChatService extends Service {
     private Context context;
@@ -112,6 +112,7 @@ public class IMChatService extends Service {
             String fromUser = from.getLocalpart().toString().split("@")[0];
             String imagePath = null;
             String voicePath = null;
+            // 语音与图片不能同时发送
             if (chatMessageEntity.getImageBytes() != null) {
                 imagePath = Tool.saveByteToLocalFile(chatMessageEntity.getImageBytes(), System.currentTimeMillis() + ".png");
             } else if (chatMessageEntity.getVoiceBytes() != null) {
@@ -129,6 +130,7 @@ public class IMChatService extends Service {
                     .build();
             chatMessageEntity.setVoicePath(voicePath);
             chatMessageEntity.setImagePath(imagePath);
+            // 若聊天对象的窗口已经打开，则不发送通知
             if (checkJid(fromUser)) {
                 chatMessageModel.setState(true);
                 EventBus.getDefault().post(chatMessageEntity);
@@ -166,6 +168,12 @@ public class IMChatService extends Service {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void messageEventBus(final String jid) {
         currentChattingUser = jid.split("@")[0];
+    }
+
+    @Override
+    public boolean stopService(Intent name) {
+        EventBus.getDefault().unregister(this);
+        return super.stopService(name);
     }
 
     public static void startItself(Context context) {

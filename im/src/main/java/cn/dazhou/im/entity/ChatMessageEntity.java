@@ -1,6 +1,8 @@
 package cn.dazhou.im.entity;
 
 
+import cn.dazhou.im.util.Constants;
+
 /**
  * Created by hooyee on 2017/5/8.
  */

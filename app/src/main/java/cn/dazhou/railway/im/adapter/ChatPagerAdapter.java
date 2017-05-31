@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Hooyee on 2017/5/7.
  * mail: hooyee_moly@foxmail.com
  */
-
+@Deprecated
 public class ChatPagerAdapter extends PagerAdapter {
     private List<View> mViewList;
     private String[] mTitles;

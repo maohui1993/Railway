@@ -9,6 +9,7 @@ import android.widget.Toast;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 
+import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -29,14 +30,15 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Created by hooyee on 2017/5/11.
+ * Created by hooyee on 2017/5/31.
  */
-@Deprecated
-public class MainPresenter implements View.OnClickListener{
+
+public class ContactListPresenter implements View.OnClickListener{
     private Context mContext;
     private OnDataUpdateListener mOnDataUpdateListener;
+    private WeakReference<List<FriendModel>> cache;
 
-    public MainPresenter(Context context) {
+    public ContactListPresenter(Context context) {
         mContext = context;
     }
 
@@ -45,14 +47,22 @@ public class MainPresenter implements View.OnClickListener{
     }
 
     public void init() {
+        if (MyApp.gCurrentUser == null) {
+            Toast.makeText(mContext, "提示登录", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (cache != null) {
+            mOnDataUpdateListener.onUpdateData(cache.get());
+            return;
+        }
         if (MyApp.gCurrentUser.isFirstLogin()) {
             Observable.create(new ObservableOnSubscribe() {
-                        @Override
-                        public void subscribe(@NonNull ObservableEmitter e) throws Exception {
-                            updateFriendFromServer();
-                            e.onNext(1);
-                        }
-                    })
+                @Override
+                public void subscribe(@NonNull ObservableEmitter e) throws Exception {
+                    updateFriendFromServer();
+                    e.onNext(1);
+                }
+            })
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer() {
@@ -61,11 +71,13 @@ public class MainPresenter implements View.OnClickListener{
                             List<FriendModel> friends = MyApp.gCurrentUser.getMyFriends();
                             if (mOnDataUpdateListener != null && friends != null && friends.size() > 0) {
                                 Collections.sort(friends);
+                                cache = new WeakReference(friends);
                                 mOnDataUpdateListener.onUpdateData(friends);
                             }
                         }
                     });
         } else {
+            cache = new WeakReference(MyApp.gCurrentUser.getMyFriends());
             mOnDataUpdateListener.onUpdateData(MyApp.gCurrentUser.getMyFriends());
         }
     }

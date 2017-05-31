@@ -98,10 +98,7 @@ public class ChatMessageModel extends BaseModel{
     }
 
     public void setId(int id) {
-        if (jid.contains(Constants.JID_SEPARATOR)) {
-            jid = jid.split(Constants.JID_SEPARATOR)[0];
-        }
-        this.jid = jid + Constants.JID_SEPARATOR +  MyApp.gCurrentUsername;
+        this.id = id;
     }
 
     public String getImagePath() {
@@ -165,7 +162,10 @@ public class ChatMessageModel extends BaseModel{
     }
 
     public void setJid(String jid) {
-        this.jid = jid;
+        if (jid.contains(Constants.JID_SEPARATOR)) {
+            jid = jid.split(Constants.JID_SEPARATOR)[0];
+        }
+        this.jid = jid + Constants.JID_SEPARATOR +  MyApp.gCurrentUsername;
     }
 
     public long getVoiceTime() {

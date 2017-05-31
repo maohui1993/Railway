@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">Railway</string>
     <string-array name="titles">
-        <item>通讯录</item>
+        <item>设置</item>
         <item>通讯录</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

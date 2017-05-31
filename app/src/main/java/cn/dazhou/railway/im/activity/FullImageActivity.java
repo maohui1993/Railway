@@ -52,8 +52,11 @@ public class FullImageActivity extends Activity {
         EventBus.getDefault().register(this);
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true) //在ui线程执行
+    /**
+     * 当发送的图片被点击时会执行该方法
+     * @param fullImageInfo
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onDataSynEvent(final FullImageInfo fullImageInfo) {
         final int left = fullImageInfo.getLocationX();
         final int top = fullImageInfo.getLocationY();
