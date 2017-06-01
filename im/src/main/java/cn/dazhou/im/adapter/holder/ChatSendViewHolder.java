@@ -63,7 +63,7 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
     }
 
     @Override
-    public void setData(ChatMessageEntity data) {
+    public void setData(final ChatMessageEntity data) {
         chatItemDate.setText(data.getDate() != null ? data.getDate() : "");
         Glide.with(getContext()).load(R.drawable.header_02).asBitmap().into(chatItemHeader);
         if (data.getContent() != null) {
@@ -109,12 +109,12 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
             chatItemContentText.setVisibility(View.GONE);
             chatItemContentImage.setVisibility(View.VISIBLE);
             Glide.with(getContext()).load(data.getImagePath()).into(chatItemContentImage);
-//            chatItemContentImage.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    onItemClickListener.onImageClick(chatItemContentImage, getDataPosition());
-//                }
-//            });
+            chatItemContentImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onImageClick(chatItemContentImage, data);
+                }
+            });
             layoutParams.width = Utils.dp2px(getContext(), 120);
             layoutParams.height = Utils.dp2px(getContext(), 48);
             chatItemLayoutContent.setLayoutParams(layoutParams);

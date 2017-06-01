@@ -76,7 +76,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     private ArrayList<Fragment> fragments;
     private ChatFunctionFragment chatFunctionFragment;
     private ChatEmotionFragment chatEmotionFragment;
-    private CommonFragmentPagerAdapter fragementAdapter;
+    private CommonFragmentPagerAdapter fragmentAdapter;
 
     private OnSendListener mOnSendListener;
     private OnImageClickListener mOnImageClickListener;
@@ -119,8 +119,8 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         fragments.add(chatEmotionFragment);
         chatFunctionFragment = new ChatFunctionFragment();
         fragments.add(chatFunctionFragment);
-        fragementAdapter = new CommonFragmentPagerAdapter(((AppCompatActivity)context).getSupportFragmentManager(), fragments);
-        viewpager.setAdapter(fragementAdapter);
+        fragmentAdapter = new CommonFragmentPagerAdapter(((AppCompatActivity)context).getSupportFragmentManager(), fragments);
+        viewpager.setAdapter(fragmentAdapter);
         viewpager.setCurrentItem(0);
         EventBus.getDefault().register(this);
 

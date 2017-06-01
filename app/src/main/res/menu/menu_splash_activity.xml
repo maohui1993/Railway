@@ -6,4 +6,9 @@
         android:icon="@mipmap/ic_launcher"
         android:title="服务器配置"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_barcode"
+        android:icon="@mipmap/ic_launcher"
+        android:title="扫一扫"
+        app:showAsAction="never"/>
 </menu>

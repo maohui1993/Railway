@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">Railway</string>
     <string-array name="titles">
-        <item>设置</item>
+        <item>主页</item>
+        <item>工作</item>
         <item>通讯录</item>
+        <item>设置</item>
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->

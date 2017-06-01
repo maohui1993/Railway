@@ -133,7 +133,7 @@ public class ChatFunctionFragment extends BaseFragment {
 
                         ChatMessageEntity messageInfo = new ChatMessageEntity();
                         Bitmap bmp = Tool.createBitmapByPath(picturePath, 300, 400);
-                        byte[] bytes = Tool.compressImage(bmp, 200, 100);
+                        byte[] bytes = Tool.compressImage(bmp, 1024, 100);
                         messageInfo.setImageBytes(bytes);
                         messageInfo.setImagePath(picturePath);
                         // 标记为自己发送的消息，显示在右边

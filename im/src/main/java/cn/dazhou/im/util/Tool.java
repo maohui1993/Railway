@@ -140,13 +140,13 @@ public class Tool {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         // 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
-        image.compress(Bitmap.CompressFormat.JPEG, 80, baos);
+        image.compress(Bitmap.CompressFormat.PNG, options, baos);
         // 循环判断如果压缩后图片是否大于100kb,大于继续压缩
         while (baos.toByteArray().length / 1024 > size) {
             options -= 10;// 每次都减少10
             baos.reset();// 重置baos即清空baos
             // 这里压缩options%，把压缩后的数据存放到baos中
-            image.compress(Bitmap.CompressFormat.JPEG, options, baos);
+            image.compress(Bitmap.CompressFormat.PNG, options, baos);
         }
         return baos.toByteArray();
     }

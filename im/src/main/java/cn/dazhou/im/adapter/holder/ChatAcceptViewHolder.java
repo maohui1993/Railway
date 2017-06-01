@@ -106,7 +106,7 @@ public class ChatAcceptViewHolder extends BaseViewHolder<ChatMessageEntity> {
             chatItemContentImage.setVisibility(View.VISIBLE);
             Glide.with(getContext())
                     .load(data.getImagePath())
-                    .placeholder(R.mipmap.ic_launcher)
+//                    .placeholder(R.mipmap.ic_launcher)
                     .into(chatItemContentImage);
             chatItemContentImage.setOnClickListener(new View.OnClickListener() {
                 @Override

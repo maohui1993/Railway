@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.db.UserModel;
@@ -22,5 +23,6 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         FlowManager.init(new FlowConfig.Builder(getApplicationContext()).build());
+        ZXingLibrary.initDisplayOpinion(this);
     }
 }

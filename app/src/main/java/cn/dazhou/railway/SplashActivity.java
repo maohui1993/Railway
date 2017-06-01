@@ -4,17 +4,16 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+
+import com.astuetz.PagerSlidingTabStrip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +30,7 @@ import cn.dazhou.railway.im.adapter.FunctionTabAdapter;
 import cn.dazhou.railway.im.fragment.BaseFragment;
 import cn.dazhou.railway.im.fragment.ContactListFragment;
 import cn.dazhou.railway.im.fragment.SettingFragment;
+import cn.dazhou.railway.im.presenter.SplashPresenter;
 import cn.dazhou.railway.util.LogUtil;
 
 public class SplashActivity extends AppCompatActivity {
@@ -38,15 +38,14 @@ public class SplashActivity extends AppCompatActivity {
     ViewGroup content;
     @BindView(R.id.my_toolbar)
     Toolbar toolbar;
-    @BindView(R.id.tabs)
-    TabLayout mTabLayout;
     @BindView(R.id.pager)
     ViewPager mViewPager;
     @BindArray(R.array.titles)
     String[] mTitles;
-
+    @BindView(R.id.tabs_1)
+    PagerSlidingTabStrip pagerSlidingTabStrip;
     private List<BaseFragment> fragments = new ArrayList();
-
+    private SplashPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,39 +58,41 @@ public class SplashActivity extends AppCompatActivity {
         Tool.checkPermission(this, Manifest.permission.RECORD_AUDIO);
         Tool.checkPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         Tool.checkPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+        Tool.checkPermission(this, Manifest.permission.CAMERA);
+        Tool.checkPermission(this, Manifest.permission.VIBRATE);
 //        Tool.checkPermission(this);
         LogUtil.init();
         ButterKnife.bind(this);
+        mPresenter = new SplashPresenter(this);
+        toolbar.setTitle(mTitles[0]);
         setSupportActionBar(toolbar);
-
-        mTabLayout.setTabMode(TabLayout.MODE_FIXED);//设置tab模式，当前为系统默认模式
-        mTabLayout.addTab(mTabLayout.newTab().setText(mTitles[0]));//添加tab选项卡
-        mTabLayout.addTab(mTabLayout.newTab().setText(mTitles[1]));//添加tab选项卡
-
         fragments.add(SettingFragment.newInstance(false));
-        // 必须登录才能正常使用
+        fragments.add(SettingFragment.newInstance(false));
         fragments.add(ContactListFragment.newInstance(true));
+        fragments.add(SettingFragment.newInstance(false));
 
-        FunctionTabAdapter mAdapter = new FunctionTabAdapter(getSupportFragmentManager(), fragments, mTitles);
+        FunctionTabAdapter mAdapter = new FunctionTabAdapter(this, getSupportFragmentManager(), fragments, mTitles);
         mViewPager.setAdapter(mAdapter);//给ViewPager设置适配器
-        mTabLayout.setupWithViewPager(mViewPager);//将TabLayout和ViewPager关联起来。
-        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        mViewPager.clearOnPageChangeListeners();
+        pagerSlidingTabStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                BaseFragment fragment = fragments.get(tab.getPosition());
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                BaseFragment fragment = fragments.get(position);
+                toolbar.setTitle(mTitles[position]);
                 if(fragment.isMustLogin() && MyApp.gCurrentUser == null) {
                     fragment.requestLogin();
                 }
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+            public void onPageScrollStateChanged(int state) {
             }
         });
+        pagerSlidingTabStrip.setViewPager(mViewPager);
     }
 
     @Override
@@ -107,6 +108,9 @@ public class SplashActivity extends AppCompatActivity {
             case R.id.menu_setting:
                 SettingActivity.startItself(this);
                 break;
+            case R.id.menu_barcode:
+                mPresenter.parseQRcode();
+                break;
         }
         return true;
     }
@@ -121,6 +125,11 @@ public class SplashActivity extends AppCompatActivity {
     void position() {
         MapLauncher.loadMap(content);
         MapLauncher.getPosition();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mPresenter.onActivityResult(requestCode, resultCode, data);
     }
 
     public static void startItself(Context context) {
