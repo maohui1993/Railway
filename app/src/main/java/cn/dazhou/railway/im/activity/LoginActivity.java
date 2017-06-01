@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity implements IOnLoginListener
         changeEditEnable();
         IMChatService.startItself(this);
         IMFriendRequestService.startItself(this);
-        finish();
+        SplashActivity.startItself(this);
     }
 
     @Override

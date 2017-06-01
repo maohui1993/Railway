@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import java.util.List;
@@ -26,6 +27,7 @@ import cn.dazhou.im.R;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.Tool;
+import cn.dazhou.railway.SplashActivity;
 import cn.dazhou.railway.im.activity.ChatActivity;
 import cn.dazhou.railway.im.db.ChatMessageModel;
 import cn.dazhou.railway.util.LogUtil;
@@ -155,9 +157,9 @@ public class IMChatService extends Service {
         Intent intent = new Intent(context, ChatActivity.class);
         intent.putExtra(cn.dazhou.railway.config.Constants.DATA_KEY, jid);
 //        //使用TaskStackBuilder为“通知页面”设置返回关系
-//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(mActivity);
-//        //为点击通知后打开的页面设定 返回 页面。（在manifest中指定）
-//        stackBuilder.addParentStack(LaunchActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        //为点击通知后打开的页面设定 返回 页面。（在manifest中指定）
+//        stackBuilder.addParentStack(SplashActivity.class);
 //        stackBuilder.addNextIntent(intent);
 //        PendingIntent pIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
