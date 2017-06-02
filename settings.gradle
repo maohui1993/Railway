@@ -1,1 +1,1 @@
-include ':app', ':maputil', ':im', ':library', ':pagerslidingtabstrip'
+include ':app', ':maputil', ':im', ':pagerslidingtabstrip'
