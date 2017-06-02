@@ -196,7 +196,7 @@ public class PagerSlidingTabStrip extends LinearLayout {
         for (int i = 0; i < tabCount; i++) {
 
             if (pager.getAdapter() instanceof IconTabProvider) {
-                addIconTab(i, ((IconTabProvider) pager.getAdapter()).getPageIconResId(i));
+                addIconTab(i, ((IconTabProvider) pager.getAdapter()).getPageIconResId(i), pager.getAdapter().getPageTitle(i).toString());
             } else {
                 addTextTab(i, pager.getAdapter().getPageTitle(i).toString(), Gravity.CENTER);
             }
@@ -235,18 +235,15 @@ public class PagerSlidingTabStrip extends LinearLayout {
         addTab(position, tab);
     }
 
-    private void addIconTab(final int position, int resId) {
+    private void addIconTab(final int position, int resId, String title) {
 
         TextView tab = new TextView(getContext());
-//        tab.setSingleLine();
+        tab.setSingleLine();
         Drawable d = getContext().getResources().getDrawable(resId);
         d.setBounds(0, 0, d.getMinimumWidth(), d.getMinimumHeight());
-        tab.setText("sdfdf");
-
+        tab.setText(title);
+        tab.setGravity(Gravity.CENTER_HORIZONTAL);
         tab.setCompoundDrawables(null, d, null, null);
-//        ImageButton tab = new ImageButton(getContext());
-//        tab.setImageResource(resId);
-//        tab.setContentDescription("11221");
         addTab(position, tab);
 
     }
