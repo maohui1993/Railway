@@ -29,7 +29,9 @@ import cn.dazhou.railway.im.activity.SettingActivity;
 import cn.dazhou.railway.im.adapter.FunctionTabAdapter;
 import cn.dazhou.railway.im.fragment.BaseFragment;
 import cn.dazhou.railway.im.fragment.ContactListFragment;
+import cn.dazhou.railway.im.fragment.HomeFragment;
 import cn.dazhou.railway.im.fragment.SettingFragment;
+import cn.dazhou.railway.im.fragment.WorkFragment;
 import cn.dazhou.railway.im.presenter.SplashPresenter;
 import cn.dazhou.railway.util.LogUtil;
 
@@ -66,8 +68,8 @@ public class SplashActivity extends AppCompatActivity {
         mPresenter = new SplashPresenter(this);
         toolbar.setTitle(mTitles[0]);
         setSupportActionBar(toolbar);
-        fragments.add(SettingFragment.newInstance(false));
-        fragments.add(SettingFragment.newInstance(false));
+        fragments.add(HomeFragment.newInstance(false));
+        fragments.add(WorkFragment.newInstance(false));
         fragments.add(ContactListFragment.newInstance(true));
         fragments.add(SettingFragment.newInstance(false));
 

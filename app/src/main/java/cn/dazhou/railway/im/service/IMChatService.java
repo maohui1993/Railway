@@ -73,6 +73,7 @@ public class IMChatService extends Service {
                 sendNotification(message, chatMessageModel.getJid());
             }
         }
+        chatMessageEntities.clear();
     }
 
     private boolean checkJid(String jid) {

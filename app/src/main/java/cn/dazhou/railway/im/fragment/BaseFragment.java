@@ -10,7 +10,7 @@ import cn.dazhou.railway.im.activity.LoginActivity;
  */
 
 public class BaseFragment extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
+    protected static String ARG_PARAM1 = "param1";
 
     /** 是否必须登录 */
     protected boolean isMustLogin;

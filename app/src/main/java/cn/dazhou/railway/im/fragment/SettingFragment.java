@@ -12,7 +12,6 @@ import cn.dazhou.railway.R;
  */
 
 public class SettingFragment extends BaseFragment {
-    private static final String ARG_PARAM1 = "param1";
     public SettingFragment(){}
 
     public static SettingFragment newInstance(boolean param1) {
