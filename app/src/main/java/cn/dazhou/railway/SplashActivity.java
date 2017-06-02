@@ -13,8 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
-import com.astuetz.PagerSlidingTabStrip;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +22,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.dazhou.im.util.Tool;
 import cn.dazhou.maputil.MapLauncher;
+import cn.dazhou.pagerslidingtabstrip.PagerSlidingTabStrip;
 import cn.dazhou.railway.im.activity.LoginActivity;
 import cn.dazhou.railway.im.activity.SettingActivity;
 import cn.dazhou.railway.im.adapter.FunctionTabAdapter;

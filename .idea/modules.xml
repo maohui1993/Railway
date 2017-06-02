@@ -5,7 +5,9 @@
       <module fileurl="file://$PROJECT_DIR$/Railway.iml" filepath="$PROJECT_DIR$/Railway.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/im/im.iml" filepath="$PROJECT_DIR$/im/im.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
       <module fileurl="file://$PROJECT_DIR$/maputil/maputil.iml" filepath="$PROJECT_DIR$/maputil/maputil.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pagerslidingtabstrip/pagerslidingtabstrip.iml" filepath="$PROJECT_DIR$/pagerslidingtabstrip/pagerslidingtabstrip.iml" />
     </modules>
   </component>
 </project>
