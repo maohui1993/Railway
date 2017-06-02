@@ -34,6 +34,7 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -42,7 +43,7 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-public class PagerSlidingTabStrip extends HorizontalScrollView {
+public class PagerSlidingTabStrip extends LinearLayout {
 
     public interface IconTabProvider {
         int getPageIconResId(int position);
@@ -108,7 +109,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     public PagerSlidingTabStrip(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
-        setFillViewport(true);
+//        setFillViewport(true);
         setWillNotDraw(false);
 
         tabsContainer = new LinearLayout(context);
@@ -204,23 +205,23 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
         updateTabStyles();
 
-        getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-
-            @SuppressWarnings("deprecation")
-            @SuppressLint("NewApi")
-            @Override
-            public void onGlobalLayout() {
-
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                    getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                } else {
-                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-
-                currentPosition = pager.getCurrentItem();
-                scrollToChild(currentPosition, 0);
-            }
-        });
+//        getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+//
+//            @SuppressWarnings("deprecation")
+//            @SuppressLint("NewApi")
+//            @Override
+//            public void onGlobalLayout() {
+//
+//                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+//                    getViewTreeObserver().removeGlobalOnLayoutListener(this);
+//                } else {
+//                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//                }
+//
+//                currentPosition = pager.getCurrentItem();
+////                scrollToChild(currentPosition, 0);
+//            }
+//        });
 
     }
 
@@ -365,7 +366,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
             currentPosition = position;
             currentPositionOffset = positionOffset;
 
-            scrollToChild(position, (int) (positionOffset * tabsContainer.getChildAt(position).getWidth()));
+//            scrollToChild(position, (int) (positionOffset * tabsContainer.getChildAt(position).getWidth()));
 
             invalidate();
 
@@ -377,7 +378,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         @Override
         public void onPageScrollStateChanged(int state) {
             if (state == ViewPager.SCROLL_STATE_IDLE) {
-                scrollToChild(pager.getCurrentItem(), 0);
+//                scrollToChild(pager.getCurrentItem(), 0);
             }
 
             if (delegatePageListener != null) {

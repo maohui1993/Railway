@@ -44,6 +44,7 @@
         android:id="@+id/tabs_1"
         app:pstsShouldExpand="true"
         app:pstsIndicatorHeight="100dp"
+        app:pstsIndicatorColor="#747aec"
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
