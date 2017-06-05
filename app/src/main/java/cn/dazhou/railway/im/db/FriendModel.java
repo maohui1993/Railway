@@ -128,6 +128,6 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel>{
         if (getName() == null) {
             return -1;
         }
-        return this.getName().compareTo(o.getName());
+        return this.getName().toLowerCase().compareTo(o.getName());
     }
 }

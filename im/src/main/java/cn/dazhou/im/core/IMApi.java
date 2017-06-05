@@ -1,6 +1,7 @@
 package cn.dazhou.im.core;
 
 import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import java.util.List;
 
@@ -21,4 +22,22 @@ public interface IMApi extends IChat, IConnection{
     boolean rejectFriendRequest(String jid);
 
     List<UserBean> searchUserFromServer(String username);
+
+    /**
+     * 创建群聊聊天室
+     * @param roomName		聊天室名字
+     * @param nickName		创建者在聊天室中的昵称
+     * @param password		聊天室密码
+     * @return
+     */
+    MultiUserChat createChatRoom(String roomName, String nickName, String password);
+
+    /**
+     * 加入一个群聊聊天室
+     * @param roomName		聊天室名字
+     * @param nickName		用户在聊天室中的昵称
+     * @param password		聊天室密码
+     * @return
+     */
+    MultiUserChat joinChatRoom(String roomName,  String nickName, String password);
 }

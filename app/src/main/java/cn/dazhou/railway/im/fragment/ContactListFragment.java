@@ -14,6 +14,8 @@ import com.jude.easyrecyclerview.decoration.DividerDecoration;
 import com.jude.easyrecyclerview.decoration.StickyHeaderDecoration;
 import com.jude.rollviewpager.Util;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import cn.dazhou.railway.R;
@@ -71,6 +73,7 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
         mRosterView.addItemDecoration(itemDecoration);
         mRosterAdapter = new RosterAdapter(getContext());
         mRosterView.setAdapter(mRosterAdapter);
+        // 添加非重用view部分的组件
         mRosterAdapter.addHeader(new RecyclerArrayAdapter.ItemView() {
             @Override
             public View onCreateView(ViewGroup parent) {
@@ -86,11 +89,11 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
 
             }
         });
-
-        // StickyHeader
-        StickyHeaderDecoration decoration = new StickyHeaderDecoration(new StickyHeaderAdapter(getContext()));
-        decoration.setIncludeHeader(false);
-        mRosterView.addItemDecoration(decoration);
+//
+//        // StickyHeader
+//        StickyHeaderDecoration decoration = new StickyHeaderDecoration(new StickyHeaderAdapter(getContext(), mRosterAdapter.getAllData()));
+//        decoration.setIncludeHeader(false);
+//        mRosterView.addItemDecoration(decoration);
     }
 
     /**
@@ -99,7 +102,12 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
      */
     @Override
     public void onUpdateData(List<FriendModel> datas) {
+        Collections.sort(datas);
         mRosterAdapter.clear();
         mRosterAdapter.addAll(datas);
+        // StickyHeader
+
+        StickyHeaderDecoration decoration = new StickyHeaderDecoration(new StickyHeaderAdapter(getContext(), mRosterAdapter.getAllData()));
+        mRosterView.addItemDecoration(decoration);
     }
 }

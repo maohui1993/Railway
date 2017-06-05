@@ -5,6 +5,7 @@ import android.util.Log;
 
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.search.ReportedData;
 import org.jxmpp.jid.EntityBareJid;
 
@@ -101,5 +102,13 @@ public final class IMLauncher {
 
     public static boolean rejectFriendRequest(String jid) {
         return mImApi.rejectFriendRequest(jid);
+    }
+
+    public static MultiUserChat createChatRoom(String roomName, String nickName, String password) {
+        return mImApi.createChatRoom(roomName, nickName, password);
+    }
+
+    public static MultiUserChat joinChatRoom(String roomName,  String nickName, String password) {
+        return mImApi.joinChatRoom(roomName, nickName, password);
     }
 }

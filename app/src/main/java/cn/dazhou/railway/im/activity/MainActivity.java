@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements OnDataUpdateListe
         });
 
         // StickyHeader
-        StickyHeaderDecoration decoration = new StickyHeaderDecoration(new StickyHeaderAdapter(this));
+        StickyHeaderDecoration decoration = new StickyHeaderDecoration(new StickyHeaderAdapter(this, mRosterAdapter.getAllData()));
         decoration.setIncludeHeader(false);
         mRosterView.addItemDecoration(decoration);
     }

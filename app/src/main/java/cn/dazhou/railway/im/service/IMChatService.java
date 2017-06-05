@@ -3,7 +3,10 @@ package cn.dazhou.railway.im.service;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jivesoftware.smack.AbstractXMPPConnection;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.chat2.IncomingChatMessageListener;
@@ -20,7 +23,10 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.R;
@@ -42,6 +48,8 @@ public class IMChatService extends Service {
     private NotificationManager notificationManager;
     private ChatManager chatManager;
     private static String currentChattingUser = "";
+    private XMPPConnection conn;
+    private Timer timer = new Timer();
 
     @Override
     public void onCreate() {
@@ -51,6 +59,7 @@ public class IMChatService extends Service {
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		initChatManager();
         handleOfflineMessage();
+//        reConnect();
     }
 
     private void handleOfflineMessage() {
@@ -87,17 +96,37 @@ public class IMChatService extends Service {
 
     @Override
     public void onDestroy() {
+        timer.cancel();
         super.onDestroy();
+    }
+
+    private void reConnect() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (!conn.isConnected()) {
+                    try {
+                        ((AbstractXMPPConnection)conn).connect();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+
+//delay为long,period为long：从现在起过delay毫秒以后，每隔period毫秒执行一次。
+        timer.schedule(task, 1000, 3000);
     }
 
     private void initChatManager() {
         try {
-            XMPPConnection conn = (XMPPConnection) IMLauncher.getImApi().getConnection();
+            conn = (XMPPConnection) IMLauncher.getImApi().getConnection();
             if (conn == null) {
                 Log.i("TAG", "IMChatService#initChatManager(),获取服务器连接为null");
             }
             chatManager = ChatManager.getInstanceFor(conn);
             chatManager.addIncomingListener(incomingChatMessageListener);
+
         }catch (Exception e) {
             Log.i("TAG", "IMChatService#initChatManager(),获取服务器连接失败");
             LogUtil.write(e);

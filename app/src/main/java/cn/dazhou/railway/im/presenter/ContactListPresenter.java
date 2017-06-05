@@ -116,6 +116,14 @@ public class ContactListPresenter implements View.OnClickListener{
                 break;
             case R.id.chat_group:
                 Toast.makeText(mContext, "Group Chat", Toast.LENGTH_SHORT).show();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        IMLauncher.createChatRoom("tst", "liaotian", "123");
+
+                    }
+                }).start();
+                break;
         }
     }
 }

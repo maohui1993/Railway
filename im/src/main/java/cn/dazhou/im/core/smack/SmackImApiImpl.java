@@ -1,6 +1,7 @@
 package cn.dazhou.im.core.smack;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
@@ -9,6 +10,7 @@ import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.StanzaListener;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.filter.AndFilter;
@@ -19,16 +21,25 @@ import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
+import org.jivesoftware.smackx.muc.DiscussionHistory;
+import org.jivesoftware.smackx.muc.HostedRoom;
+import org.jivesoftware.smackx.muc.MucEnterConfiguration;
+import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smackx.muc.MultiUserChatManager;
 import org.jivesoftware.smackx.search.ReportedData;
 import org.jivesoftware.smackx.search.UserSearchManager;
 import org.jivesoftware.smackx.xdata.Form;
+import org.jivesoftware.smackx.xdata.FormField;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.jid.parts.Resourcepart;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import cn.dazhou.im.core.IMApi;
@@ -168,6 +179,8 @@ public class SmackImApiImpl implements IMApi {
         return null;
     }
 
+
+
     public boolean acceptFriendRequest(String jid) {
         try {
             Presence presenceRes = new Presence(Presence.Type.subscribed);
@@ -225,6 +238,116 @@ public class SmackImApiImpl implements IMApi {
             Log.i("TAG", "SmackImApiImpl.class : " + e.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public MultiUserChat createChatRoom(final String roomName, final String nickName, final String password) {
+//        getHostRooms();
+
+        if(!mConnection.isConnected()) {
+            Log.i("TAG", "连接已断开");
+        }
+        MultiUserChat muc = null;
+        try {
+            // 创建一个MultiUserChat
+            muc = MultiUserChatManager.getInstanceFor(mConnection).getMultiUserChat(JidCreate.entityBareFrom(roomName + "@chatroom." + mConnection.getServiceName().toString()));
+            // 创建聊天室
+            Log.i("TAG", "发送时间： " + System.currentTimeMillis());
+            MultiUserChat.MucCreateConfigFormHandle mucCreateConfigFormHandle = muc.createOrJoin(Resourcepart.from(nickName));
+            if(mucCreateConfigFormHandle != null) {
+                // 获得聊天室的配置表单
+                Form form = muc.getConfigurationForm();
+                // 根据原始表单创建一个要提交的新表单。
+                Form submitForm = form.createAnswerForm();
+                // 向要提交的表单添加默认答复
+                List<FormField> fields = form.getFields();
+                for(int i = 0; fields != null && i < fields.size(); i++) {
+                    if(FormField.Type.hidden != fields.get(i).getType() &&
+                            fields.get(i).getVariable() != null) {
+                        // 设置默认值作为答复
+                        submitForm.setDefaultAnswer(fields.get(i).getVariable());
+                    }
+                }
+                // 设置聊天室的新拥有者
+                List owners = new ArrayList();
+                owners.add(mConnection.getUser());// 用户JID
+                submitForm.setAnswer("muc#roomconfig_roomowners", owners);
+                // 设置聊天室是持久聊天室，即将要被保存下来
+                submitForm.setAnswer("muc#roomconfig_persistentroom", true);
+                // 房间仅对成员开放
+                submitForm.setAnswer("muc#roomconfig_membersonly", false);
+                // 允许占有者邀请其他人
+                submitForm.setAnswer("muc#roomconfig_allowinvites", true);
+                if(password != null && password.length() != 0) {
+                    // 进入是否需要密码
+                    submitForm.setAnswer("muc#roomconfig_passwordprotectedroom",  true);
+                    // 设置进入密码
+                    submitForm.setAnswer("muc#roomconfig_roomsecret", password);
+                }
+                // 能够发现占有者真实 JID 的角色
+                // submitForm.setAnswer("muc#roomconfig_whois", "anyone");
+                // 登录房间对话
+                submitForm.setAnswer("muc#roomconfig_enablelogging", true);
+                // 仅允许注册的昵称登录
+                submitForm.setAnswer("x-muc#roomconfig_reservednick", true);
+                // 允许使用者修改昵称
+                submitForm.setAnswer("x-muc#roomconfig_canchangenick", false);
+                // 允许用户注册房间
+                submitForm.setAnswer("x-muc#roomconfig_registration", false);
+                // 发送已完成的表单（有默认值）到服务器来配置聊天室
+                muc.sendConfigurationForm(submitForm);
+
+                Log.i("TAG", "发送结束： " + System.currentTimeMillis());
+            }
+        } catch (Exception e) {
+            Log.i("TAG", "测试：" + mConnection);
+            e.printStackTrace();
+        }
+        return muc;
+    }
+
+    @Override
+    public MultiUserChat joinChatRoom(String roomName,  String nickName, String password) {
+        if(!mConnection.isConnected()) {
+            throw new NullPointerException("服务器连接失败，请先连接服务器");
+        }
+        try {
+            // 使用XMPPConnection创建一个MultiUserChat窗口
+            MultiUserChat muc = MultiUserChatManager.getInstanceFor(mConnection).
+                    getMultiUserChat(JidCreate.entityBareFrom(roomName + "@chatroom." + mConnection.getServiceName().toString()));
+            // 聊天室服务将会决定要接受的历史记录数量
+            MucEnterConfiguration mucEnterConfiguration = muc.getEnterConfigurationBuilder(Resourcepart.from(nickName))
+                    .requestMaxStanzasHistory(100)
+                    .build();
+            // history.setSince(new Date());
+            // 用户加入聊天室
+            muc.join(Resourcepart.from(nickName), password);
+            return muc;
+        } catch (XMPPException | SmackException e) {
+            e.printStackTrace();
+            return null;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (XmppStringprepException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 初始化会议室列表 <br>
+     * 该列表数据为会议服务列表，一个会议服务包含N个会议室
+     */
+    public List<HostedRoom> getHostRooms() {
+        if (getConnection() == null)
+            return null;
+        Collection<HostedRoom> hostrooms = null;
+        List<HostedRoom> roominfos = new ArrayList<HostedRoom>();
+        MultiUserChatManager mucManager = null;
+        // 创建一个MultiUserChat
+        mucManager = MultiUserChatManager.getInstanceFor(mConnection);
+        Log.i("TAG", "加入的chatroom.size = " + mucManager.getJoinedRooms().size());
+        return roominfos;
     }
 
     class MyStanzaListener implements StanzaListener {
