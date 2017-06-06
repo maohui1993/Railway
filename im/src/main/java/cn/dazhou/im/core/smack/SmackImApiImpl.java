@@ -1,7 +1,6 @@
 package cn.dazhou.im.core.smack;
 
 import android.content.Context;
-import android.os.Handler;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
@@ -21,8 +20,6 @@ import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
-import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
-import org.jivesoftware.smackx.muc.DiscussionHistory;
 import org.jivesoftware.smackx.muc.HostedRoom;
 import org.jivesoftware.smackx.muc.MucEnterConfiguration;
 import org.jivesoftware.smackx.muc.MultiUserChat;
@@ -31,6 +28,7 @@ import org.jivesoftware.smackx.search.ReportedData;
 import org.jivesoftware.smackx.search.UserSearchManager;
 import org.jivesoftware.smackx.xdata.Form;
 import org.jivesoftware.smackx.xdata.FormField;
+import org.jxmpp.jid.DomainBareJid;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
@@ -180,7 +178,6 @@ public class SmackImApiImpl implements IMApi {
     }
 
 
-
     public boolean acceptFriendRequest(String jid) {
         try {
             Presence presenceRes = new Presence(Presence.Type.subscribed);
@@ -215,16 +212,28 @@ public class SmackImApiImpl implements IMApi {
         return false;
     }
 
+    private DomainBareJid getTargetServiceJid(String target, List<DomainBareJid> domainBareJids) {
+        for (DomainBareJid domainBareJid : domainBareJids) {
+            if (domainBareJid.toString().contains(target)) {
+                return domainBareJid;
+            }
+        }
+        return null;
+    }
+
     @Override
     public List<UserBean> searchUserFromServer(String username) {
         try {
             List<UserBean> users = new ArrayList();
             UserSearchManager search = new UserSearchManager(mConnection);
-            Form searchForm = search.getSearchForm(search.getSearchServices().get(0));
+            List<DomainBareJid> domainBareJids = search.getSearchServices();
+            DomainBareJid targetJid = getTargetServiceJid("search", domainBareJids);
+            Form searchForm = search.getSearchForm(targetJid);
+
             Form answerForm = searchForm.createAnswerForm();
             answerForm.setAnswer("Username", true);
             answerForm.setAnswer("search", username);
-            ReportedData data = search.getSearchResults(answerForm, search.getSearchServices().get(0));
+            ReportedData data = search.getSearchResults(answerForm, targetJid);
             for (ReportedData.Row row : data.getRows()) {
                 Log.i("TAG", "SmackImApiImpl.class: " + "username = " + row.getValues("Username").toString());
                 UserBean user = new UserBean();
@@ -244,7 +253,7 @@ public class SmackImApiImpl implements IMApi {
     public MultiUserChat createChatRoom(final String roomName, final String nickName, final String password) {
 //        getHostRooms();
 
-        if(!mConnection.isConnected()) {
+        if (!mConnection.isConnected()) {
             Log.i("TAG", "连接已断开");
         }
         MultiUserChat muc = null;
@@ -253,15 +262,15 @@ public class SmackImApiImpl implements IMApi {
             muc = MultiUserChatManager.getInstanceFor(mConnection).getMultiUserChat(JidCreate.entityBareFrom(roomName + "@conference." + mConnection.getServiceName().toString()));
             // 创建聊天室
             MultiUserChat.MucCreateConfigFormHandle mucCreateConfigFormHandle = muc.createOrJoin(Resourcepart.from(nickName));
-            if(mucCreateConfigFormHandle != null) {
+            if (mucCreateConfigFormHandle != null) {
                 // 获得聊天室的配置表单
                 Form form = muc.getConfigurationForm();
                 // 根据原始表单创建一个要提交的新表单。
                 Form submitForm = form.createAnswerForm();
                 // 向要提交的表单添加默认答复
                 List<FormField> fields = form.getFields();
-                for(int i = 0; fields != null && i < fields.size(); i++) {
-                    if(FormField.Type.hidden != fields.get(i).getType() &&
+                for (int i = 0; fields != null && i < fields.size(); i++) {
+                    if (FormField.Type.hidden != fields.get(i).getType() &&
                             fields.get(i).getVariable() != null) {
                         // 设置默认值作为答复
                         submitForm.setDefaultAnswer(fields.get(i).getVariable());
@@ -278,9 +287,9 @@ public class SmackImApiImpl implements IMApi {
 //                // 允许占有者邀请其他人
                 submitForm.setAnswer("muc#roomconfig_allowinvites", true);
                 submitForm.setAnswer("muc#roomconfig_enablelogging", true);
-                if(password != null && password.length() != 0) {
+                if (password != null && password.length() != 0) {
                     // 进入是否需要密码
-                    submitForm.setAnswer("muc#roomconfig_passwordprotectedroom",  true);
+                    submitForm.setAnswer("muc#roomconfig_passwordprotectedroom", true);
                     // 设置进入密码
                     submitForm.setAnswer("muc#roomconfig_roomsecret", password);
                 }
@@ -305,8 +314,8 @@ public class SmackImApiImpl implements IMApi {
     }
 
     @Override
-    public MultiUserChat joinChatRoom(String roomName,  String nickName, String password) {
-        if(!mConnection.isConnected()) {
+    public MultiUserChat joinChatRoom(String roomName, String nickName, String password) {
+        if (!mConnection.isConnected()) {
             throw new NullPointerException("服务器连接失败，请先连接服务器");
         }
         try {

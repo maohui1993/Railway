@@ -1,7 +1,5 @@
 package cn.dazhou.railway.im.db;
 
-import android.support.annotation.NonNull;
-
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
@@ -11,7 +9,6 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import java.util.Comparator;
 import java.util.List;
 
 import cn.dazhou.railway.MyApp;
@@ -71,7 +68,14 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel>{
         this.jid = jid + Constants.JID_SEPARATOR + MyApp.gCurrentUsername;
     }
 
+    /**
+     * 添加默认值(避免不必要的空指针问题)
+     * @return
+     */
     public String getName() {
+        if (name == null) {
+            return " ";
+        }
         return name;
     }
 
