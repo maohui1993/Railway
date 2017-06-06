@@ -119,7 +119,7 @@ public class ContactListPresenter implements View.OnClickListener{
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        IMLauncher.createChatRoom("tst", "liaotian", "123");
+                        IMLauncher.createChatRoom("test2", "liaotian", "123");
 
                     }
                 }).start();

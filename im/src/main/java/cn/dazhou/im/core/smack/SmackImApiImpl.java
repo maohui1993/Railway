@@ -250,9 +250,8 @@ public class SmackImApiImpl implements IMApi {
         MultiUserChat muc = null;
         try {
             // 创建一个MultiUserChat
-            muc = MultiUserChatManager.getInstanceFor(mConnection).getMultiUserChat(JidCreate.entityBareFrom(roomName + "@chatroom." + mConnection.getServiceName().toString()));
+            muc = MultiUserChatManager.getInstanceFor(mConnection).getMultiUserChat(JidCreate.entityBareFrom(roomName + "@conference." + mConnection.getServiceName().toString()));
             // 创建聊天室
-            Log.i("TAG", "发送时间： " + System.currentTimeMillis());
             MultiUserChat.MucCreateConfigFormHandle mucCreateConfigFormHandle = muc.createOrJoin(Resourcepart.from(nickName));
             if(mucCreateConfigFormHandle != null) {
                 // 获得聊天室的配置表单
@@ -269,15 +268,16 @@ public class SmackImApiImpl implements IMApi {
                     }
                 }
                 // 设置聊天室的新拥有者
-                List owners = new ArrayList();
-                owners.add(mConnection.getUser());// 用户JID
-                submitForm.setAnswer("muc#roomconfig_roomowners", owners);
-                // 设置聊天室是持久聊天室，即将要被保存下来
+//                List owners = new ArrayList();
+//                owners.add(mConnection.getUser());// 用户JID
+//                submitForm.setAnswer("muc#roomconfig_roomowners", owners);
+//                // 设置聊天室是持久聊天室，即将要被保存下来
                 submitForm.setAnswer("muc#roomconfig_persistentroom", true);
-                // 房间仅对成员开放
+//                // 房间仅对成员开放
                 submitForm.setAnswer("muc#roomconfig_membersonly", false);
-                // 允许占有者邀请其他人
+//                // 允许占有者邀请其他人
                 submitForm.setAnswer("muc#roomconfig_allowinvites", true);
+                submitForm.setAnswer("muc#roomconfig_enablelogging", true);
                 if(password != null && password.length() != 0) {
                     // 进入是否需要密码
                     submitForm.setAnswer("muc#roomconfig_passwordprotectedroom",  true);
@@ -296,8 +296,6 @@ public class SmackImApiImpl implements IMApi {
                 submitForm.setAnswer("x-muc#roomconfig_registration", false);
                 // 发送已完成的表单（有默认值）到服务器来配置聊天室
                 muc.sendConfigurationForm(submitForm);
-
-                Log.i("TAG", "发送结束： " + System.currentTimeMillis());
             }
         } catch (Exception e) {
             Log.i("TAG", "测试：" + mConnection);
