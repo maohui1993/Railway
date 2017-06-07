@@ -6,6 +6,7 @@ import android.util.Log;
 import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.StanzaListener;
 import org.jivesoftware.smack.XMPPConnection;
@@ -15,12 +16,15 @@ import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.filter.AndFilter;
 import org.jivesoftware.smack.filter.StanzaFilter;
 import org.jivesoftware.smack.filter.StanzaTypeFilter;
+import org.jivesoftware.smack.packet.ExtensionElement;
+import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.muc.HostedRoom;
+import org.jivesoftware.smackx.muc.MUCAffiliation;
 import org.jivesoftware.smackx.muc.MucEnterConfiguration;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.MultiUserChatManager;
@@ -37,8 +41,11 @@ import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import cn.dazhou.im.core.IMApi;
 import cn.dazhou.im.core.function.IConnection;
@@ -63,6 +70,8 @@ public class SmackImApiImpl implements IMApi {
 
     private byte mState;
     private Chat mChat;
+
+    private HashMap<String, MultiUserChat> multiUserChatCache = new HashMap();
 
     private SmackImApiImpl() {
     }
@@ -164,11 +173,11 @@ public class SmackImApiImpl implements IMApi {
     public Roster addFriend(String jid) {
         if (mConnection == null) return null;
         try {
-//            Roster roster = Roster.getInstanceFor(mConnection);
-//            roster.createEntry(JidCreate.entityBareFrom(jid), jid, new String[]{"Friends"});
-            Presence presenceRes = new Presence(Presence.Type.subscribe);
-            presenceRes.setTo(JidCreate.entityBareFrom(jid));
-            mConnection.sendStanza(presenceRes);
+            Roster roster = Roster.getInstanceFor(mConnection);
+            roster.createEntry(JidCreate.entityBareFrom(jid), jid, new String[]{"Friends"});
+//            Presence presenceRes = new Presence(Presence.Type.subscribe);
+//            presenceRes.setTo(JidCreate.entityBareFrom(jid));
+//            mConnection.sendStanza(presenceRes);
 //            acceptFriendRequest(jid);
         } catch (Exception e) {
             Log.e("TAG", "SmackImApiImpl.class: " + "好友添加失败");
@@ -176,7 +185,6 @@ public class SmackImApiImpl implements IMApi {
         }
         return null;
     }
-
 
     public boolean acceptFriendRequest(String jid) {
         try {
@@ -251,12 +259,12 @@ public class SmackImApiImpl implements IMApi {
 
     @Override
     public MultiUserChat createChatRoom(final String roomName, final String nickName, final String password) {
-//        getHostRooms();
-
+        getHostRooms();
         if (!mConnection.isConnected()) {
             Log.i("TAG", "连接已断开");
         }
         MultiUserChat muc = null;
+
         try {
             // 创建一个MultiUserChat
             muc = MultiUserChatManager.getInstanceFor(mConnection).getMultiUserChat(JidCreate.entityBareFrom(roomName + "@conference." + mConnection.getServiceName().toString()));
@@ -276,10 +284,13 @@ public class SmackImApiImpl implements IMApi {
                         submitForm.setDefaultAnswer(fields.get(i).getVariable());
                     }
                 }
+
+                submitForm.setAnswer("muc#roomconfig_moderatedroom", true);
+                submitForm.setAnswer("muc#roomconfig_whois", Arrays.asList("moderators"));
                 // 设置聊天室的新拥有者
-//                List owners = new ArrayList();
-//                owners.add(mConnection.getUser());// 用户JID
-//                submitForm.setAnswer("muc#roomconfig_roomowners", owners);
+                List owners = new ArrayList();
+                owners.add(mConnection.getUser().toString());// 用户JID
+                submitForm.setAnswer("muc#roomconfig_roomowners", owners);
 //                // 设置聊天室是持久聊天室，即将要被保存下来
                 submitForm.setAnswer("muc#roomconfig_persistentroom", true);
 //                // 房间仅对成员开放
@@ -287,6 +298,7 @@ public class SmackImApiImpl implements IMApi {
 //                // 允许占有者邀请其他人
                 submitForm.setAnswer("muc#roomconfig_allowinvites", true);
                 submitForm.setAnswer("muc#roomconfig_enablelogging", true);
+
                 if (password != null && password.length() != 0) {
                     // 进入是否需要密码
                     submitForm.setAnswer("muc#roomconfig_passwordprotectedroom", true);
@@ -305,12 +317,29 @@ public class SmackImApiImpl implements IMApi {
                 submitForm.setAnswer("x-muc#roomconfig_registration", false);
                 // 发送已完成的表单（有默认值）到服务器来配置聊天室
                 muc.sendConfigurationForm(submitForm);
+
             }
         } catch (Exception e) {
             Log.i("TAG", "测试：" + mConnection);
             e.printStackTrace();
         }
         return muc;
+    }
+
+    /**
+     *
+     * @param roomName 要加入的房间
+     * @param jid 被邀请者的Jid
+     */
+    @Override
+    public void inviteUser(String roomName, String jid) {
+        try {
+            MultiUserChat muc = MultiUserChatManager.getInstanceFor(mConnection).getMultiUserChat(JidCreate.entityBareFrom(roomName + "@conference." + mConnection.getServiceName().toString()));
+            muc.invite(JidCreate.entityBareFrom(jid), "He is our friends");
+            muc.grantMembership(JidCreate.entityBareFrom(jid));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -321,14 +350,28 @@ public class SmackImApiImpl implements IMApi {
         try {
             // 使用XMPPConnection创建一个MultiUserChat窗口
             MultiUserChat muc = MultiUserChatManager.getInstanceFor(mConnection).
-                    getMultiUserChat(JidCreate.entityBareFrom(roomName + "@chatroom." + mConnection.getServiceName().toString()));
-            // 聊天室服务将会决定要接受的历史记录数量
-            MucEnterConfiguration mucEnterConfiguration = muc.getEnterConfigurationBuilder(Resourcepart.from(nickName))
-                    .requestMaxStanzasHistory(100)
-                    .build();
+                    getMultiUserChat(JidCreate.entityBareFrom(roomName + "@conference." + mConnection.getServiceName().toString()));
             // history.setSince(new Date());
             // 用户加入聊天室
             muc.join(Resourcepart.from(nickName), password);
+            getHostRooms();
+            Message msg = new Message();
+
+            msg.addExtension(new SDPExtensionElement());
+            msg.setBody("你好啊");
+
+            muc.addMessageListener(new MessageListener() {
+                @Override
+                public void processMessage(Message message) {
+                    Log.i("TAG", "收到的  群聊消息 ： " + message.getBody());
+                    Log.i("TAG", "收到的  群聊消息from ： " + message.getFrom());
+                    Log.i("TAG", "收到的  群聊消息to ： " + message.getTo());
+                    if (message.hasExtension(SDPExtensionElement.NAME_SPACE)) {
+                        Log.i("TAG", "收到的  群聊消息extension ： " + message.getExtension(SDPExtensionElement.NAME_SPACE).getElementName());
+                    }
+                }
+            });
+            muc.sendMessage(msg);
             return muc;
         } catch (XMPPException | SmackException e) {
             e.printStackTrace();
@@ -349,12 +392,12 @@ public class SmackImApiImpl implements IMApi {
         if (getConnection() == null)
             return null;
         Collection<HostedRoom> hostrooms = null;
-        List<HostedRoom> roominfos = new ArrayList<HostedRoom>();
+        List<HostedRoom> roomInfos = new ArrayList();
         MultiUserChatManager mucManager = null;
         // 创建一个MultiUserChat
         mucManager = MultiUserChatManager.getInstanceFor(mConnection);
         Log.i("TAG", "加入的chatroom.size = " + mucManager.getJoinedRooms().size());
-        return roominfos;
+        return roomInfos;
     }
 
     class MyStanzaListener implements StanzaListener {
@@ -378,6 +421,60 @@ public class SmackImApiImpl implements IMApi {
                     Log.i("TAG", "Type.subscribed");
                 }
             }
+        }
+    }
+
+
+
+    public class SDPExtensionElement implements ExtensionElement {
+        public static final String NAME_SPACE = "com.xml.extension";
+        //用户信息元素名称
+        public static final String ELEMENT_NAME = "userinfo";
+
+        //用户昵称元素名称
+        private String nameElement = "name";
+        //用户昵称元素文本(对外开放)
+        private String nameText = "";
+
+        //用户头像地址元素名称
+        private String urlElement = "url";
+        //用户头像地址元素文本(对外开放)
+        private String urlText = "";
+
+        public String getNameText() {
+            return nameText;
+        }
+        public void setNameText(String nameText) {
+            this.nameText = nameText;
+        }
+
+        public String getUrlText() {
+            return urlText;
+        }
+        public void setUrlText(String urlText) {
+            this.urlText = urlText;
+        }
+
+        @Override
+        public String getNamespace() {
+            return NAME_SPACE;
+        }
+
+        @Override
+        public String getElementName() {
+            return ELEMENT_NAME;
+        }
+
+        @Override
+        public CharSequence toXML() {
+            StringBuilder sb = new StringBuilder();
+
+            sb.append("<").append(ELEMENT_NAME).append(" xmlns=\"").append(NAME_SPACE).append("\">");
+            sb.append("<" + nameElement + ">").append(nameText).append("</"+nameElement+">");
+            sb.append("<" + urlElement + ">").append(urlText).append("</"+urlElement+">");
+            sb.append("</"+ELEMENT_NAME+">");
+
+            return sb.toString();
         }
     }
 }

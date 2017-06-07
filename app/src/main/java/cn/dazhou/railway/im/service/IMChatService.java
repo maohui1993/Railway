@@ -126,7 +126,6 @@ public class IMChatService extends Service {
             }
             chatManager = ChatManager.getInstanceFor(conn);
             chatManager.addIncomingListener(incomingChatMessageListener);
-
         }catch (Exception e) {
             Log.i("TAG", "IMChatService#initChatManager(),获取服务器连接失败");
             LogUtil.write(e);
@@ -138,6 +137,7 @@ public class IMChatService extends Service {
     IncomingChatMessageListener incomingChatMessageListener = new IncomingChatMessageListener() {
         @Override
         public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
+            Log.i("TAG", message.getBody());
             ChatMessageEntity chatMessageEntity = (ChatMessageEntity) Tool.parseJSON(message.getBody(), ChatMessageEntity.class);
             // 标志为接收到的消息
             chatMessageEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);

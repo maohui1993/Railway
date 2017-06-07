@@ -40,4 +40,6 @@ public interface IMApi extends IChat, IConnection{
      * @return
      */
     MultiUserChat joinChatRoom(String roomName,  String nickName, String password);
+
+    void inviteUser(String roomName, String jid);
 }

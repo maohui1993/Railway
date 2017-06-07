@@ -111,4 +111,8 @@ public final class IMLauncher {
     public static MultiUserChat joinChatRoom(String roomName,  String nickName, String password) {
         return mImApi.joinChatRoom(roomName, nickName, password);
     }
+
+    public static void inviteUser(String roomName, String jid) {
+        mImApi.inviteUser(roomName, jid);
+    }
 }

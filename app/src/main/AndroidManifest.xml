@@ -77,7 +77,12 @@
             android:name=".im.activity.FriendRequestActivity"
             android:launchMode="singleTop" />
         <activity android:name=".im.activity.SettingActivity" />
-        <activity android:name=".im.activity.ChatRoomActivity"></activity>
+        <activity android:name=".im.activity.ChatRoomActivity" />
+
+        <service
+            android:name=".im.service.IMChatRoomService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
