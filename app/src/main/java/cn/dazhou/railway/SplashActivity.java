@@ -48,6 +48,13 @@ public class SplashActivity extends AppCompatActivity {
     private List<BaseFragment> fragments = new ArrayList();
     private SplashPresenter mPresenter;
 
+    private int[] icons = {
+            R.drawable.home,
+            R.drawable.work,
+            R.drawable.contacts,
+            R.drawable.set
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +79,7 @@ public class SplashActivity extends AppCompatActivity {
         fragments.add(ContactListFragment.newInstance(true));
         fragments.add(SettingFragment.newInstance(false));
 
-        FunctionTabAdapter mAdapter = new FunctionTabAdapter(this, getSupportFragmentManager(), fragments, mTitles);
+        FunctionTabAdapter mAdapter = new FunctionTabAdapter(this, getSupportFragmentManager(), fragments, mTitles, icons);
         mViewPager.setAdapter(mAdapter);//给ViewPager设置适配器
         mViewPager.clearOnPageChangeListeners();
         pagerSlidingTabStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {

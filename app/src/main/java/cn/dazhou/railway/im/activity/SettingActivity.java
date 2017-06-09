@@ -27,6 +27,7 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         ButterKnife.bind(this);
+        mServerIpEdit.setText(SharedPreferenceUtil.getString(this, Constants.SERVER_IP, Constants.SERVER_IP_DEFAULT));
     }
 
     @OnClick(R.id.bt_submit)

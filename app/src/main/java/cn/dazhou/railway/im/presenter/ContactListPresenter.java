@@ -19,6 +19,7 @@ import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.activity.AddFriendActivity;
+import cn.dazhou.railway.im.activity.ChatRoomActivity;
 import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.im.listener.OnDataUpdateListener;
 import io.reactivex.Observable;
@@ -119,8 +120,9 @@ public class ContactListPresenter implements View.OnClickListener{
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-//                        IMLauncher.createChatRoom("test2", "liaotian", "123");
-                        IMLauncher.joinChatRoom("test2", MyApp.gCurrentUsername, "123");
+////                        IMLauncher.createChatRoom("test2", "liaotian", "123");
+//                        IMLauncher.joinChatRoom("test2", MyApp.gCurrentUsername, "123");
+                        ChatRoomActivity.startItself(mContext);
                     }
                 }).start();
                 break;

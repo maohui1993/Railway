@@ -5,7 +5,7 @@
     <!-- "Mark Favorite", should appear as action button if possible -->
     <item
         android:id="@+id/menu_add_friend"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher"
         android:title="添加好友"
         app:showAsAction="always"/>
 

@@ -1,6 +1,7 @@
 package cn.dazhou.railway.im.adapter;
 
 import android.content.Context;
+import android.support.annotation.DrawableRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -18,11 +19,13 @@ public class FunctionTabAdapter extends FragmentPagerAdapter implements PagerSli
     List<Fragment> fragments;
     String[] titles;
     Context context;
-    public FunctionTabAdapter(Context context, FragmentManager fm, List fragments, String[] titles) {
+    int[] icons;
+    public FunctionTabAdapter(Context context, FragmentManager fm, List fragments, String[] titles, @DrawableRes int[] icons) {
         super(fm);
         this.fragments = fragments;
         this.titles = titles;
         this.context = context;
+        this.icons = icons;
     }
 
     @Override
@@ -42,6 +45,6 @@ public class FunctionTabAdapter extends FragmentPagerAdapter implements PagerSli
 
     @Override
     public int getPageIconResId(int position) {
-        return R.mipmap.ic_launcher;
+        return icons[position];
     }
 }

@@ -21,8 +21,8 @@ public class UserModel extends BaseModel{
     private String password;   //用户密码
     @Column
     private boolean firstLogin = false; // 记录用户是否第一次在当前机器登录, 默认为非第一次
-    List<FriendModel> friends;
 
+    List<FriendModel> friends;
     @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "friends")
     public List<FriendModel> getMyFriends() {
         if (friends == null || friends.isEmpty()) {

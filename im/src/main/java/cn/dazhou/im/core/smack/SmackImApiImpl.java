@@ -23,17 +23,21 @@ import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.muc.Affiliate;
 import org.jivesoftware.smackx.muc.HostedRoom;
+import org.jivesoftware.smackx.muc.InvitationListener;
 import org.jivesoftware.smackx.muc.MUCAffiliation;
 import org.jivesoftware.smackx.muc.MucEnterConfiguration;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.MultiUserChatManager;
+import org.jivesoftware.smackx.muc.packet.MUCUser;
 import org.jivesoftware.smackx.search.ReportedData;
 import org.jivesoftware.smackx.search.UserSearchManager;
 import org.jivesoftware.smackx.xdata.Form;
 import org.jivesoftware.smackx.xdata.FormField;
 import org.jxmpp.jid.DomainBareJid;
 import org.jxmpp.jid.EntityBareJid;
+import org.jxmpp.jid.EntityJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.jid.parts.Resourcepart;
@@ -52,6 +56,7 @@ import cn.dazhou.im.core.function.IConnection;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.entity.FriendRequest;
 import cn.dazhou.im.entity.UserBean;
+import cn.dazhou.im.entity.UserExtensionElement;
 import cn.dazhou.im.util.OfflineMsgManager;
 import cn.dazhou.im.util.Tool;
 
@@ -317,7 +322,6 @@ public class SmackImApiImpl implements IMApi {
                 submitForm.setAnswer("x-muc#roomconfig_registration", false);
                 // 发送已完成的表单（有默认值）到服务器来配置聊天室
                 muc.sendConfigurationForm(submitForm);
-
             }
         } catch (Exception e) {
             Log.i("TAG", "测试：" + mConnection);
@@ -335,8 +339,20 @@ public class SmackImApiImpl implements IMApi {
     public void inviteUser(String roomName, String jid) {
         try {
             MultiUserChat muc = MultiUserChatManager.getInstanceFor(mConnection).getMultiUserChat(JidCreate.entityBareFrom(roomName + "@conference." + mConnection.getServiceName().toString()));
-            muc.invite(JidCreate.entityBareFrom(jid), "He is our friends");
-            muc.grantMembership(JidCreate.entityBareFrom(jid));
+
+//            muc.invite(JidCreate.entityBareFrom(jid), "He is our friends");
+            boolean b = muc.isJoined();
+            if (!b) {
+//                muc.join(Resourcepart.from(roomName));
+            }
+            List s1 = muc.getAdmins();
+//            List s = muc.getMembers();
+//            muc.grantAdmin(JidCreate.entityBareFrom(jid));
+//            muc.grantMembership(JidCreate.entityBareFrom(jid));
+
+            List l  = muc.getMembers();
+            List m = muc.getOccupants();
+            //    List out = muc.getOutcasts();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -357,8 +373,8 @@ public class SmackImApiImpl implements IMApi {
             getHostRooms();
             Message msg = new Message();
 
-            msg.addExtension(new SDPExtensionElement());
-            msg.setBody("你好啊");
+            msg.addExtension(new UserExtensionElement());
+            msg.setBody("测试2");
 
             muc.addMessageListener(new MessageListener() {
                 @Override
@@ -366,8 +382,8 @@ public class SmackImApiImpl implements IMApi {
                     Log.i("TAG", "收到的  群聊消息 ： " + message.getBody());
                     Log.i("TAG", "收到的  群聊消息from ： " + message.getFrom());
                     Log.i("TAG", "收到的  群聊消息to ： " + message.getTo());
-                    if (message.hasExtension(SDPExtensionElement.NAME_SPACE)) {
-                        Log.i("TAG", "收到的  群聊消息extension ： " + message.getExtension(SDPExtensionElement.NAME_SPACE).getElementName());
+                    if (message.hasExtension(UserExtensionElement.NAME_SPACE)) {
+                        Log.i("TAG", "收到的  群聊消息extension ： " + message.getExtension(UserExtensionElement.NAME_SPACE).getElementName());
                     }
                 }
             });
@@ -424,57 +440,4 @@ public class SmackImApiImpl implements IMApi {
         }
     }
 
-
-
-    public class SDPExtensionElement implements ExtensionElement {
-        public static final String NAME_SPACE = "com.xml.extension";
-        //用户信息元素名称
-        public static final String ELEMENT_NAME = "userinfo";
-
-        //用户昵称元素名称
-        private String nameElement = "name";
-        //用户昵称元素文本(对外开放)
-        private String nameText = "";
-
-        //用户头像地址元素名称
-        private String urlElement = "url";
-        //用户头像地址元素文本(对外开放)
-        private String urlText = "";
-
-        public String getNameText() {
-            return nameText;
-        }
-        public void setNameText(String nameText) {
-            this.nameText = nameText;
-        }
-
-        public String getUrlText() {
-            return urlText;
-        }
-        public void setUrlText(String urlText) {
-            this.urlText = urlText;
-        }
-
-        @Override
-        public String getNamespace() {
-            return NAME_SPACE;
-        }
-
-        @Override
-        public String getElementName() {
-            return ELEMENT_NAME;
-        }
-
-        @Override
-        public CharSequence toXML() {
-            StringBuilder sb = new StringBuilder();
-
-            sb.append("<").append(ELEMENT_NAME).append(" xmlns=\"").append(NAME_SPACE).append("\">");
-            sb.append("<" + nameElement + ">").append(nameText).append("</"+nameElement+">");
-            sb.append("<" + urlElement + ">").append(urlText).append("</"+urlElement+">");
-            sb.append("</"+ELEMENT_NAME+">");
-
-            return sb.toString();
-        }
-    }
 }

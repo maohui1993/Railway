@@ -38,6 +38,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -237,13 +238,16 @@ public class PagerSlidingTabStrip extends LinearLayout {
 
     private void addIconTab(final int position, int resId, String title) {
 
-        TextView tab = new TextView(getContext());
-        tab.setSingleLine();
-        Drawable d = getContext().getResources().getDrawable(resId);
-        d.setBounds(0, 0, d.getMinimumWidth(), d.getMinimumHeight());
-        tab.setText(title);
-        tab.setGravity(Gravity.CENTER_HORIZONTAL);
-        tab.setCompoundDrawables(null, d, null, null);
+        ImageView tab = new ImageView(getContext());
+        tab.setImageResource(resId);
+        tab.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+//        TextView tab = new TextView(getContext());
+//        tab.setSingleLine();
+//        Drawable d = getContext().getResources().getDrawable(resId);
+//        d.setBounds(0, 0, d.getMinimumWidth(), d.getMinimumHeight());
+//        tab.setText(title);
+//        tab.setGravity(Gravity.CENTER_HORIZONTAL);
+//        tab.setCompoundDrawables(null, d, null, null);
         addTab(position, tab);
 
     }

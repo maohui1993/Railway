@@ -7,10 +7,11 @@
 
     <cn.dazhou.railway.widget.RippleButton
         android:id="@+id/new_friend"
-        android:drawableLeft="@mipmap/ic_launcher"
+        android:drawableLeft="@drawable/friend_request"
         android:textSize="16sp"
         android:text="新的朋友"
         android:gravity="center_vertical"
+        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="50dp" />
     <LinearLayout
@@ -19,10 +20,11 @@
         android:layout_height="1dp" />
     <cn.dazhou.railway.widget.RippleButton
         android:id="@+id/chat_group"
-        android:drawableLeft="@mipmap/ic_launcher"
+        android:drawableLeft="@drawable/chat_room"
         android:textSize="16sp"
         android:text="群聊"
         android:gravity="center_vertical"
+        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="50dp"/>
 </LinearLayout>

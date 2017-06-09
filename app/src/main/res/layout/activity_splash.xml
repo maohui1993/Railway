@@ -12,7 +12,7 @@
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="@color/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
@@ -44,9 +44,9 @@
         android:id="@+id/tabs_1"
         app:pstsShouldExpand="true"
         app:pstsIndicatorHeight="100dp"
-        app:pstsIndicatorColor="#747aec"
+        app:pstsIndicatorColor="@color/colorIndicator"
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="75dp" />
 
 </LinearLayout>

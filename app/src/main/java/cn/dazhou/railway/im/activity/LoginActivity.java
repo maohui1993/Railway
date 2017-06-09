@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -29,6 +30,8 @@ public class LoginActivity extends AppCompatActivity implements IOnLoginListener
     EditText mUsernameEdit;
     @BindView(R.id.edit_password)
     EditText mPasswordEdit;
+    @BindView(R.id.my_toolbar)
+    Toolbar mToolbar;
 
     private LoginPresenter mPresenter;
 
@@ -37,6 +40,7 @@ public class LoginActivity extends AppCompatActivity implements IOnLoginListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        setSupportActionBar(mToolbar);
         // 设置按钮样式
         mLoginPbt.setMode(ActionProcessButton.Mode.ENDLESS);
         mPresenter = new LoginPresenter(this, this);

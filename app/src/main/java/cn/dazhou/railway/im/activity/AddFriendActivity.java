@@ -63,8 +63,8 @@ public class AddFriendActivity extends AppCompatActivity {
         mAdapter = new UserAdapter(this, datas);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mEasyRecyclerView.setLayoutManager(layoutManager);
-        DividerDecoration itemDecoration = new DividerDecoration(Color.GRAY, Util.dip2px(this, 0.5f), Util.dip2px(this, 72), 0);
-        itemDecoration.setDrawLastItem(false);
+        DividerDecoration itemDecoration = new DividerDecoration(Color.GRAY, Util.dip2px(this, 0.5f), 0, 0);
+        itemDecoration.setDrawLastItem(true);
         mEasyRecyclerView.setAdapter(mAdapter);
         mEasyRecyclerView.addItemDecoration(itemDecoration);
     }

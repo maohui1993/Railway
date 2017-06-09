@@ -56,6 +56,11 @@ public class ChatMessageModel extends BaseModel{
     references = {@ForeignKeyReference(columnName = "jid", foreignKeyColumnName = "jid")})
     String jid;    // 当前用户为发送方，则记录接收方jid，为接收方则记录发送方jid
 
+    @Column
+    @ForeignKey(tableClass = ChatRoomModel.class,
+            references = {@ForeignKeyReference(columnName = "roomJid", foreignKeyColumnName = "roomJid")})
+    String roomJid;
+
     public ChatMessageModel() {
 
     }
@@ -174,6 +179,14 @@ public class ChatMessageModel extends BaseModel{
 
     public void setVoiceTime(long voiceTime) {
         this.voiceTime = voiceTime;
+    }
+
+    public String getRoomJid() {
+        return roomJid;
+    }
+
+    public void setRoomJid(String roomJid) {
+        this.roomJid = roomJid;
     }
 
     private ChatMessageModel(int id, String imagePath, String voicePath, String content, String fromJid, String toJid, String jid, int type, long voiceTime) {

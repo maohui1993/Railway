@@ -21,9 +21,11 @@ public class WorkFragment extends BaseFragment {
 
     // 图标
     private int[] mEffectArray = {
-            R.mipmap.ic_launcher, R.mipmap.ic_launcher_round,
-            R.mipmap.icon_chat_add, R.mipmap.icon_chat_expression
+            R.drawable.record, R.drawable.check,
+            R.drawable.breakdown, R.drawable.date
     };
+
+    private String[] mNames;
 
     public static WorkFragment newInstance(boolean param1) {
         WorkFragment fragment = new WorkFragment();
@@ -37,6 +39,7 @@ public class WorkFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_work, container, false);
+        mNames = getResources().getStringArray(R.array.names);
         mGridView = (GridView) root.findViewById(R.id.grid);
         initGridview();
         return root;
@@ -47,10 +50,11 @@ public class WorkFragment extends BaseFragment {
         for(int i=0;i<mEffectArray.length;i++){
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("image", mEffectArray[i]);
+            map.put("text", mNames[i]);
             mDataList.add(map);
         }
-        String [] from ={"image"};
-        int [] to = {R.id.image};
+        String [] from ={"image", "text"};
+        int [] to = {R.id.image, R.id.text};
         mAdapter = new SimpleAdapter(getContext(), mDataList, R.layout.grid_item, from, to);
         mGridView.setAdapter(mAdapter);
     }
