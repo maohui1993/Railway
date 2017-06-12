@@ -36,6 +36,7 @@ import cn.dazhou.im.util.Tool;
 import cn.dazhou.railway.SplashActivity;
 import cn.dazhou.railway.im.activity.ChatActivity;
 import cn.dazhou.railway.im.db.ChatMessageModel;
+import cn.dazhou.railway.im.fragment.ContactListFragment;
 import cn.dazhou.railway.util.LogUtil;
 
 /**
@@ -141,6 +142,7 @@ public class IMChatService extends Service {
             ChatMessageEntity chatMessageEntity = (ChatMessageEntity) Tool.parseJSON(message.getBody(), ChatMessageEntity.class);
             // 标志为接收到的消息
             chatMessageEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
+            chatMessageEntity.setDate(String.valueOf(System.currentTimeMillis()));
             String fromUser = from.getLocalpart().toString().split("@")[0];
             String imagePath = null;
             String voicePath = null;
@@ -171,6 +173,7 @@ public class IMChatService extends Service {
                 chatMessageModel.setState(false);
                 sendNotification(chatMessageEntity, chatMessageModel.getJid());
             }
+            EventBus.getDefault().post(new ContactListFragment.TipMessage(chatMessageModel.getJid(), chatMessageModel.getContent()));
             chatMessageModel.save();
         }
     };

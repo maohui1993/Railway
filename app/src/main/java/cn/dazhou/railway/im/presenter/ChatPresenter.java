@@ -73,6 +73,7 @@ public class ChatPresenter implements ChatContentView.OnSendListener, ChatConten
         // model保存的jid应该是 【接收方+@+当前用户】
         model.setJid(mJid);         // 正在聊天的人
         model.setState(msg.isState());
+
         model.save();
         String jid = mJid.split(Constants.JID_SEPARATOR)[0] + Constants.JID_SEPARATOR + MyApp.gServerIp;
         IMLauncher.chatWith(jid, msg);

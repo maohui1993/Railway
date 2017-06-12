@@ -9,6 +9,7 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import java.io.Serializable;
 import java.util.List;
 
 import cn.dazhou.railway.MyApp;
@@ -19,7 +20,7 @@ import cn.dazhou.railway.config.Constants;
  */
 
 @Table(database = RailwayDatabase.class)
-public class FriendModel extends BaseModel implements Comparable<FriendModel>{
+public class FriendModel extends BaseModel implements Comparable<FriendModel>, Serializable{
     @PrimaryKey
     @Column
     private String jid;         // 好友账号@所属人账号<好友username@所属人username>
@@ -47,6 +48,16 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel>{
                     .queryList();
         }
         return chatMessages;
+    }
+
+    public ChatMessageModel getLatestChatMessage() {
+        if (chatMessages == null) {
+            getMyChatMessages();
+        }
+        if (chatMessages.size() == 0) {
+            return null;
+        }
+        return chatMessages.get(chatMessages.size()-1);
     }
 
     public String getPossessor() {
@@ -133,5 +144,15 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel>{
             return -1;
         }
         return this.getName().toLowerCase().compareTo(o.getName());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof FriendModel) {
+            FriendModel obj1 = (FriendModel) obj;
+            return possessor.equals(obj1.getPossessor()) && jid.equals(obj1.getJid());
+        } else {
+            return false;
+        }
     }
 }

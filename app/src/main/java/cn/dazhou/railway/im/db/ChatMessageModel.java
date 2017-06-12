@@ -55,14 +55,20 @@ public class ChatMessageModel extends BaseModel{
     @ForeignKey(tableClass = FriendModel.class,
     references = {@ForeignKeyReference(columnName = "jid", foreignKeyColumnName = "jid")})
     String jid;    // 当前用户为发送方，则记录接收方jid，为接收方则记录发送方jid
-
-    @Column
-    @ForeignKey(tableClass = ChatRoomModel.class,
-            references = {@ForeignKeyReference(columnName = "roomJid", foreignKeyColumnName = "roomJid")})
+//
+//    @Column
+//    @ForeignKey(tableClass = ChatRoomModel.class,
+//            references = {@ForeignKeyReference(columnName = "roomJid", foreignKeyColumnName = "roomJid")})
     String roomJid;
 
     public ChatMessageModel() {
 
+    }
+
+    @Override
+    public boolean save() {
+
+        return super.save();
     }
 
     public boolean isState() {

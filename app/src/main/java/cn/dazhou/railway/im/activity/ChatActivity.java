@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.Serializable;
 import java.util.List;
 
 import butterknife.BindView;
@@ -26,6 +28,8 @@ public class ChatActivity extends AppCompatActivity implements OnDataUpdateListe
 
     @BindView(R.id.chat_content)
     ChatContentView mChatContentView;
+    @BindView(R.id.my_toolbar)
+    Toolbar mToolbar;
     private ChatPresenter mPresenter;
     /**
      * 正在chat的用户jid 形式为【正在聊天的用户jid+@+自身jid】
@@ -37,7 +41,9 @@ public class ChatActivity extends AppCompatActivity implements OnDataUpdateListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         ButterKnife.bind(this);
+        setSupportActionBar(mToolbar);
         mJid = getIntent().getStringExtra(DATA_KEY);
+        mToolbar.setTitle(mJid);
         mPresenter = new ChatPresenter(this, mJid);
         mPresenter.setOnDataUpdateListener(this);
         mPresenter.init();
@@ -48,7 +54,7 @@ public class ChatActivity extends AppCompatActivity implements OnDataUpdateListe
 
     }
 
-    public static void startItself(Context context, String data) {
+    public static void startItself(Context context, Serializable data) {
         Intent intent = new Intent(context, ChatActivity.class);
         intent.putExtra(DATA_KEY, data);
         context.startActivity(intent);

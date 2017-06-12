@@ -14,6 +14,10 @@ import com.jude.easyrecyclerview.decoration.DividerDecoration;
 import com.jude.easyrecyclerview.decoration.StickyHeaderDecoration;
 import com.jude.rollviewpager.Util;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -48,6 +52,7 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
         super.onCreate(savedInstanceState);
         mPresenter = new ContactListPresenter(getContext());
         mPresenter.setOnDataUpdateListener(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -109,5 +114,26 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
 
         StickyHeaderDecoration decoration = new StickyHeaderDecoration(new StickyHeaderAdapter(getContext(), mRosterAdapter.getAllData()));
         mRosterView.addItemDecoration(decoration);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateTipMessage(TipMessage tipMessage) {
+        mRosterAdapter.updateData(tipMessage);
+    }
+
+    public static class TipMessage {
+        public String jid;
+        public String info;
+
+        public TipMessage(String jid, String info) {
+            this.jid = jid;
+            this.info = info;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 }

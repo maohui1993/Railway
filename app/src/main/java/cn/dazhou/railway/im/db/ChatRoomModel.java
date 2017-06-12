@@ -20,17 +20,17 @@ public class ChatRoomModel extends BaseModel {
     @Column
     String possessor;
 
-    List<ChatMessageModel> messages;
-    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "messages")
-    public List<ChatMessageModel> getMyMessages() {
-        if (messages == null || messages.isEmpty()) {
-            messages = SQLite.select()
-                    .from(ChatMessageModel.class)
-                    .where(ChatMessageModel_Table.roomJid.eq(roomJid))
-                    .queryList();
-        }
-        return messages;
-    }
+//    List<ChatMessageModel> messages;
+//    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "messages")
+//    public List<ChatMessageModel> getMyMessages() {
+//        if (messages == null || messages.isEmpty()) {
+//            messages = SQLite.select()
+//                    .from(ChatMessageModel.class)
+//                    .where(ChatMessageModel_Table.roomJid.eq(roomJid))
+//                    .queryList();
+//        }
+//        return messages;
+//    }
 
     public String getRoomJid() {
         return roomJid;
