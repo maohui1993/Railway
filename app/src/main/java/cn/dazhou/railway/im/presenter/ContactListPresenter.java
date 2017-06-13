@@ -53,7 +53,7 @@ public class ContactListPresenter implements View.OnClickListener{
             return;
         }
         if (cache != null) {
-            mOnDataUpdateListener.onUpdateData(cache.get());
+            mOnDataUpdateListener.onUpdateData(cache.get(), false);
             return;
         }
         if (MyApp.gCurrentUser.isFirstLogin()) {
@@ -73,13 +73,13 @@ public class ContactListPresenter implements View.OnClickListener{
                             if (mOnDataUpdateListener != null && friends != null && friends.size() > 0) {
                                 Collections.sort(friends);
                                 cache = new WeakReference(friends);
-                                mOnDataUpdateListener.onUpdateData(friends);
+                                mOnDataUpdateListener.onUpdateData(friends, false);
                             }
                         }
                     });
         } else {
             cache = new WeakReference(MyApp.gCurrentUser.getMyFriends());
-            mOnDataUpdateListener.onUpdateData(MyApp.gCurrentUser.getMyFriends());
+            mOnDataUpdateListener.onUpdateData(MyApp.gCurrentUser.getMyFriends(), false);
         }
     }
 

@@ -64,7 +64,7 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
 
     @Override
     public void setData(final ChatMessageEntity data) {
-        chatItemDate.setText(data.getDate() != null ? data.getDate() : "");
+        chatItemDate.setText(String.valueOf(data.getDate()));
         Glide.with(getContext()).load(R.drawable.header_02).asBitmap().into(chatItemHeader);
         if (data.getContent() != null) {
             chatItemContentText.setSpanText(handler, data.getContent(), true);

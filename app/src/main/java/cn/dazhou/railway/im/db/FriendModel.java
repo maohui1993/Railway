@@ -9,7 +9,6 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import java.io.Serializable;
 import java.util.List;
 
 import cn.dazhou.railway.MyApp;
@@ -20,7 +19,7 @@ import cn.dazhou.railway.config.Constants;
  */
 
 @Table(database = RailwayDatabase.class)
-public class FriendModel extends BaseModel implements Comparable<FriendModel>, Serializable{
+public class FriendModel extends BaseModel implements Comparable<FriendModel> {
     @PrimaryKey
     @Column
     private String jid;         // 好友账号@所属人账号<好友username@所属人username>
@@ -37,16 +36,46 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel>, S
             references = {@ForeignKeyReference(columnName = "possessor", foreignKeyColumnName = "username")})
     private String possessor;   // 好友的持有者（持有人账号）
 
+    private int onceMaxShown = 30;
+
     List<ChatMessageModel> chatMessages;
 
     @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "chatMessages")
     public List<ChatMessageModel> getMyChatMessages() {
+        int count = (int) SQLite.selectCountOf(ChatMessageModel_Table.id)
+                .from(ChatMessageModel.class)
+                .where(ChatMessageModel_Table.jid.eq(jid))
+                .count();
         if (chatMessages == null || chatMessages.isEmpty()) {
             chatMessages = SQLite.select()
                     .from(ChatMessageModel.class)
                     .where(ChatMessageModel_Table.jid.eq(jid))
+                    .limit(onceMaxShown)
+                    .offset(count - onceMaxShown)
                     .queryList();
         }
+        return chatMessages;
+    }
+
+    public List<ChatMessageModel> getMyChatMessages(int page) {
+        int count = (int) SQLite.selectCountOf(ChatMessageModel_Table.id)
+                .from(ChatMessageModel.class)
+                .where(ChatMessageModel_Table.jid.eq(jid))
+                .count();
+        // 避免查找出重复数据
+        int limitCount = onceMaxShown;
+        int offset = count - onceMaxShown * page;
+        if (offset < 0 && count + offset > 0) {
+            limitCount = onceMaxShown + offset;
+        } else if (offset < 0 && count + offset < 0) {
+            return null;
+        }
+        chatMessages = SQLite.select()
+                .from(ChatMessageModel.class)
+                .where(ChatMessageModel_Table.jid.eq(jid))
+                .limit(limitCount)
+                .offset(offset)
+                .queryList();
         return chatMessages;
     }
 
@@ -57,7 +86,7 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel>, S
         if (chatMessages.size() == 0) {
             return null;
         }
-        return chatMessages.get(chatMessages.size()-1);
+        return chatMessages.get(chatMessages.size() - 1);
     }
 
     public String getPossessor() {
@@ -81,6 +110,7 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel>, S
 
     /**
      * 添加默认值(避免不必要的空指针问题)
+     *
      * @return
      */
     public String getName() {
@@ -120,15 +150,15 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel>, S
 
     public static int typeToInt(String type) {
         switch (type) {
-            case "remove" :
+            case "remove":
                 return -1;
-            case "none" :
+            case "none":
                 return 0;
-            case "to" :
+            case "to":
                 return 1;
-            case "from" :
+            case "from":
                 return 2;
-            case "both" :
+            case "both":
                 return 3;
             default:
                 return 0;

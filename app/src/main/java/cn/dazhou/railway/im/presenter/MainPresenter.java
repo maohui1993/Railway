@@ -61,12 +61,12 @@ public class MainPresenter implements View.OnClickListener{
                             List<FriendModel> friends = MyApp.gCurrentUser.getMyFriends();
                             if (mOnDataUpdateListener != null && friends != null && friends.size() > 0) {
                                 Collections.sort(friends);
-                                mOnDataUpdateListener.onUpdateData(friends);
+                                mOnDataUpdateListener.onUpdateData(friends, false);
                             }
                         }
                     });
         } else {
-            mOnDataUpdateListener.onUpdateData(MyApp.gCurrentUser.getMyFriends());
+            mOnDataUpdateListener.onUpdateData(MyApp.gCurrentUser.getMyFriends(), false);
         }
     }
 

@@ -6,6 +6,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jude.easyrecyclerview.EasyRecyclerView;
+import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -51,7 +53,7 @@ import cn.dazhou.im.util.Utils;
  * EventBus接受到的<ChatMessageEntity>事件信息都在这里集中处理
  */
 
-public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItemClickListener{
+public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItemClickListener , com.jude.easyrecyclerview.swipe.SwipeRefreshLayout.OnRefreshListener{
     @BindView(R2.id.chat_list)
     EasyRecyclerView chatList;
     @BindView(R2.id.emotion_voice)
@@ -143,7 +145,21 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         mAdapter = new ChatAdapter1(context);
         mAdapter.setOnItemClickListener(this);
         chatList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        chatList.setAdapter(mAdapter);
+        mAdapter.setNoMore(R.layout.view_nomore);
+
+        mAdapter.setError(R.layout.view_error, new RecyclerArrayAdapter.OnErrorListener() {
+            @Override
+            public void onErrorShow() {
+                mAdapter.resumeMore();
+            }
+
+            @Override
+            public void onErrorClick() {
+                mAdapter.resumeMore();
+            }
+        });
+//        chatList.setAdapter(mAdapter);
+        chatList.setAdapterWithProgress(mAdapter);
         chatList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -169,6 +185,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
 
     public void initChatDatas(List<ChatMessageEntity> chatDatas) {
         mAdapter.addAll(chatDatas);
+        chatList.scrollToPosition(mAdapter.getCount() - 1);
     }
 
     public void addMessage(ChatMessageEntity msg) {
@@ -185,7 +202,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         switch (messageInfo.getType()) {
             case Constants.CHAT_ITEM_TYPE_RIGHT:
                 messageInfo.setSendState(Constants.CHAT_ITEM_SENDING);
-                messageInfo.setDate(Utils.getCurrentTime());
+                messageInfo.setDate(System.currentTimeMillis());
                 // 发送按钮点击时，由上层决定消息是发送给谁，ChatContentView只做消息的展示，不做逻辑控制
                 if (mOnSendListener != null) {
                     mOnSendListener.onSend(messageInfo);
@@ -271,6 +288,28 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
 
     public boolean interceptBackPress() {
         return mDetector.interceptBackPress();
+    }
+
+    public void setRefreshListener(SwipeRefreshLayout.OnRefreshListener listener) {
+        chatList.setRefreshListener(listener);
+    }
+
+    Handler handler = new Handler();
+
+
+    public void onRefresh(final List<ChatMessageEntity> msgs, final boolean moveCursor) {
+        if (msgs == null || msgs.size() == 0) {
+            return;
+        }
+        mAdapter.insertAll(msgs, 0);
+        if (moveCursor) {
+            chatList.scrollToPosition(mAdapter.getCount() - 1);
+        }
+    }
+
+    @Override
+    public void onRefresh() {
+
     }
 
     // 当发送时，回调到ChatActivity，由其确认目前正在跟谁聊天

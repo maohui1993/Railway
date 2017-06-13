@@ -8,5 +8,10 @@ import java.util.List;
  */
 
 public interface OnDataUpdateListener<T> {
-    void onUpdateData(List<T> datas);
+    /**
+     *
+     * @param datas
+     * @param moveCursor 是否移动光标
+     */
+    void onUpdateData(List<T> datas, boolean moveCursor);
 }

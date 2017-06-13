@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements OnDataUpdateListe
      * @param datas
      */
     @Override
-    public void onUpdateData(List<FriendModel> datas) {
+    public void onUpdateData(List<FriendModel> datas, boolean moveCursor) {
         mRosterAdapter.clear();
         mRosterAdapter.addAll(datas);
     }

@@ -49,7 +49,7 @@ public class ChatMessageModel extends BaseModel{
     @Column
     int type;       // 是发送还是接收消息
     @Column
-    String date;    // 消息日期
+    long date;    // 消息日期
 
     @Column
     @ForeignKey(tableClass = FriendModel.class,
@@ -80,7 +80,7 @@ public class ChatMessageModel extends BaseModel{
     }
 
     public static List<ChatMessageEntity> toChatMessageEntity(List<ChatMessageModel> models) {
-        if (models == null) {
+        if (models == null || models.size() == 0) {
             return null;
         }
         List<ChatMessageEntity> messages = new ArrayList<ChatMessageEntity>();
@@ -160,11 +160,11 @@ public class ChatMessageModel extends BaseModel{
         this.type = type;
     }
 
-    public String getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
@@ -195,7 +195,7 @@ public class ChatMessageModel extends BaseModel{
         this.roomJid = roomJid;
     }
 
-    private ChatMessageModel(int id, String imagePath, String voicePath, String content, String fromJid, String toJid, String jid, int type, long voiceTime) {
+    private ChatMessageModel(int id, String imagePath, String voicePath, String content, String fromJid, String toJid, String jid, int type, long voiceTime, long date) {
         this.id = id;
         this.imagePath = imagePath;
         this.voicePath = voicePath;
@@ -208,6 +208,7 @@ public class ChatMessageModel extends BaseModel{
         this.jid = jid + Constants.JID_SEPARATOR + MyApp.gCurrentUsername;
         this.type = type;
         this.voiceTime = voiceTime;
+        this.date = date;
     }
 
     public static class Builder {
@@ -220,9 +221,10 @@ public class ChatMessageModel extends BaseModel{
         private String jid;
         private int type;
         private long voiceTime;
+        private long date;
 
         public ChatMessageModel build() {
-            return new ChatMessageModel(id, imagePath, voicePath, content, fromJid, toJid, jid, type, voiceTime);
+            return new ChatMessageModel(id, imagePath, voicePath, content, fromJid, toJid, jid, type, voiceTime, date);
         }
 
         public Builder id(int id) {
@@ -270,6 +272,11 @@ public class ChatMessageModel extends BaseModel{
 
         public Builder voiceTime(long voiceTime) {
             this.voiceTime = voiceTime;
+            return this;
+        }
+
+        public Builder date(long date) {
+            this.date = date;
             return this;
         }
     }

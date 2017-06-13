@@ -106,7 +106,7 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
      * @param datas
      */
     @Override
-    public void onUpdateData(List<FriendModel> datas) {
+    public void onUpdateData(List<FriendModel> datas, boolean moveCursor) {
         Collections.sort(datas);
         mRosterAdapter.clear();
         mRosterAdapter.addAll(datas);

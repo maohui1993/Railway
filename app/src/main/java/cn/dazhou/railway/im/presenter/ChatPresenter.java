@@ -3,8 +3,10 @@ package cn.dazhou.railway.im.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
+import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.util.List;
@@ -25,9 +27,10 @@ import cn.dazhou.railway.util.SharedPreferenceUtil;
  * Created by hooyee on 2017/5/8.
  */
 
-public class ChatPresenter implements ChatContentView.OnSendListener, ChatContentView.OnImageClickListener {
+public class ChatPresenter implements ChatContentView.OnSendListener, ChatContentView.OnImageClickListener, SwipeRefreshLayout.OnRefreshListener{
     private Context mContext;
     private String mJid;
+    private FriendModel friendModel;
 
     private OnDataUpdateListener<ChatMessageEntity> mOnDataUpdateListener;
 
@@ -42,16 +45,16 @@ public class ChatPresenter implements ChatContentView.OnSendListener, ChatConten
 
     public void init() {
         String possessor = MyApp.gCurrentUser.getUsername();
-        FriendModel friend = SQLite.select()
+        friendModel = SQLite.select()
                 .from(FriendModel.class)
                 .where(FriendModel_Table.possessor.eq(possessor))
                 // 存储的jid形式为  username@possessor
                 .and(FriendModel_Table.jid.eq(mJid))
                 .querySingle();
 
-        if(friend != null && mOnDataUpdateListener != null) {
-            List<ChatMessageModel> chatMessageModels = friend.getMyChatMessages();
-            mOnDataUpdateListener.onUpdateData(ChatMessageModel.toChatMessageEntity(chatMessageModels));
+        if(friendModel != null && mOnDataUpdateListener != null) {
+            List<ChatMessageModel> chatMessageModels = friendModel.getMyChatMessages();
+            mOnDataUpdateListener.onUpdateData(ChatMessageModel.toChatMessageEntity(chatMessageModels), true);
         }
     }
 
@@ -83,5 +86,16 @@ public class ChatPresenter implements ChatContentView.OnSendListener, ChatConten
     public void onClick() {
         mContext.startActivity(new Intent(mContext, FullImageActivity.class));
         ((Activity)mContext).overridePendingTransition(0, 0);
+    }
+
+    int page = 2;
+
+    @Override
+    public void onRefresh() {
+        if (friendModel != null) {
+            List<ChatMessageModel> chatMessageModels = friendModel.getMyChatMessages(page);
+            page ++;
+            mOnDataUpdateListener.onUpdateData(ChatMessageModel.toChatMessageEntity(chatMessageModels), false);
+        }
     }
 }

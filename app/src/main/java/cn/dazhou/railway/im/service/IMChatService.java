@@ -142,7 +142,7 @@ public class IMChatService extends Service {
             ChatMessageEntity chatMessageEntity = (ChatMessageEntity) Tool.parseJSON(message.getBody(), ChatMessageEntity.class);
             // 标志为接收到的消息
             chatMessageEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
-            chatMessageEntity.setDate(String.valueOf(System.currentTimeMillis()));
+            chatMessageEntity.setDate(System.currentTimeMillis());
             String fromUser = from.getLocalpart().toString().split("@")[0];
             String imagePath = null;
             String voicePath = null;
@@ -161,6 +161,7 @@ public class IMChatService extends Service {
                     .imagePath(imagePath)
                     .type(chatMessageEntity.getType())
                     .jid(fromUser.toString())
+                    .date(System.currentTimeMillis())
                     .build();
             chatMessageEntity.setVoicePath(voicePath);
             chatMessageEntity.setImagePath(imagePath);

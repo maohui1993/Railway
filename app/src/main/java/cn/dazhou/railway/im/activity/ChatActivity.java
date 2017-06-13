@@ -6,16 +6,23 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import org.greenrobot.eventbus.EventBus;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 
-import java.io.Serializable;
+import org.greenrobot.eventbus.EventBus;
+import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterEntry;
+
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.widget.ChatContentView;
 import cn.dazhou.railway.R;
+import cn.dazhou.railway.im.db.FriendModel;
+import cn.dazhou.railway.im.db.FriendModel_Table;
 import cn.dazhou.railway.im.listener.OnDataUpdateListener;
 import cn.dazhou.railway.im.presenter.ChatPresenter;
 
@@ -41,20 +48,49 @@ public class ChatActivity extends AppCompatActivity implements OnDataUpdateListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         ButterKnife.bind(this);
-        setSupportActionBar(mToolbar);
         mJid = getIntent().getStringExtra(DATA_KEY);
-        mToolbar.setTitle(mJid);
+        setTitle();
         mPresenter = new ChatPresenter(this, mJid);
         mPresenter.setOnDataUpdateListener(this);
         mPresenter.init();
         // 点击发送按钮时
         mChatContentView.setOnSendListener(mPresenter);
         mChatContentView.setOnImageClickListener(mPresenter);
+        mChatContentView.setRefreshListener(mPresenter);
         EventBus.getDefault().post(mJid);
-
     }
 
-    public static void startItself(Context context, Serializable data) {
+    private void setTitle() {
+        FriendModel friend = SQLite.select()
+                .from(FriendModel.class)
+                .where(FriendModel_Table.jid.eq(mJid))
+                .querySingle();
+        String title = mJid;
+        if (friend != null) {
+            title = friend.getName();
+        } else {
+            String name = getNameFromServer();
+            if (title != null) {
+                title = name;
+            }
+        }
+        mToolbar.setTitle(title);
+        setSupportActionBar(mToolbar);
+    }
+
+    private String getNameFromServer() {
+        // 从服务器获取好友列表
+        Roster roster = IMLauncher.getRoster();
+        Set<RosterEntry> entries = roster.getEntries();
+        for (RosterEntry entry : entries) {
+            if (entry.getJid().toString().contains(mJid)) {
+                return entry.getName();
+            }
+        }
+        return null;
+    }
+
+    public static void startItself(Context context, String data) {
         Intent intent = new Intent(context, ChatActivity.class);
         intent.putExtra(DATA_KEY, data);
         context.startActivity(intent);
@@ -81,8 +117,8 @@ public class ChatActivity extends AppCompatActivity implements OnDataUpdateListe
     }
 
     @Override
-    public void onUpdateData(List<ChatMessageEntity> datas) {
-        mChatContentView.initChatDatas(datas);
+    public void onUpdateData(List<ChatMessageEntity> datas, boolean moveCursor) {
+        mChatContentView.onRefresh(datas, moveCursor);
     }
 
 }
