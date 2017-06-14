@@ -17,4 +17,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="help">帮助</string>
     <string name="tip">消息提醒</string>
+    <string name="title_activity_splash1">Splash1Activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>

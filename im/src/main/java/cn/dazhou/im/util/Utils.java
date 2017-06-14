@@ -76,6 +76,11 @@ public class Utils {
         return sdf.format(System.currentTimeMillis());
     }
 
+    public static String getFormatTime(long time) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
+        return sdf.format(time);
+    }
+
     //毫秒转秒
     public static String long2String(long time) {
         //毫秒转秒

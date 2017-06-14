@@ -44,7 +44,6 @@ import cn.dazhou.im.fragment.ChatFunctionFragment;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.GlobalOnItemClickManagerUtils;
 import cn.dazhou.im.util.MediaManager;
-import cn.dazhou.im.util.Utils;
 
 /**
  * Created by Hooyee on 2017/5/7.
@@ -53,7 +52,7 @@ import cn.dazhou.im.util.Utils;
  * EventBus接受到的<ChatMessageEntity>事件信息都在这里集中处理
  */
 
-public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItemClickListener , com.jude.easyrecyclerview.swipe.SwipeRefreshLayout.OnRefreshListener{
+public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItemClickListener {
     @BindView(R2.id.chat_list)
     EasyRecyclerView chatList;
     @BindView(R2.id.emotion_voice)
@@ -254,7 +253,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         fullImageInfo.setImageUrl(message.getImagePath());
         EventBus.getDefault().postSticky(fullImageInfo);
         if (mOnImageClickListener != null) {
-            mOnImageClickListener.onClick();
+            mOnImageClickListener.onImageClick();
         }
     }
 
@@ -307,11 +306,6 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         }
     }
 
-    @Override
-    public void onRefresh() {
-
-    }
-
     // 当发送时，回调到ChatActivity，由其确认目前正在跟谁聊天
     public interface OnSendListener {
         void onSend(ChatMessageEntity msg);
@@ -319,6 +313,6 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
 
     // 当发送时，回调到ChatActivity，由其确认目前正在跟谁聊天
     public interface OnImageClickListener {
-        void onClick();
+        void onImageClick();
     }
 }

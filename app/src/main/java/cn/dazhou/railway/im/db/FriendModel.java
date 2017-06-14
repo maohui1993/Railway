@@ -1,5 +1,7 @@
 package cn.dazhou.railway.im.db;
 
+import android.util.Log;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyReference;
@@ -36,7 +38,7 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel> {
             references = {@ForeignKeyReference(columnName = "possessor", foreignKeyColumnName = "username")})
     private String possessor;   // 好友的持有者（持有人账号）
 
-    private int onceMaxShown = 30;
+    private int onceMaxShown = 5;
 
     List<ChatMessageModel> chatMessages;
 
@@ -57,7 +59,7 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel> {
         return chatMessages;
     }
 
-    public List<ChatMessageModel> getMyChatMessages(int page) {
+    public synchronized List<ChatMessageModel> getMyChatMessages(int page) {
         int count = (int) SQLite.selectCountOf(ChatMessageModel_Table.id)
                 .from(ChatMessageModel.class)
                 .where(ChatMessageModel_Table.jid.eq(jid))
@@ -65,11 +67,15 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel> {
         // 避免查找出重复数据
         int limitCount = onceMaxShown;
         int offset = count - onceMaxShown * page;
-        if (offset < 0 && count + offset > 0) {
-            limitCount = onceMaxShown + offset;
-        } else if (offset < 0 && count + offset < 0) {
-            return null;
+        int surplusCount = offset + onceMaxShown;
+        if (offset < 0) {
+            if (surplusCount > 0) {
+                limitCount = surplusCount;
+            } else {
+                return null;
+            }
         }
+        Log.i("TAG", "第几次page = " + page + "第几次count = " + count);
         chatMessages = SQLite.select()
                 .from(ChatMessageModel.class)
                 .where(ChatMessageModel_Table.jid.eq(jid))

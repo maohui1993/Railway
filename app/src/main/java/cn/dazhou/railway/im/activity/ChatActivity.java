@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
 
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
@@ -21,6 +24,7 @@ import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.widget.ChatContentView;
 import cn.dazhou.railway.R;
+import cn.dazhou.railway.SplashActivity;
 import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.im.db.FriendModel_Table;
 import cn.dazhou.railway.im.listener.OnDataUpdateListener;
@@ -50,6 +54,13 @@ public class ChatActivity extends AppCompatActivity implements OnDataUpdateListe
         ButterKnife.bind(this);
         mJid = getIntent().getStringExtra(DATA_KEY);
         setTitle();
+        mToolbar.setNavigationIcon(R.drawable.back);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SplashActivity.startItself(ChatActivity.this);
+            }
+        });
         mPresenter = new ChatPresenter(this, mJid);
         mPresenter.setOnDataUpdateListener(this);
         mPresenter.init();
@@ -94,6 +105,13 @@ public class ChatActivity extends AppCompatActivity implements OnDataUpdateListe
         Intent intent = new Intent(context, ChatActivity.class);
         intent.putExtra(DATA_KEY, data);
         context.startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_chat_activity, menu);
+        return true;
     }
 
     @Override

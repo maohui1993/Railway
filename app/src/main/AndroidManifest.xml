@@ -24,16 +24,7 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="tKiTYcTGAZB0NrpWK19f57Rrp3PzrGOo" />
 
-        <activity
-            android:name=".SplashActivity"
-            android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".im.activity.LoginActivity"/>
+        <activity android:name=".im.activity.LoginActivity" />
         <activity
             android:name=".im.activity.ChatActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
@@ -82,7 +73,16 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".im.activity.ChatRoomActivity"></activity>
+        <activity android:name=".im.activity.ChatRoomActivity" />
+        <activity
+            android:name=".SplashActivity"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

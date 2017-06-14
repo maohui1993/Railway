@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="cn.dazhou.railway.SplashActivity"
+    tools:showIn="@layout/app_bar_splash1">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/content"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v4.view.ViewPager
+            android:layout_weight="1"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" >
+        </android.support.v4.view.ViewPager>
+
+        <cn.dazhou.pagerslidingtabstrip.PagerSlidingTabStrip
+            android:id="@+id/tabs_1"
+            app:pstsShouldExpand="true"
+            app:pstsIndicatorHeight="100dp"
+            app:pstsIndicatorColor="@color/colorIndicator"
+            android:layout_gravity="bottom"
+            android:layout_width="match_parent"
+            android:layout_height="75dp" />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

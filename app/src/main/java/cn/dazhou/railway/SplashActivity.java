@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
@@ -19,11 +22,9 @@ import java.util.List;
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cn.dazhou.im.util.Tool;
 import cn.dazhou.maputil.MapLauncher;
 import cn.dazhou.pagerslidingtabstrip.PagerSlidingTabStrip;
-import cn.dazhou.railway.im.activity.LoginActivity;
 import cn.dazhou.railway.im.activity.SettingActivity;
 import cn.dazhou.railway.im.adapter.FunctionTabAdapter;
 import cn.dazhou.railway.im.fragment.BaseFragment;
@@ -31,13 +32,14 @@ import cn.dazhou.railway.im.fragment.ContactListFragment;
 import cn.dazhou.railway.im.fragment.HomeFragment;
 import cn.dazhou.railway.im.fragment.SettingFragment;
 import cn.dazhou.railway.im.fragment.WorkFragment;
-import cn.dazhou.railway.im.presenter.SplashPresenter;
 import cn.dazhou.railway.util.LogUtil;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
+
     @BindView(R.id.content)
     ViewGroup content;
-    @BindView(R.id.my_toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.pager)
     ViewPager mViewPager;
@@ -46,7 +48,6 @@ public class SplashActivity extends AppCompatActivity {
     @BindView(R.id.tabs_1)
     PagerSlidingTabStrip pagerSlidingTabStrip;
     private List<BaseFragment> fragments = new ArrayList();
-    private SplashPresenter mPresenter;
 
     private int[] icons = {
             R.drawable.home,
@@ -55,12 +56,14 @@ public class SplashActivity extends AppCompatActivity {
             R.drawable.set
     };
 
+    private SplashPresenter mPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash1);
+
         MapLauncher.init(getApplicationContext());
-        ViewGroup content = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.activity_splash, null);
-        setContentView(content);
         Tool.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         Tool.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
         Tool.checkPermission(this, Manifest.permission.RECORD_AUDIO);
@@ -72,8 +75,6 @@ public class SplashActivity extends AppCompatActivity {
         LogUtil.init();
         ButterKnife.bind(this);
         mPresenter = new SplashPresenter(this);
-        toolbar.setTitle(mTitles[0]);
-        setSupportActionBar(toolbar);
         fragments.add(HomeFragment.newInstance(false));
         fragments.add(WorkFragment.newInstance(false));
         fragments.add(ContactListFragment.newInstance(true));
@@ -101,12 +102,34 @@ public class SplashActivity extends AppCompatActivity {
             }
         });
         pagerSlidingTabStrip.setViewPager(mViewPager);
+        // 抽屉式导航栏设置
+        toolbar.setTitle(mTitles[0]);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_splash_activity, menu);
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_splash_activity, menu);
         return true;
     }
 
@@ -123,21 +146,29 @@ public class SplashActivity extends AppCompatActivity {
         return true;
     }
 
-    @OnClick(R.id.btn_login)
-    void login() {
-        Intent i = new Intent(this, LoginActivity.class);
-        startActivity(i);
-    }
-
-    @OnClick(R.id.bt_position)
-    void position() {
-        MapLauncher.loadMap(content);
-        MapLauncher.getPosition();
-    }
-
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mPresenter.onActivityResult(requestCode, resultCode, data);
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     public static void startItself(Context context) {
