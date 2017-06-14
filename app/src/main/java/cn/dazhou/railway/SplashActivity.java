@@ -4,18 +4,19 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +24,12 @@ import java.util.List;
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.dazhou.im.util.Tool;
 import cn.dazhou.maputil.MapLauncher;
 import cn.dazhou.pagerslidingtabstrip.PagerSlidingTabStrip;
 import cn.dazhou.railway.im.activity.SettingActivity;
+import cn.dazhou.railway.im.activity.UserInfoActivity;
 import cn.dazhou.railway.im.adapter.FunctionTabAdapter;
 import cn.dazhou.railway.im.fragment.BaseFragment;
 import cn.dazhou.railway.im.fragment.ContactListFragment;
@@ -119,6 +122,11 @@ public class SplashActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    void openUserInfo(View v) {
+        Toast.makeText(this, "image", Toast.LENGTH_SHORT).show();
+        UserInfoActivity.startItself(this);
     }
 
     @Override

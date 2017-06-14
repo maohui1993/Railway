@@ -33,6 +33,8 @@ import org.jivesoftware.smackx.muc.MultiUserChatManager;
 import org.jivesoftware.smackx.muc.packet.MUCUser;
 import org.jivesoftware.smackx.search.ReportedData;
 import org.jivesoftware.smackx.search.UserSearchManager;
+import org.jivesoftware.smackx.vcardtemp.VCardManager;
+import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 import org.jivesoftware.smackx.xdata.Form;
 import org.jivesoftware.smackx.xdata.FormField;
 import org.jxmpp.jid.DomainBareJid;
@@ -176,6 +178,22 @@ public class SmackImApiImpl implements IMApi {
         }
         String msgJson = Tool.toJSON(msg);
         mChat.send(msgJson);
+    }
+
+    public void saveVCard() {
+        VCard vCard = new VCard();
+        vCard.setPhoneWork("Tel","17051202104");
+        try {
+            VCardManager.getInstanceFor(mConnection).saveVCard(vCard);
+        } catch (SmackException.NoResponseException e) {
+            e.printStackTrace();
+        } catch (XMPPException.XMPPErrorException e) {
+            e.printStackTrace();
+        } catch (SmackException.NotConnectedException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -19,10 +19,7 @@ import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.db.FriendModel;
 
 /**
- * 当前类注释：悬浮headerAdapter
- * PackageName：com.jude.dome.sticky
- * Created by Qyang on 16/11/4
- * Email: yczx27@163.com
+ * Created by hooyee on 2017/06/08.
  */
 public class StickyHeaderAdapter implements StickyHeaderDecoration.IStickyHeaderAdapter<StickyHeaderAdapter.HeaderHolder> {
 
@@ -72,7 +69,7 @@ public class StickyHeaderAdapter implements StickyHeaderDecoration.IStickyHeader
 
     @Override
     public void onBindHeaderViewHolder(HeaderHolder viewHolder, int position) {
-        viewHolder.header.setText("第"+referenceHeaderId.get((int)getHeaderId(position))+"组");
+        viewHolder.header.setText(referenceHeaderId.get((int)getHeaderId(position)).toString());
     }
 
     class HeaderHolder extends RecyclerView.ViewHolder {
