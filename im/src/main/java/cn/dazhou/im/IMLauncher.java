@@ -115,4 +115,8 @@ public final class IMLauncher {
     public static void inviteUser(String roomName, String jid) {
         mImApi.inviteUser(roomName, jid);
     }
+
+    public static UserBean getCurrentLogindUserInfo() {
+        return mImApi.getCurrentLoginedUserInfo();
+    }
 }

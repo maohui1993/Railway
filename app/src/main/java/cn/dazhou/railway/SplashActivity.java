@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,10 @@ public class SplashActivity extends AppCompatActivity
     String[] mTitles;
     @BindView(R.id.tabs_1)
     PagerSlidingTabStrip pagerSlidingTabStrip;
+//    @BindView(R.id.tx_name)
+//    TextView mNameTx;
+//    @BindView(R.id.tx_jid)
+//    TextView mJidTx;
     private List<BaseFragment> fragments = new ArrayList();
 
     private int[] icons = {
@@ -114,6 +119,17 @@ public class SplashActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        if (MyApp.gCurrentUser != null) {
+            TextView mNameTx = (TextView) findViewById(R.id.tx_name);
+            mNameTx.setText(MyApp.gCurrentUser.getNickName());
+            TextView mJidTx = (TextView) findViewById(R.id.tx_jid);
+            mJidTx.setText(MyApp.gCurrentUser.getUsername());
+        }
+        super.onResume();
     }
 
     @Override

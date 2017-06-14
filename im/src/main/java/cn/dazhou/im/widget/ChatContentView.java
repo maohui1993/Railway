@@ -144,7 +144,6 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         mAdapter = new ChatAdapter1(context);
         mAdapter.setOnItemClickListener(this);
         chatList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        mAdapter.setNoMore(R.layout.view_nomore);
 
         mAdapter.setError(R.layout.view_error, new RecyclerArrayAdapter.OnErrorListener() {
             @Override

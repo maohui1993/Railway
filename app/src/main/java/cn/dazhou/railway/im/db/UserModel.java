@@ -21,6 +21,10 @@ public class UserModel extends BaseModel{
     private String password;   //用户密码
     @Column
     private boolean firstLogin = false; // 记录用户是否第一次在当前机器登录, 默认为非第一次
+    @Column
+    private String nickName;
+    @Column
+    private String email;
 
     List<FriendModel> friends;
     @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "friends")
@@ -56,5 +60,21 @@ public class UserModel extends BaseModel{
 
     public void setFirstLogin(boolean firstLogin) {
         this.firstLogin = firstLogin;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

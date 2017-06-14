@@ -7,6 +7,7 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import org.jivesoftware.smack.util.FileUtils;
 
 import cn.dazhou.im.IMLauncher;
+import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.db.UserModel;
@@ -89,10 +90,13 @@ public class LoginPresenter {
                                 .querySingle();
 
                         if (userModel == null) {
+                            UserBean user = IMLauncher.getCurrentLogindUserInfo();
                             userModel = new UserModel();
                             userModel.setUsername(username);
                             userModel.setPassword(password);
                             userModel.setFirstLogin(true);
+                            userModel.setEmail(user.getEmail());
+                            userModel.setNickName(user.getName());
                             userModel.save();
                         }
                         // 先初始化全局user
