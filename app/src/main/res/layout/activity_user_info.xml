@@ -1,31 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#dadada"
     android:orientation="vertical"
-    android:padding="10dp"
     tools:context="cn.dazhou.railway.im.activity.UserInfoActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <cn.dazhou.railway.widget.MultiText
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:leftText="头像"
+        app:rightImage="@drawable/header_02"
+        app:rightText="测试" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
 
-        <TextView
-            android:id="@+id/tx_header"
-            android:layout_weight="1"
-            android:text="头像"
-            android:textSize="@dimen/text_body"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/teb_height"/>
+    <cn.dazhou.railway.widget.MultiText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:leftText="昵称"
+        app:rightText="测试" />
 
-        <ImageView
-            android:id="@+id/ig_header"
-            android:layout_width="@dimen/teb_height"
-            android:layout_height="@dimen/teb_height"
-            android:scaleType="centerInside"
-            android:src="@drawable/header_02" />
-    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
+
+    <cn.dazhou.railway.widget.MultiText
+        android:id="@+id/jid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:leftText="账号"
+        app:rightImage="@drawable/header_02"
+        app:rightText="测试" />
 </LinearLayout>

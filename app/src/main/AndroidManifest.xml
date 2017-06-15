@@ -83,7 +83,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".im.activity.UserInfoActivity"></activity>
+        <activity android:name=".im.activity.UserInfoActivity" />
+        <activity android:name=".im.activity.EditInfoActivity"></activity>
     </application>
 
 </manifest>

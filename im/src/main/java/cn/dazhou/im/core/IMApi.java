@@ -44,4 +44,6 @@ public interface IMApi extends IChat, IConnection{
     void inviteUser(String roomName, String jid);
 
     UserBean getCurrentLoginedUserInfo();
+
+    void saveVCard(String key, String value) throws Exception;
 }

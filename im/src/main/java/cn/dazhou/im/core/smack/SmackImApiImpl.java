@@ -180,20 +180,10 @@ public class SmackImApiImpl implements IMApi {
         mChat.send(msgJson);
     }
 
-    public void saveVCard() {
+    public void saveVCard(String key, String value) throws Exception {
         VCard vCard = new VCard();
-        vCard.setPhoneWork("Tel","17051202104");
-        try {
-            VCardManager.getInstanceFor(mConnection).saveVCard(vCard);
-        } catch (SmackException.NoResponseException e) {
-            e.printStackTrace();
-        } catch (XMPPException.XMPPErrorException e) {
-            e.printStackTrace();
-        } catch (SmackException.NotConnectedException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        vCard.setPhoneWork(key, value);
+        VCardManager.getInstanceFor(mConnection).saveVCard(vCard);
     }
 
     @Override
@@ -466,5 +456,4 @@ public class SmackImApiImpl implements IMApi {
             }
         }
     }
-
 }

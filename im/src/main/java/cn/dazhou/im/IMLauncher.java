@@ -119,4 +119,8 @@ public final class IMLauncher {
     public static UserBean getCurrentLogindUserInfo() {
         return mImApi.getCurrentLoginedUserInfo();
     }
+
+    public static void saveVCard(String key, String value) throws Exception{
+        mImApi.saveVCard(key, value);
+    }
 }
