@@ -14,6 +14,7 @@ import java.util.List;
 import cn.dazhou.im.core.ConnectManager;
 import cn.dazhou.im.core.IMApi;
 import cn.dazhou.im.entity.ChatMessageEntity;
+import cn.dazhou.im.entity.ExtraInfo;
 import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.im.util.OfflineMsgManager;
 
@@ -120,7 +121,11 @@ public final class IMLauncher {
         return mImApi.getCurrentLoginedUserInfo();
     }
 
-    public static void saveVCard(String key, String value) throws Exception{
-        mImApi.saveVCard(key, value);
+    public static void saveVCard(ExtraInfo info) throws Exception{
+        mImApi.saveVCard(info);
+    }
+
+    public static ExtraInfo getVCard(String jid) {
+        return mImApi.getVCard(jid);
     }
 }

@@ -52,4 +52,18 @@
         app:leftText="账号"
         app:rightImage="@drawable/header_02"
         app:rightText="测试" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
+
+    <cn.dazhou.railway.widget.MultiText
+        android:id="@+id/tel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:leftText="手机"
+        app:rightText="测试" />
+
 </LinearLayout>

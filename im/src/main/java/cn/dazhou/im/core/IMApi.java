@@ -7,6 +7,7 @@ import java.util.List;
 
 import cn.dazhou.im.core.function.IChat;
 import cn.dazhou.im.core.function.IConnection;
+import cn.dazhou.im.entity.ExtraInfo;
 import cn.dazhou.im.entity.UserBean;
 
 /**
@@ -45,5 +46,7 @@ public interface IMApi extends IChat, IConnection{
 
     UserBean getCurrentLoginedUserInfo();
 
-    void saveVCard(String key, String value) throws Exception;
+    void saveVCard(ExtraInfo info) throws Exception;
+
+    ExtraInfo getVCard(String jid);
 }

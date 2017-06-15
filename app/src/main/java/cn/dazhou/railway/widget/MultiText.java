@@ -35,6 +35,10 @@ public class MultiText extends LinearLayout {
         init(typeArray);
     }
 
+    public void setText(String text) {
+        mRightText.setText(text);
+    }
+
     public String getText() {
         return mRightText.getText().toString();
     }

@@ -56,6 +56,7 @@ import java.util.Set;
 import cn.dazhou.im.core.IMApi;
 import cn.dazhou.im.core.function.IConnection;
 import cn.dazhou.im.entity.ChatMessageEntity;
+import cn.dazhou.im.entity.ExtraInfo;
 import cn.dazhou.im.entity.FriendRequest;
 import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.im.entity.UserExtensionElement;
@@ -180,10 +181,26 @@ public class SmackImApiImpl implements IMApi {
         mChat.send(msgJson);
     }
 
-    public void saveVCard(String key, String value) throws Exception {
+    @Override
+    public void saveVCard(ExtraInfo info) throws Exception {
         VCard vCard = new VCard();
-        vCard.setPhoneWork(key, value);
+        vCard.setPhoneWork(info.getTelKey(), info.getTel());
+        vCard.setNickName(info.getName());
         VCardManager.getInstanceFor(mConnection).saveVCard(vCard);
+    }
+
+    @Override
+    public ExtraInfo getVCard(String jid) {
+        ExtraInfo info = null;
+        try {
+            VCard vCard = VCardManager.getInstanceFor(mConnection).loadVCard(mConnection.getUser().asEntityBareJid());
+            info = new ExtraInfo();
+            info.setName(vCard.getNickName());
+            info.setTel(vCard.getPhoneWork(info.getTelKey()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return info;
     }
 
     @Override
