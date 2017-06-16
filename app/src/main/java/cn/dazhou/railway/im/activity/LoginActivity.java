@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.SplashActivity;
+import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.listener.IOnLoginListener;
 import cn.dazhou.railway.im.presenter.LoginPresenter;
 import cn.dazhou.railway.im.service.IMChatService;
@@ -73,9 +74,16 @@ public class LoginActivity extends AppCompatActivity implements IOnLoginListener
         LogUtil.write("登录成功");
         mLoginPbt.setProgress(0);
         changeEditEnable();
+        sendLoginBroadcast();
         IMChatService.startItself(this);
         IMFriendRequestService.startItself(this);
         SplashActivity.startItself(this);
+    }
+
+    private void sendLoginBroadcast() {
+        Intent intent = new Intent();
+        intent.setAction(Constants.LOGIN_SUCCESS_BROADCAST);
+        sendBroadcast(intent);
     }
 
     @Override

@@ -14,4 +14,6 @@ public class Constants {
     public static final int NOTIFICATION_ID_VALUE_ONE = 0x01;
     public static final int NOTIFICATION_ACTION_TYPE_ACCEPT = 0x01;
     public static final int NOTIFICATION_ACTION_TYPE_REFUSE = 0x02;
+
+    public static final String LOGIN_SUCCESS_BROADCAST = "action.login.success";
 }

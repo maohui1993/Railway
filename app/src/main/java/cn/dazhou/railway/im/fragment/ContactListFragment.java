@@ -1,9 +1,13 @@
 package cn.dazhou.railway.im.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +22,11 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import cn.dazhou.railway.R;
+import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.adapter.RosterAdapter;
 import cn.dazhou.railway.im.adapter.StickyHeaderAdapter;
 import cn.dazhou.railway.im.db.FriendModel;
@@ -53,12 +57,14 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
         mPresenter = new ContactListPresenter(getContext());
         mPresenter.setOnDataUpdateListener(this);
         EventBus.getDefault().register(this);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.LOGIN_SUCCESS_BROADCAST);
+        getActivity().registerReceiver(loginReceiver, intentFilter);
     }
 
     @Override
-    public void onResume() {
-        mPresenter.init();
-        super.onResume();
+    public void onAttach(Context context) {
+        super.onAttach(context);
     }
 
     @Override
@@ -69,6 +75,13 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
         initRoster();
         return root;
     }
+
+    BroadcastReceiver loginReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent){
+            mPresenter.init();
+        }
+    };
 
     private void initRoster() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -108,7 +121,7 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
     @Override
     public void onUpdateData(List<FriendModel> datas, boolean moveCursor) {
         Collections.sort(datas);
-        mRosterAdapter.clear();
+//        mRosterAdapter.clear();
         mRosterAdapter.addAll(datas);
         // StickyHeader
 
@@ -133,6 +146,7 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
 
     @Override
     public void onDestroy() {
+        getActivity().unregisterReceiver(loginReceiver);
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
