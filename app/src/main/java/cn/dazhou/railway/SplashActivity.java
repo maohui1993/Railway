@@ -11,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +27,7 @@ import butterknife.ButterKnife;
 import cn.dazhou.im.util.Tool;
 import cn.dazhou.maputil.MapLauncher;
 import cn.dazhou.pagerslidingtabstrip.PagerSlidingTabStrip;
+import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.activity.MyselfInfoActivity;
 import cn.dazhou.railway.im.activity.SettingActivity;
 import cn.dazhou.railway.im.adapter.FunctionTabAdapter;
@@ -37,6 +37,7 @@ import cn.dazhou.railway.im.fragment.HomeFragment;
 import cn.dazhou.railway.im.fragment.SettingFragment;
 import cn.dazhou.railway.im.fragment.WorkFragment;
 import cn.dazhou.railway.util.LogUtil;
+import cn.dazhou.railway.util.SharedPreferenceUtil;
 
 public class SplashActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -193,6 +194,12 @@ public class SplashActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        SharedPreferenceUtil.putString(this, Constants.LATEST_LOGIN_JID, MyApp.gCurrentUsername);
+        super.onDestroy();
     }
 
     public static void startItself(Context context) {

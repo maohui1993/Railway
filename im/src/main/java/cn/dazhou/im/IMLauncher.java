@@ -124,10 +124,6 @@ public final class IMLauncher {
         mImApi.inviteUser(roomName, jid);
     }
 
-    public static UserBean getCurrentLogindUserInfo() {
-        return mImApi.getCurrentLoginedUserInfo();
-    }
-
     public static void saveVCard(ExtraInfo info) throws Exception{
         mImApi.saveVCard(info);
     }

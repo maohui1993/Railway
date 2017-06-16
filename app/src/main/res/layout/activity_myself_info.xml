@@ -50,7 +50,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:leftText="账号"
-        app:rightImage="@drawable/header_02"
         app:rightText="测试" />
 
     <LinearLayout

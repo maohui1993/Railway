@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import cn.dazhou.im.IMLauncher;
+import cn.dazhou.im.entity.ExtraInfo;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
@@ -100,6 +101,9 @@ public class ContactListPresenter implements View.OnClickListener{
             friend.setRawJid(rawJid);
             friend.setName(entry.getName());
             friend.setPossessor(possessor);
+            ExtraInfo info = IMLauncher.getVCard(rawJid);
+            friend.setNickName(info.getName());
+            friend.setTel(info.getTel());
             MyApp.gCurrentUser.getMyFriends().add(friend);
             MyApp.gCurrentUser.setFirstLogin(false);
             MyApp.gCurrentUser.save();

@@ -14,6 +14,9 @@ import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ExtraInfo;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
+import cn.dazhou.railway.im.db.FriendModel;
+import cn.dazhou.railway.im.db.UserModel;
+import cn.dazhou.railway.util.SharedPreferenceUtil;
 import cn.dazhou.railway.util.StringUtil;
 
 public class FriendInfoActivity extends AppCompatActivity {
@@ -44,14 +47,17 @@ public class FriendInfoActivity extends AppCompatActivity {
             }
         });
         // 有ARN风险
-        ExtraInfo info = IMLauncher.getVCard(StringUtil.getRealJid(jid));
-        mNickNameTx.setText(info.getName());
-        mTelTx.setText(info.getTel());
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
+        String latestUser = SharedPreferenceUtil.getString(this, Constants.LATEST_LOGIN_JID, "");
+        if (!"".equals(latestUser)) {
+            FriendModel friendModel = FriendModel.getMyFriend(StringUtil.getWrapJid(jid, latestUser));
+            mNickNameTx.setText(friendModel.getNickName());
+            mTelTx.setText(friendModel.getTel());
+        }
+//        else {
+//            ExtraInfo info = IMLauncher.getVCard(StringUtil.getRealJid(latestUser));
+//            mNickNameTx.setText(info.getName());
+//            mTelTx.setText(info.getTel());
+//        }
     }
 
     public static void startItself(Context context, String data) {

@@ -10,11 +10,12 @@ import android.view.View;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ExtraInfo;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
-import cn.dazhou.railway.util.StringUtil;
+import cn.dazhou.railway.config.Constants;
+import cn.dazhou.railway.im.db.UserModel;
+import cn.dazhou.railway.util.SharedPreferenceUtil;
 import cn.dazhou.railway.widget.MultiText;
 
 public class MyselfInfoActivity extends AppCompatActivity {
@@ -42,9 +43,20 @@ public class MyselfInfoActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 //        ExtraInfo info = IMLauncher.getVCard(MyApp.gCurrentUsername + "@192.168.1.39");
-        ExtraInfo info = IMLauncher.getVCard(StringUtil.getRealJid(MyApp.gCurrentUsername));
-        mNameMtx.setText(info.getName());
-        mTelMtx.setText(info.getTel());
+//        ExtraInfo info = IMLauncher.getVCard(StringUtil.getRealJid(MyApp.gCurrentUsername));
+        UserModel user = null;
+        String latestUser = SharedPreferenceUtil.getString(this, Constants.LATEST_LOGIN_JID, "");
+        if (MyApp.gCurrentUser != null) {
+            user = MyApp.gCurrentUser;
+        } else if (!"".equals(latestUser)){
+            user = UserModel.getUser(latestUser);
+        }
+        if (user == null) {
+            return;
+        }
+        mJidMtx.setText(user.getUsername());
+        mNameMtx.setText(user.getNickName());
+        mTelMtx.setText(user.getTel());
     }
 
     @OnClick({R.id.header, R.id.name, R.id.jid, R.id.tel})

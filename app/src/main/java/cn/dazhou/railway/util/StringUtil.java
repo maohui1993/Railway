@@ -18,4 +18,11 @@ public class StringUtil {
         }
         return rawJid + Constants.JID_SEPARATOR + MyApp.gCurrentUsername;
     }
+
+    public static String getWrapJid(String rawJid, String wrap) {
+        if (rawJid.contains(Constants.JID_SEPARATOR)) {
+            rawJid = rawJid.split(Constants.JID_SEPARATOR)[0];
+        }
+        return rawJid + Constants.JID_SEPARATOR + wrap;
+    }
 }

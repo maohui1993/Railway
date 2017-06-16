@@ -142,15 +142,6 @@ public class SmackImApiImpl implements IMApi {
         }
     }
 
-    public UserBean getCurrentLoginedUserInfo() {
-        UserBean userBean = null;
-        if (mState == LOGINED_STATE) {
-            // 精确搜索只会有一个值
-            userBean = searchUserFromServer(mConnection.getUser().toString().split("@")[0]).get(0);
-        }
-        return userBean;
-    }
-
     @Override
     public void chatWith(String jid, ChatMessageEntity msg) throws XmppStringprepException, SmackException.NotConnectedException, InterruptedException {
         EntityBareJid id = JidCreate.entityBareFrom(jid);

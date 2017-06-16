@@ -25,6 +25,8 @@ public class UserModel extends BaseModel{
     private String nickName;
     @Column
     private String email;
+    @Column
+    private String tel;
 
     List<FriendModel> friends;
     @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "friends")
@@ -36,6 +38,13 @@ public class UserModel extends BaseModel{
                     .queryList();
         }
         return friends;
+    }
+
+    public static UserModel getUser(String username) {
+        return SQLite.select()
+                .from(UserModel.class)
+                .where(UserModel_Table.username.eq(username))
+                .querySingle();
     }
 
     public String getUsername() {
@@ -76,5 +85,13 @@ public class UserModel extends BaseModel{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
     }
 }
