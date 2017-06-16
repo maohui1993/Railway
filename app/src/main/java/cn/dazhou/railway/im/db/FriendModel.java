@@ -15,6 +15,7 @@ import java.util.List;
 
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.config.Constants;
+import cn.dazhou.railway.util.StringUtil;
 
 /**
  * Created by hooyee on 2017/5/17.
@@ -37,6 +38,10 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel> {
     @ForeignKey(tableClass = UserModel.class,
             references = {@ForeignKeyReference(columnName = "possessor", foreignKeyColumnName = "username")})
     private String possessor;   // 好友的持有者（持有人账号）
+    @Column
+    private String tel;         // 手机号码
+    @Column
+    private String nickName;    // 好友备注
 
     private int onceMaxShown = 5;
 
@@ -108,10 +113,7 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel> {
     }
 
     public void setJid(String jid) {
-        if (jid.contains(Constants.JID_SEPARATOR)) {
-            jid = jid.split(Constants.JID_SEPARATOR)[0];
-        }
-        this.jid = jid + Constants.JID_SEPARATOR + MyApp.gCurrentUsername;
+        this.jid = StringUtil.getWrapJid(jid);
     }
 
     /**
@@ -152,6 +154,22 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel> {
 
     public void setRelation(int relation) {
         this.relation = relation;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public static int typeToInt(String type) {

@@ -4,10 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
-import android.view.View;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
-import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.util.List;
@@ -16,19 +15,21 @@ import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.widget.ChatContentView;
 import cn.dazhou.railway.MyApp;
-import cn.dazhou.railway.config.Constants;
+import cn.dazhou.railway.R;
+import cn.dazhou.railway.im.activity.FriendInfoActivity;
 import cn.dazhou.railway.im.activity.FullImageActivity;
+import cn.dazhou.railway.im.activity.MyselfInfoActivity;
 import cn.dazhou.railway.im.db.ChatMessageModel;
 import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.im.db.FriendModel_Table;
 import cn.dazhou.railway.im.listener.OnDataUpdateListener;
-import cn.dazhou.railway.util.SharedPreferenceUtil;
+import cn.dazhou.railway.util.StringUtil;
 
 /**
  * Created by hooyee on 2017/5/8.
  */
 
-public class ChatPresenter implements ChatContentView.OnSendListener, ChatContentView.OnImageClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class ChatPresenter implements ChatContentView.OnSendListener, ChatContentView.OnImageClickListener, SwipeRefreshLayout.OnRefreshListener, Toolbar.OnMenuItemClickListener {
     private Context mContext;
     private String mJid;
     private FriendModel friendModel;
@@ -79,7 +80,8 @@ public class ChatPresenter implements ChatContentView.OnSendListener, ChatConten
         model.setState(msg.isState());
 
         model.save();
-        String jid = mJid.split(Constants.JID_SEPARATOR)[0] + Constants.JID_SEPARATOR + MyApp.gServerIp;
+        // 还原真实jid
+        String jid = StringUtil.getRealJid(mJid);
         IMLauncher.chatWith(jid, msg);
     }
 
@@ -98,5 +100,15 @@ public class ChatPresenter implements ChatContentView.OnSendListener, ChatConten
             page ++;
             mOnDataUpdateListener.onUpdateData(ChatMessageModel.toChatMessageEntity(chatMessageModels), false);
         }
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.info:
+                FriendInfoActivity.startItself(mContext, StringUtil.getRealJid(mJid));
+                break;
+        }
+        return false;
     }
 }

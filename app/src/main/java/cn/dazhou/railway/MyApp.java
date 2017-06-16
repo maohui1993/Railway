@@ -18,6 +18,7 @@ import cn.dazhou.railway.util.SharedPreferenceUtil;
 public class MyApp extends Application {
     public static UserModel gCurrentUser; // 当前用户
     public static String gCurrentUsername; // 当前账号
+    // 初始化位置在LoginPresenter#login
     public static String gServerIp;
     @Override
     public void onCreate() {

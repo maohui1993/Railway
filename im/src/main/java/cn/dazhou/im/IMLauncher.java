@@ -24,12 +24,17 @@ import cn.dazhou.im.util.OfflineMsgManager;
 
 public final class IMLauncher {
     private static final String TAG = "TAG";
+    private static boolean login = false;
 
     public static IMApi getImApi() {
         return mImApi;
     }
 
     private static IMApi mImApi;
+
+    public static boolean isLogin() {
+        return login;
+    }
 
     public static boolean connect(Context context, String ip) throws Exception {
         boolean result = true;
@@ -57,8 +62,10 @@ public final class IMLauncher {
         boolean result = true;
         try {
             mImApi.login(username, password);
+            login = true;
         } catch (Exception e) {
             Log.w("TAG", "登录失败:" + e.getMessage());
+            login = false;
             throw e;
         }
         return result;

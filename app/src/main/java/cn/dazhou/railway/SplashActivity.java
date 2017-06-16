@@ -24,12 +24,11 @@ import java.util.List;
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cn.dazhou.im.util.Tool;
 import cn.dazhou.maputil.MapLauncher;
 import cn.dazhou.pagerslidingtabstrip.PagerSlidingTabStrip;
+import cn.dazhou.railway.im.activity.MyselfInfoActivity;
 import cn.dazhou.railway.im.activity.SettingActivity;
-import cn.dazhou.railway.im.activity.UserInfoActivity;
 import cn.dazhou.railway.im.adapter.FunctionTabAdapter;
 import cn.dazhou.railway.im.fragment.BaseFragment;
 import cn.dazhou.railway.im.fragment.ContactListFragment;
@@ -126,7 +125,7 @@ public class SplashActivity extends AppCompatActivity
 
     void openUserInfo(View v) {
         Toast.makeText(this, "image", Toast.LENGTH_SHORT).show();
-        UserInfoActivity.startItself(this);
+        MyselfInfoActivity.startItself(this);
     }
 
     @Override

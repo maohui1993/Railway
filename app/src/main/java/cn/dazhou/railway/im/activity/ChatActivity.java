@@ -54,7 +54,6 @@ public class ChatActivity extends AppCompatActivity implements OnDataUpdateListe
         ButterKnife.bind(this);
         mJid = getIntent().getStringExtra(DATA_KEY);
         setTitle();
-        mToolbar.setNavigationIcon(R.drawable.back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,6 +63,7 @@ public class ChatActivity extends AppCompatActivity implements OnDataUpdateListe
         mPresenter = new ChatPresenter(this, mJid);
         mPresenter.setOnDataUpdateListener(this);
         mPresenter.init();
+        mToolbar.setOnMenuItemClickListener(mPresenter);
         // 点击发送按钮时
         mChatContentView.setOnSendListener(mPresenter);
         mChatContentView.setOnImageClickListener(mPresenter);
@@ -87,6 +87,7 @@ public class ChatActivity extends AppCompatActivity implements OnDataUpdateListe
         }
         mToolbar.setTitle(title);
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private String getNameFromServer() {

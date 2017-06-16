@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#dadada"
     android:orientation="vertical"
-    tools:context="cn.dazhou.railway.im.activity.UserInfoActivity">
+    tools:context="cn.dazhou.railway.im.activity.MyselfInfoActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
