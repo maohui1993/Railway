@@ -114,6 +114,7 @@ public class SmackImApiImpl implements IMApi {
     @Override
     public void disconnect() {
         mConnection.disconnect();
+        mState = NOT_LOGIN_STATE;
     }
 
     public void addPacketSendListener(StanzaListener stanzaListener) {

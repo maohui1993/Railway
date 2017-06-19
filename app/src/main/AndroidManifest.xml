@@ -28,7 +28,9 @@
 
         <activity
             android:name=".im.activity.LoginActivity"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".im.activity.ChatActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
