@@ -24,6 +24,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.Collections;
 import java.util.List;
 
+import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.adapter.RosterAdapter;
@@ -56,14 +57,13 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
         mPresenter = new ContactListPresenter(getContext());
         mPresenter.setOnDataUpdateListener(this);
         EventBus.getDefault().register(this);
+        registerLoginReceiver();
+    }
+
+    private void registerLoginReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.LOGIN_SUCCESS_BROADCAST);
         getActivity().registerReceiver(loginReceiver, intentFilter);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
     BroadcastReceiver loginReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent){
-            mPresenter.init();
+//            mPresenter.init();
         }
     };
 
@@ -89,6 +89,7 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
         itemDecoration.setDrawLastItem(false);
         mRosterView.addItemDecoration(itemDecoration);
         mRosterAdapter = new RosterAdapter(getContext());
+        onUpdateData(MyApp.gCurrentUser.getMyFriends(), false);
         mRosterView.setAdapter(mRosterAdapter);
         // 添加非重用view部分的组件
         mRosterAdapter.addHeader(new RecyclerArrayAdapter.ItemView() {
@@ -123,7 +124,6 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
 //        mRosterAdapter.clear();
         mRosterAdapter.addAll(datas);
         // StickyHeader
-
         StickyHeaderDecoration decoration = new StickyHeaderDecoration(new StickyHeaderAdapter(getContext(), mRosterAdapter.getAllData()));
         mRosterView.addItemDecoration(decoration);
     }

@@ -37,6 +37,13 @@ public class MyselfInfoActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         mToolbar.setTitle("个人信息");
         setSupportActionBar(mToolbar);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

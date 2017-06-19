@@ -74,6 +74,7 @@ public class LoginActivity extends AppCompatActivity implements IOnLoginListener
         LogUtil.write("登录成功");
         mLoginPbt.setProgress(0);
         changeEditEnable();
+        // 发送登录成功的广播
         sendLoginBroadcast();
         IMChatService.startItself(this);
         IMFriendRequestService.startItself(this);

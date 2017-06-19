@@ -22,7 +22,9 @@ import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.activity.AddFriendActivity;
 import cn.dazhou.railway.im.activity.ChatRoomActivity;
 import cn.dazhou.railway.im.db.FriendModel;
+import cn.dazhou.railway.im.db.UserModel;
 import cn.dazhou.railway.im.listener.OnDataUpdateListener;
+import cn.dazhou.railway.util.SharedPreferenceUtil;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -46,69 +48,6 @@ public class ContactListPresenter implements View.OnClickListener{
 
     public void setOnDataUpdateListener(OnDataUpdateListener mOnDataUpdateListener) {
         this.mOnDataUpdateListener = mOnDataUpdateListener;
-    }
-
-    public void init() {
-        if (MyApp.gCurrentUser == null) {
-            Toast.makeText(mContext, "提示登录", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (cache != null) {
-//            mOnDataUpdateListener.onUpdateData(cache.get(), false);
-            return;
-        }
-        if (MyApp.gCurrentUser.isFirstLogin()) {
-            Observable.create(new ObservableOnSubscribe() {
-                @Override
-                public void subscribe(@NonNull ObservableEmitter e) throws Exception {
-                    updateFriendFromServer();
-                    e.onNext(1);
-                }
-            })
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer() {
-                        @Override
-                        public void accept(@NonNull Object o) throws Exception {
-                            List<FriendModel> friends = MyApp.gCurrentUser.getMyFriends();
-                            if (mOnDataUpdateListener != null && friends != null && friends.size() > 0) {
-                                Collections.sort(friends);
-//                                cache = new WeakReference(friends);
-                                mOnDataUpdateListener.onUpdateData(friends, false);
-                            }
-                        }
-                    });
-        } else {
-//            cache = new WeakReference(MyApp.gCurrentUser.getMyFriends());
-            mOnDataUpdateListener.onUpdateData(MyApp.gCurrentUser.getMyFriends(), false);
-        }
-    }
-
-    private List<FriendModel> updateFriendFromServer() {
-        // 从服务器获取好友列表
-        Roster roster = IMLauncher.getRoster();
-
-        Set<RosterEntry> entries = roster.getEntries();
-        for (RosterEntry entry : entries) {
-            FriendModel friend = new FriendModel();
-            // raw-jid形式为  username@hostname
-            String rawJid = entry.getJid().toString();
-            Log.i("TAG", "friend type = " + entry.getType().name());
-            String possessor = MyApp.gCurrentUser.getUsername();
-            // 存储的jid形式为  username@possessor
-            friend.setJid(rawJid.split(Constants.JID_SEPARATOR)[0] + Constants.JID_SEPARATOR + possessor);
-            friend.setRelation(FriendModel.typeToInt(entry.getType().name()));
-            friend.setRawJid(rawJid);
-            friend.setName(entry.getName());
-            friend.setPossessor(possessor);
-            ExtraInfo info = IMLauncher.getVCard(rawJid);
-            friend.setNickName(info.getName());
-            friend.setTel(info.getTel());
-            MyApp.gCurrentUser.getMyFriends().add(friend);
-            MyApp.gCurrentUser.setFirstLogin(false);
-            MyApp.gCurrentUser.save();
-        }
-        return MyApp.gCurrentUser.getMyFriends();
     }
 
     @Override

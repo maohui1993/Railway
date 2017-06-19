@@ -1,12 +1,14 @@
 package cn.dazhou.railway;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 import cn.dazhou.railway.config.Constants;
+import cn.dazhou.railway.im.activity.LoginActivity;
 import cn.dazhou.railway.im.db.UserModel;
 import cn.dazhou.railway.util.LogUtil;
 import cn.dazhou.railway.util.SharedPreferenceUtil;
@@ -25,5 +27,13 @@ public class MyApp extends Application {
         super.onCreate();
         FlowManager.init(new FlowConfig.Builder(getApplicationContext()).build());
         ZXingLibrary.initDisplayOpinion(this);
+
+        String lastLogin = SharedPreferenceUtil.getString(this, Constants.LATEST_LOGIN_JID, "");
+        if (!"".equals(lastLogin)) {
+            gCurrentUser =UserModel.getUser(lastLogin);
+            gCurrentUsername = lastLogin;
+        } else {
+            LoginActivity.startItself(this);
+        }
     }
 }

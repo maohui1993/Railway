@@ -15,6 +15,7 @@ import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.db.UserModel;
 import cn.dazhou.railway.im.db.UserModel_Table;
 import cn.dazhou.railway.im.listener.IOnLoginListener;
+import cn.dazhou.railway.util.IMUtil;
 import cn.dazhou.railway.util.LogUtil;
 import cn.dazhou.railway.util.SharedPreferenceUtil;
 import cn.dazhou.railway.util.StringUtil;
@@ -101,6 +102,7 @@ public class LoginPresenter {
                             userModel.setNickName(user.getName());
                             userModel.setTel(user.getTel());
                             userModel.save();
+                            IMUtil.updateFriendFromServer(userModel);
                         }
                         // 先初始化全局user
                         MyApp.gCurrentUser = userModel;

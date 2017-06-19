@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,7 @@ import cn.dazhou.im.util.Tool;
 import cn.dazhou.maputil.MapLauncher;
 import cn.dazhou.pagerslidingtabstrip.PagerSlidingTabStrip;
 import cn.dazhou.railway.config.Constants;
+import cn.dazhou.railway.im.activity.LoginActivity;
 import cn.dazhou.railway.im.activity.MyselfInfoActivity;
 import cn.dazhou.railway.im.activity.SettingActivity;
 import cn.dazhou.railway.im.adapter.FunctionTabAdapter;
@@ -52,6 +54,9 @@ public class SplashActivity extends AppCompatActivity
     String[] mTitles;
     @BindView(R.id.tabs_1)
     PagerSlidingTabStrip pagerSlidingTabStrip;
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
+    View headerLayout;
 //    @BindView(R.id.tx_name)
 //    TextView mNameTx;
 //    @BindView(R.id.tx_jid)
@@ -71,7 +76,7 @@ public class SplashActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash1);
-
+        Log.i("TAG", "splash-onCreate");
         MapLauncher.init(getApplicationContext());
         Tool.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         Tool.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -86,7 +91,7 @@ public class SplashActivity extends AppCompatActivity
         mPresenter = new SplashPresenter(this);
         fragments.add(HomeFragment.newInstance(false));
         fragments.add(WorkFragment.newInstance(false));
-        fragments.add(ContactListFragment.newInstance(true));
+        fragments.add(ContactListFragment.newInstance(false));
         fragments.add(SettingFragment.newInstance(false));
 
         FunctionTabAdapter mAdapter = new FunctionTabAdapter(this, getSupportFragmentManager(), fragments, mTitles, icons);
@@ -121,9 +126,10 @@ public class SplashActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_splash1);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
 
     void openUserInfo(View v) {
         Toast.makeText(this, "image", Toast.LENGTH_SHORT).show();
@@ -133,9 +139,9 @@ public class SplashActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         if (MyApp.gCurrentUser != null) {
-            TextView mNameTx = (TextView) findViewById(R.id.tx_name);
+            TextView mNameTx = (TextView) headerLayout.findViewById(R.id.tx_name);
             mNameTx.setText(MyApp.gCurrentUser.getNickName());
-            TextView mJidTx = (TextView) findViewById(R.id.tx_jid);
+            TextView mJidTx = (TextView) headerLayout.findViewById(R.id.tx_jid);
             mJidTx.setText(MyApp.gCurrentUser.getUsername());
         }
         super.onResume();
