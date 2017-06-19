@@ -13,7 +13,7 @@ public class ChatMessageEntity {
     private String toJid;          // 发送给谁的聊天信息
     private boolean state;         // 是否已读
     private int type;              // 是发送还是接收消息
-    private long date;           // 消息日期
+    private long date;             // 消息日期
     private byte[] imageBytes;     // 图片的字节信息，传输时使用
     private byte[] voiceBytes;     // 语音的字节信息，传输时使用
     private long voiceTime;

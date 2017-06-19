@@ -83,4 +83,9 @@ public class IMFriendRequestService extends Service {
         Intent intent = new Intent(context, IMFriendRequestService.class);
         context.startService(intent);
     }
+
+    public static void stopItself(Context context) {
+        Intent intent = new Intent(context, IMFriendRequestService.class);
+        context.stopService(intent);
+    }
 }

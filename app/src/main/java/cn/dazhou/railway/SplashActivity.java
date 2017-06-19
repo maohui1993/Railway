@@ -3,6 +3,8 @@ package cn.dazhou.railway;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -33,6 +35,7 @@ import cn.dazhou.railway.im.activity.LoginActivity;
 import cn.dazhou.railway.im.activity.MyselfInfoActivity;
 import cn.dazhou.railway.im.activity.SettingActivity;
 import cn.dazhou.railway.im.adapter.FunctionTabAdapter;
+import cn.dazhou.railway.im.broadcast.NetworkReceiver;
 import cn.dazhou.railway.im.fragment.BaseFragment;
 import cn.dazhou.railway.im.fragment.ContactListFragment;
 import cn.dazhou.railway.im.fragment.HomeFragment;
@@ -76,7 +79,7 @@ public class SplashActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash1);
-        Log.i("TAG", "splash-onCreate");
+        MyApp.addActivity(this);
         MapLauncher.init(getApplicationContext());
         Tool.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         Tool.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -85,6 +88,7 @@ public class SplashActivity extends AppCompatActivity
         Tool.checkPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
         Tool.checkPermission(this, Manifest.permission.CAMERA);
         Tool.checkPermission(this, Manifest.permission.VIBRATE);
+        Tool.checkPermission(this, Manifest.permission.ACCESS_NETWORK_STATE);
 //        Tool.checkPermission(this);
         LogUtil.init();
         ButterKnife.bind(this);
@@ -128,7 +132,14 @@ public class SplashActivity extends AppCompatActivity
 
         headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_splash1);
         navigationView.setNavigationItemSelectedListener(this);
+
+        receiver = new NetworkReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(receiver, filter);
     }
+
+    NetworkReceiver receiver;
 
 
     void openUserInfo(View v) {
@@ -205,6 +216,7 @@ public class SplashActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         SharedPreferenceUtil.putString(this, Constants.LATEST_LOGIN_JID, MyApp.gCurrentUsername);
+        unregisterReceiver(receiver);
         super.onDestroy();
     }
 

@@ -120,21 +120,21 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
             layoutParams.height = Utils.dp2px(getContext(), 48);
             chatItemLayoutContent.setLayoutParams(layoutParams);
         }
-//
-//        switch (data.getSendState()) {
-//            case Constants.CHAT_ITEM_SENDING:
-//                chatItemProgress.setVisibility(View.VISIBLE);
-//                chatItemFail.setVisibility(View.GONE);
-//                break;
-//            case Constants.CHAT_ITEM_SEND_ERROR:
-//                chatItemProgress.setVisibility(View.GONE);
-//                chatItemFail.setVisibility(View.VISIBLE);
-//                break;
-//            case Constants.CHAT_ITEM_SEND_SUCCESS:
-//                chatItemProgress.setVisibility(View.GONE);
-//                chatItemFail.setVisibility(View.GONE);
-//                break;
-//        }
+
+        switch (data.getSendState()) {
+            case Constants.CHAT_ITEM_SENDING:
+                chatItemProgress.setVisibility(View.VISIBLE);
+                chatItemFail.setVisibility(View.GONE);
+                break;
+            case Constants.CHAT_ITEM_SEND_ERROR:
+                chatItemProgress.setVisibility(View.GONE);
+                chatItemFail.setVisibility(View.VISIBLE);
+                break;
+            case Constants.CHAT_ITEM_SEND_SUCCESS:
+                chatItemProgress.setVisibility(View.GONE);
+                chatItemFail.setVisibility(View.GONE);
+                break;
+        }
     }
 
 }

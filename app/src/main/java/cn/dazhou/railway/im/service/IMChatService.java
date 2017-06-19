@@ -139,6 +139,7 @@ public class IMChatService extends Service {
             // 标志为接收到的消息
             chatMessageEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
             chatMessageEntity.setDate(System.currentTimeMillis());
+            chatMessageEntity.setSendState(Constants.CHAT_ITEM_SEND_SUCCESS);
             String fromUser = from.getLocalpart().toString().split("@")[0];
             String imagePath = null;
             String voicePath = null;
@@ -211,5 +212,10 @@ public class IMChatService extends Service {
     public static void startItself(Context context) {
         Intent intent = new Intent(context, IMChatService.class);
         context.startService(intent);
+    }
+
+    public static void stopItself(Context context) {
+        Intent intent = new Intent(context, IMChatService.class);
+        context.stopService(intent);
     }
 }

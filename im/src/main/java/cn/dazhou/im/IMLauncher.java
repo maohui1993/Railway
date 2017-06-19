@@ -71,7 +71,12 @@ public final class IMLauncher {
         return result;
     }
 
-    public static boolean chatWith(String id, ChatMessageEntity msg) {
+    public static boolean logout() {
+        mImApi.disconnect();
+        return true;
+    }
+
+    public static boolean chatWith(String id, ChatMessageEntity msg) throws Exception{
         boolean result;
         try {
             mImApi.chatWith(id, msg);
@@ -79,6 +84,7 @@ public final class IMLauncher {
         } catch (Exception e) {
             result = false;
             e.printStackTrace();
+            throw e;
         }
         return result;
     }

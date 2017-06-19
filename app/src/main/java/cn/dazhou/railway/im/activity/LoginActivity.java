@@ -2,6 +2,8 @@ package cn.dazhou.railway.im.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Process;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +16,7 @@ import com.dd.processbutton.iml.ActionProcessButton;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.SplashActivity;
 import cn.dazhou.railway.config.Constants;
@@ -21,6 +24,7 @@ import cn.dazhou.railway.im.listener.IOnLoginListener;
 import cn.dazhou.railway.im.presenter.LoginPresenter;
 import cn.dazhou.railway.im.service.IMChatService;
 import cn.dazhou.railway.im.service.IMFriendRequestService;
+import cn.dazhou.railway.util.IMUtil;
 import cn.dazhou.railway.util.LogUtil;
 
 public class LoginActivity extends AppCompatActivity implements IOnLoginListener {
@@ -39,6 +43,7 @@ public class LoginActivity extends AppCompatActivity implements IOnLoginListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MyApp.addActivity(this);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
@@ -59,6 +64,27 @@ public class LoginActivity extends AppCompatActivity implements IOnLoginListener
         }
     }
 
+    int clickNum;
+
+    @Override
+    public void onBackPressed() {
+        clickNum++;
+        if (clickNum == 2) {
+            MyApp.exit();
+            System.exit(0);
+        }
+        Handler handler = new Handler();
+        Toast.makeText(LoginActivity.this, "再按一次将退出", Toast.LENGTH_SHORT).show();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (clickNum != 2) {
+                    clickNum = 0;
+                }
+            }
+        }, 2000);
+    }
+
     /**
      * 变换EditText的可输入状态
      */
@@ -76,8 +102,7 @@ public class LoginActivity extends AppCompatActivity implements IOnLoginListener
         changeEditEnable();
         // 发送登录成功的广播
         sendLoginBroadcast();
-        IMChatService.startItself(this);
-        IMFriendRequestService.startItself(this);
+        IMUtil.startServiceWhenLogin(this);
         SplashActivity.startItself(this);
     }
 

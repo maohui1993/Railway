@@ -205,11 +205,11 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
                 if (mOnSendListener != null) {
                     mOnSendListener.onSend(messageInfo);
                 }
-                new Handler().postDelayed(new Runnable() {
-                    public void run() {
-                        messageInfo.setSendState(Constants.CHAT_ITEM_SEND_SUCCESS);
-                    }
-                }, 2000);
+//                new Handler().postDelayed(new Runnable() {
+//                    public void run() {
+//                        messageInfo.setSendState(Constants.CHAT_ITEM_SEND_SUCCESS);
+//                    }
+//                }, 2000);
                 break;
             case Constants.CHAT_ITEM_TYPE_LEFT:
                 if (messageInfo.getVoiceBytes() != null) {

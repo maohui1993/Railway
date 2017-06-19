@@ -10,11 +10,13 @@ import android.view.View;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ExtraInfo;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.db.UserModel;
+import cn.dazhou.railway.util.IMUtil;
 import cn.dazhou.railway.util.SharedPreferenceUtil;
 import cn.dazhou.railway.widget.MultiText;
 
@@ -29,6 +31,8 @@ public class MyselfInfoActivity extends AppCompatActivity {
     MultiText mJidMtx;
     @BindView(R.id.tel)
     MultiText mTelMtx;
+    @BindView(R.id.mt_logout)
+    MultiText mLogoutMtx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +70,7 @@ public class MyselfInfoActivity extends AppCompatActivity {
         mTelMtx.setText(user.getTel());
     }
 
-    @OnClick({R.id.header, R.id.name, R.id.jid, R.id.tel})
+    @OnClick({R.id.header, R.id.name, R.id.jid, R.id.tel, R.id.mt_logout})
     void click(View v) {
         switch (v.getId()) {
             case R.id.header:
@@ -84,6 +88,14 @@ public class MyselfInfoActivity extends AppCompatActivity {
                 telInfo.setName(tel.getText());
                 telInfo.setTitle(EditInfoActivity.TITLE_TEL);
                 EditInfoActivity.startItself(this, telInfo);
+                break;
+            case R.id.mt_logout:
+                IMLauncher.logout();
+                MyApp.gCurrentUser = null;
+                MyApp.gCurrentUsername = "";
+                IMUtil.stopServiceWhenLogout(this);
+                LoginActivity.startItself(this);
+                finish();
                 break;
             default:
                 break;

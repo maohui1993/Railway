@@ -1,5 +1,6 @@
 package cn.dazhou.railway;
 
+import android.app.Activity;
 import android.app.Application;
 import android.util.Log;
 
@@ -7,6 +8,10 @@ import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.dazhou.im.IMLauncher;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.activity.LoginActivity;
 import cn.dazhou.railway.im.db.UserModel;
@@ -22,6 +27,7 @@ public class MyApp extends Application {
     public static String gCurrentUsername; // 当前账号
     // 初始化位置在LoginPresenter#login
     public static String gServerIp;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -30,10 +36,26 @@ public class MyApp extends Application {
 
         String lastLogin = SharedPreferenceUtil.getString(this, Constants.LATEST_LOGIN_JID, "");
         if (!"".equals(lastLogin)) {
-            gCurrentUser =UserModel.getUser(lastLogin);
             gCurrentUsername = lastLogin;
+            gCurrentUser = UserModel.getUser(lastLogin);
+            MyApp.gServerIp = SharedPreferenceUtil.getString(this, Constants.SERVER_IP, Constants.SERVER_IP_DEFAULT);
+
+
         } else {
             LoginActivity.startItself(this);
+        }
+
+    }
+
+    static List<Activity> activitys = new ArrayList<>();
+
+    public static void addActivity(Activity activity) {
+        activitys.add(activity);
+    }
+
+    public static void exit() {
+        for (Activity activity : activitys) {
+            activity.finish();
         }
     }
 }

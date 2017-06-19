@@ -26,43 +26,46 @@
         app:rightImage="@drawable/header_02"
         app:rightText="测试" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
-
     <cn.dazhou.railway.widget.MultiText
         android:id="@+id/name"
+        android:layout_marginTop="1dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:leftText="昵称"
         app:rightText="测试" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
-
     <cn.dazhou.railway.widget.MultiText
         android:id="@+id/jid"
+        android:layout_marginTop="1dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:leftText="账号"
         app:rightText="测试" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
-
     <cn.dazhou.railway.widget.MultiText
         android:id="@+id/tel"
+        android:layout_marginTop="1dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:leftText="手机"
         app:rightText="测试" />
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <cn.dazhou.railway.widget.MultiText
+            android:id="@+id/mt_logout"
+            app:leftText="退出当前账号"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <cn.dazhou.railway.widget.MultiText
+            app:leftText="退出应用"
+            android:layout_marginTop="1dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 </LinearLayout>

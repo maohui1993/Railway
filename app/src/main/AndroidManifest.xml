@@ -12,6 +12,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:name=".MyApp"
@@ -24,7 +26,9 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="tKiTYcTGAZB0NrpWK19f57Rrp3PzrGOo" />
 
-        <activity android:name=".im.activity.LoginActivity" />
+        <activity
+            android:name=".im.activity.LoginActivity"
+            android:launchMode="singleTask" />
         <activity
             android:name=".im.activity.ChatActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
@@ -85,7 +89,7 @@
         </activity>
         <activity android:name=".im.activity.MyselfInfoActivity" />
         <activity android:name=".im.activity.EditInfoActivity" />
-        <activity android:name=".im.activity.FriendInfoActivity"></activity>
+        <activity android:name=".im.activity.FriendInfoActivity" />
     </application>
 
 </manifest>

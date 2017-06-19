@@ -13,6 +13,7 @@ import java.util.List;
 
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ChatMessageEntity;
+import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.widget.ChatContentView;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
@@ -46,12 +47,10 @@ public class ChatPresenter implements ChatContentView.OnSendListener, ChatConten
     }
 
     public void init() {
-        String possessor = MyApp.gCurrentUser.getUsername();
         friendModel = SQLite.select()
                 .from(FriendModel.class)
-                .where(FriendModel_Table.possessor.eq(possessor))
                 // 存储的jid形式为  username@possessor
-                .and(FriendModel_Table.jid.eq(mJid))
+                .where(FriendModel_Table.jid.eq(mJid))
                 .querySingle();
 
         if(friendModel != null && mOnDataUpdateListener != null) {
@@ -82,7 +81,13 @@ public class ChatPresenter implements ChatContentView.OnSendListener, ChatConten
         model.save();
         // 还原真实jid
         String jid = StringUtil.getRealJid(mJid);
-        IMLauncher.chatWith(jid, msg);
+        try {
+            IMLauncher.chatWith(jid, msg);
+            msg.setSendState(Constants.CHAT_ITEM_SEND_SUCCESS);
+        } catch (Exception e) {
+            msg.setSendState(Constants.CHAT_ITEM_SEND_ERROR);
+            e.printStackTrace();
+        }
     }
 
     @Override
