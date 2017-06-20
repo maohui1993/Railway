@@ -79,6 +79,7 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
         @Override
         public void onReceive(Context context, Intent intent){
 //            mPresenter.init();
+            onUpdateData(MyApp.gCurrentUser.getMyFriends(), false);
         }
     };
 

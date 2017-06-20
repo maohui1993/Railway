@@ -33,6 +33,7 @@
             />
         <activity
             android:name=".im.activity.ChatActivity"
+            android:launchMode="singleTop"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize">
