@@ -15,6 +15,7 @@ import cn.dazhou.im.IMLauncher;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.activity.LoginActivity;
 import cn.dazhou.railway.im.db.UserModel;
+import cn.dazhou.railway.util.IMUtil;
 import cn.dazhou.railway.util.LogUtil;
 import cn.dazhou.railway.util.SharedPreferenceUtil;
 
@@ -39,7 +40,13 @@ public class MyApp extends Application {
             gCurrentUsername = lastLogin;
             gCurrentUser = UserModel.getUser(lastLogin);
             MyApp.gServerIp = SharedPreferenceUtil.getString(this, Constants.SERVER_IP, Constants.SERVER_IP_DEFAULT);
-
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    IMUtil.login(MyApp.this);
+                    IMUtil.startServiceWhenLogin(MyApp.this);
+                }
+            }).start();
 
         } else {
             LoginActivity.startItself(this);

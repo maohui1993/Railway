@@ -213,7 +213,7 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel> {
     public boolean equals(Object obj) {
         if (obj instanceof FriendModel) {
             FriendModel obj1 = (FriendModel) obj;
-            return possessor.equals(obj1.getPossessor()) && jid.equals(obj1.getJid());
+            return jid.equals(obj1.getJid());
         } else {
             return false;
         }

@@ -1,11 +1,18 @@
 package cn.dazhou.railway.im.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
+
+import com.uuzuche.lib_zxing.activity.CodeUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +36,8 @@ public class MyselfInfoActivity extends AppCompatActivity {
     MultiText mNameMtx;
     @BindView(R.id.jid)
     MultiText mJidMtx;
+    @BindView(R.id.qr_code)
+    MultiText mQRCode;
     @BindView(R.id.tel)
     MultiText mTelMtx;
     @BindView(R.id.mt_logout)
@@ -70,7 +79,7 @@ public class MyselfInfoActivity extends AppCompatActivity {
         mTelMtx.setText(user.getTel());
     }
 
-    @OnClick({R.id.header, R.id.name, R.id.jid, R.id.tel, R.id.mt_logout})
+    @OnClick({R.id.header, R.id.name, R.id.jid, R.id.tel, R.id.mt_logout, R.id.qr_code})
     void click(View v) {
         switch (v.getId()) {
             case R.id.header:
@@ -95,7 +104,19 @@ public class MyselfInfoActivity extends AppCompatActivity {
                 MyApp.gCurrentUsername = "";
                 IMUtil.stopServiceWhenLogout(this);
                 LoginActivity.startItself(this);
+                MyApp.exit();
                 finish();
+                break;
+            case R.id.qr_code:
+                final ImageView image = new ImageView(this);
+                Bitmap bmp = CodeUtils.createImage(MyApp.gCurrentUsername, 400, 400, BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+                image.setImageBitmap(bmp);
+                new AlertDialog.Builder(this)
+                        .setView(image)
+                        .setTitle("二维码")
+                        .setPositiveButton("确认", null)
+                        .create()
+                        .show();
                 break;
             default:
                 break;

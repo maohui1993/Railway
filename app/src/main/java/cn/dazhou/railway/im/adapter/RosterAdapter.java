@@ -40,6 +40,7 @@ public class RosterAdapter extends RecyclerArrayAdapter<FriendModel> {
         public void onItemClick(int position) {
             String jid = getItem(position).getJid();
             ChatActivity.startItself(getContext(), jid);
+            viewHolders.get(position).restore();
         }
     };
 
@@ -53,4 +54,9 @@ public class RosterAdapter extends RecyclerArrayAdapter<FriendModel> {
         result.updateLatestMsg(tipMessage.info);
     }
 
+    public void updateData(FriendModel friendModel) {
+        int index = getPosition(friendModel);
+        RosterViewHolder result = viewHolders.get(index);
+        result.updateMessageCount(1);
+    }
 }

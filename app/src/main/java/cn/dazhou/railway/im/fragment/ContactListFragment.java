@@ -134,6 +134,11 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
         mRosterAdapter.updateData(tipMessage);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateTipMessage(FriendModel friendModel) {
+        mRosterAdapter.updateData(friendModel);
+    }
+
     public static class TipMessage {
         public String jid;
         public String info;

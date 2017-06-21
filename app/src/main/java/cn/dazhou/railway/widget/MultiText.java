@@ -59,4 +59,5 @@ public class MultiText extends LinearLayout {
             mRightText.setVisibility(GONE);
         }
     }
+
 }

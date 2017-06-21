@@ -13,11 +13,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +31,6 @@ import cn.dazhou.im.util.Tool;
 import cn.dazhou.maputil.MapLauncher;
 import cn.dazhou.pagerslidingtabstrip.PagerSlidingTabStrip;
 import cn.dazhou.railway.config.Constants;
-import cn.dazhou.railway.im.activity.LoginActivity;
 import cn.dazhou.railway.im.activity.MyselfInfoActivity;
 import cn.dazhou.railway.im.activity.SettingActivity;
 import cn.dazhou.railway.im.adapter.FunctionTabAdapter;
@@ -110,7 +109,7 @@ public class SplashActivity extends AppCompatActivity
             public void onPageSelected(int position) {
                 BaseFragment fragment = fragments.get(position);
                 toolbar.setTitle(mTitles[position]);
-                if(fragment.isMustLogin() && MyApp.gCurrentUser == null) {
+                if (fragment.isMustLogin() && MyApp.gCurrentUser == null) {
                     fragment.requestLogin();
                 }
             }
@@ -131,6 +130,13 @@ public class SplashActivity extends AppCompatActivity
         toggle.syncState();
 
         headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_splash1);
+        ImageView header = (ImageView) headerLayout.findViewById(R.id.iv_header);
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openUserInfo(v);
+            }
+        });
         navigationView.setNavigationItemSelectedListener(this);
 
         receiver = new NetworkReceiver();
@@ -156,6 +162,11 @@ public class SplashActivity extends AppCompatActivity
             mJidTx.setText(MyApp.gCurrentUser.getUsername());
         }
         super.onResume();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mPresenter.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

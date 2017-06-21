@@ -14,9 +14,12 @@ import org.jxmpp.jid.EntityBareJid;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.support.annotation.IntDef;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -26,12 +29,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.dazhou.im.IMLauncher;
-import cn.dazhou.im.R;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.Tool;
+import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.activity.ChatActivity;
 import cn.dazhou.railway.im.db.ChatMessageModel;
+import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.im.fragment.ContactListFragment;
 import cn.dazhou.railway.util.LogUtil;
 
@@ -50,13 +54,18 @@ public class IMChatService extends Service {
 
     @Override
     public void onCreate() {
-        context = this;
         super.onCreate();
-        EventBus.getDefault().register(this);
+        context = this;
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		initChatManager();
-        handleOfflineMessage();
+        EventBus.getDefault().register(this);
 //        reConnect();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        initChatManager();
+        handleOfflineMessage();
+        return super.onStartCommand(intent, flags, startId);
     }
 
     private void handleOfflineMessage() {
@@ -124,13 +133,15 @@ public class IMChatService extends Service {
             chatManager = ChatManager.getInstanceFor(conn);
             chatManager.addIncomingListener(incomingChatMessageListener);
         }catch (Exception e) {
-            Log.i("TAG", "IMChatService#initChatManager(),获取服务器连接失败");
+            Log.i("TAG", "IMChatService#initChatManager(),获取服务器连接失败:" + e.getMessage());
             LogUtil.write(e);
         }
 
     }
 
-    // 收到新消息统一在这里处理
+    /**
+     * 收到的消息统一在这里处理
+     */
     IncomingChatMessageListener incomingChatMessageListener = new IncomingChatMessageListener() {
         @Override
         public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
@@ -165,6 +176,7 @@ public class IMChatService extends Service {
             // 若聊天对象的窗口已经打开，则不发送通知
             if (checkJid(fromUser)) {
                 chatMessageModel.setState(true);
+                // 统一交由ChatContentView#showMessage中展示
                 EventBus.getDefault().post(chatMessageEntity);
                 Log.d(Constants.TAG, "New message from " + from + ": " + "to " + message.getFrom() + "body:" + message.getBody());
             } else {
@@ -172,6 +184,10 @@ public class IMChatService extends Service {
                 sendNotification(chatMessageEntity, chatMessageModel.getJid());
             }
             EventBus.getDefault().post(new ContactListFragment.TipMessage(chatMessageModel.getJid(), chatMessageModel.getContent()));
+            // 有新消息则在对应的好友上面加上 消息数量
+            FriendModel friend = new FriendModel();
+            friend.setJid(chatMessageModel.getJid());
+            EventBus.getDefault().post(friend);
             chatMessageModel.save();
         }
     };
@@ -179,7 +195,7 @@ public class IMChatService extends Service {
     private void sendNotification(ChatMessageEntity msg, String jid) {
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-                context).setSmallIcon(R.drawable.emotion_aini)
+                context).setSmallIcon(R.drawable.message)
                 .setContentTitle("薪消息")
                 .setContentText(msg.getContent())
                 .setOngoing(true);

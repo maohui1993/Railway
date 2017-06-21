@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/multi_text_background"
-
-    android:padding="10dp">
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/tx_left"

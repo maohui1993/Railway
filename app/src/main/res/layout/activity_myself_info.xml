@@ -43,6 +43,15 @@
         app:rightText="测试" />
 
     <cn.dazhou.railway.widget.MultiText
+        android:id="@+id/qr_code"
+        android:layout_marginTop="1dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:leftText="二维码"
+        app:rightImage="@drawable/qr_code"
+        app:rightText="测试" />
+
+    <cn.dazhou.railway.widget.MultiText
         android:id="@+id/tel"
         android:layout_marginTop="1dp"
         android:layout_width="match_parent"

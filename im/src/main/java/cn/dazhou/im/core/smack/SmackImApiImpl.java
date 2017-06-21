@@ -103,7 +103,6 @@ public class SmackImApiImpl implements IMApi {
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                 .setSendPresence(false)
                 .build();
-
         mConnection = new XMPPTCPConnection(config);
         mConnection.connect();
         addPacketSendListener(new MyStanzaListener());

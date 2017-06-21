@@ -51,6 +51,7 @@ public class IMUtil {
     }
 
     public static void startServiceWhenLogin(Context context) {
+        Log.i("TAG", "start service");
         IMChatService.startItself(context);
         IMFriendRequestService.startItself(context);
     }
@@ -61,16 +62,12 @@ public class IMUtil {
     }
 
     public static void login(final Context context) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    IMLauncher.connect(context, MyApp.gServerIp);
-                    IMLauncher.login(MyApp.gCurrentUsername, MyApp.gCurrentUser.getPassword());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        try {
+            IMLauncher.connect(context, MyApp.gServerIp);
+            boolean login = IMLauncher.login(MyApp.gCurrentUsername, MyApp.gCurrentUser.getPassword());
+            Log.i("TAG", "hasLog = " + login);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
