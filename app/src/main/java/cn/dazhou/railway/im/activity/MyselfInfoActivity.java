@@ -113,8 +113,8 @@ public class MyselfInfoActivity extends AppCompatActivity {
                 image.setImageBitmap(bmp);
                 new AlertDialog.Builder(this)
                         .setView(image)
-                        .setTitle("二维码")
-                        .setPositiveButton("确认", null)
+                        .setTitle(R.string.qr_code)
+                        .setPositiveButton(R.string.sure, null)
                         .create()
                         .show();
                 break;
