@@ -26,5 +26,8 @@ public class StringUtil {
         return rawJid + Constants.JID_SEPARATOR + wrap;
     }
 
+    public static String getUsername(String jid) {
+        return jid.split(Constants.JID_SEPARATOR)[0];
+    }
 
 }

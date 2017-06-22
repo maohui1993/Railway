@@ -193,7 +193,7 @@ public class IMChatService extends Service {
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                 context).setSmallIcon(R.drawable.message)
-                .setContentTitle("薪消息")
+                .setContentTitle(getResources().getString(R.string.new_message))
                 .setContentText(msg.getContent())
                 .setOngoing(true);
         mBuilder.setTicker("一个新来的消息");//第一次提示消息的时候显示在通知栏上

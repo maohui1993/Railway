@@ -38,12 +38,15 @@ import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.jid.parts.Resourcepart;
 import org.jxmpp.stringprep.XmppStringprepException;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import cn.dazhou.im.core.IMApi;
 import cn.dazhou.im.core.function.IConnection;
@@ -68,6 +71,7 @@ public class SmackImApiImpl implements IMApi {
     private ChatManager mChatManager;
     private Context mContext;
 
+    private boolean connected;
     private byte mState;
     private Chat mChat;
 
@@ -93,6 +97,9 @@ public class SmackImApiImpl implements IMApi {
      */
     @Override
     public IConnection connect(String ip) throws Exception {
+        if (connected) {
+            return this;
+        }
         XMPPTCPConnectionConfiguration config = null;
         InetAddress inetAddress = InetAddress.getByName(ip);
         config = XMPPTCPConnectionConfiguration.builder()
@@ -106,13 +113,14 @@ public class SmackImApiImpl implements IMApi {
         mConnection = new XMPPTCPConnection(config);
         mConnection.connect();
         addPacketSendListener(new MyStanzaListener());
-
+        connected = true;
         return this;
     }
 
     @Override
     public void disconnect() {
         mConnection.disconnect();
+        connected = false;
         mState = NOT_LOGIN_STATE;
     }
 
@@ -129,6 +137,9 @@ public class SmackImApiImpl implements IMApi {
     public void login(String username, String password) throws Exception {
         if (mState == LOGINED_STATE) {
             return;
+        }
+        if (!connected) {
+            throw new Exception("未能链接服务器");
         }
         try {
             mConnection.login(username, password);
@@ -271,10 +282,18 @@ public class SmackImApiImpl implements IMApi {
                 user.setName(row.getValues("Name").get(0));
                 user.setEmail(row.getValues("Email").get(0));
                 users.add(user);
-            }
+            } Log.i("TAG", " mConnect: " + mConnection);
             return users;
         } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw =  new PrintWriter(sw);
+            //将出错的栈信息输出到printWriter中
+            e.printStackTrace(pw);
+            pw.flush();
+            sw.flush();
             Log.i("TAG", "SmackImApiImpl.class : " + e.getMessage());
+            Log.i("TAG", "SmackImApiImpl.class mConnect: " + mConnection);
+            Log.i("TAG", "SmackImApiImpl.class : " + sw.toString());
         }
         return null;
     }

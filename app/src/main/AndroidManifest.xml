@@ -29,12 +29,11 @@
         <activity
             android:name=".im.activity.LoginActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".im.activity.ChatActivity"
-            android:launchMode="singleTop"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
@@ -59,16 +58,11 @@
         <service
             android:name=".im.service.IMFriendRequestService"
             android:enabled="true"
-            android:exported="true" />
-
-        <receiver
-            android:name=".im.broadcast.FriendRequestReceiver"
-            android:enabled="true"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
-                <action android:name="friend.request.accept" />
+                <action android:name="action.friend.refresh"></action>
             </intent-filter>
-        </receiver>
+        </service>
 
         <activity
             android:name=".im.activity.FriendRequestActivity"
@@ -93,6 +87,7 @@
         <activity android:name=".im.activity.MyselfInfoActivity" />
         <activity android:name=".im.activity.EditInfoActivity" />
         <activity android:name=".im.activity.FriendInfoActivity" />
+
     </application>
 
 </manifest>

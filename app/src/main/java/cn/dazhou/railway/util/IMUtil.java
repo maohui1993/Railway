@@ -1,11 +1,14 @@
 package cn.dazhou.railway.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Set;
 
@@ -67,7 +70,19 @@ public class IMUtil {
             boolean login = IMLauncher.login(MyApp.gCurrentUsername, MyApp.gCurrentUser.getPassword());
             Log.i("TAG", "hasLog = " + login);
         } catch (Exception e) {
-            e.printStackTrace();
+            StringWriter sw = new StringWriter();
+            PrintWriter pw =  new PrintWriter(sw);
+            //将出错的栈信息输出到printWriter中
+            e.printStackTrace(pw);
+            pw.flush();
+            sw.flush();
+            Log.i("TAG", "login fail : " + sw.toString());
         }
+    }
+
+    public static void sendBroadcast(Context context, String action) {
+        Intent intent = new Intent();
+        intent.setAction(action);
+        context.sendBroadcast(intent);
     }
 }

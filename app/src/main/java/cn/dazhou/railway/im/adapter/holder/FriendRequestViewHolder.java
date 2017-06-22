@@ -10,7 +10,10 @@ import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.UserBean;
+import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
+import cn.dazhou.railway.config.Constants;
+import cn.dazhou.railway.util.IMUtil;
 
 /**
  * Created by hooyee on 2017/5/26.
@@ -43,7 +46,7 @@ public class FriendRequestViewHolder extends BaseViewHolder<UserBean> {
             switch (v.getId()) {
                 case R.id.bt_submit :
                     IMLauncher.acceptFriendRequest(mUsernameText.getText().toString());
-//                    IMLauncher.addFriend(mUsernameText.getText().toString());
+                    IMUtil.sendBroadcast(getContext(), Constants.UPDATE_FROM_SERVER_BROADCAST);
                     break;
                 case R.id.bt_reject :
                     IMLauncher.rejectFriendRequest(mUsernameText.getText().toString());

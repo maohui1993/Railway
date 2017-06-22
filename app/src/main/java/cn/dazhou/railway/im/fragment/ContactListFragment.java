@@ -32,6 +32,7 @@ import cn.dazhou.railway.im.adapter.StickyHeaderAdapter;
 import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.im.listener.OnDataUpdateListener;
 import cn.dazhou.railway.im.presenter.ContactListPresenter;
+import cn.dazhou.railway.util.IMUtil;
 
 public class ContactListFragment extends BaseFragment implements OnDataUpdateListener<FriendModel> {
     // TODO: Rename parameter arguments, choose names that match
@@ -64,6 +65,10 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.LOGIN_SUCCESS_BROADCAST);
         getActivity().registerReceiver(loginReceiver, intentFilter);
+
+        IntentFilter intentFilter1 = new IntentFilter();
+        intentFilter.addAction(Constants.UPDATE_FROM_SERVER_BROADCAST);
+        getActivity().registerReceiver(updateReceiver, intentFilter1);
     }
 
     @Override
@@ -78,7 +83,14 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
     BroadcastReceiver loginReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent){
-//            mPresenter.init();
+            onUpdateData(MyApp.gCurrentUser.getMyFriends(), false);
+        }
+    };
+
+    BroadcastReceiver updateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent){
+            IMUtil.updateFriendFromServer(MyApp.gCurrentUser);
             onUpdateData(MyApp.gCurrentUser.getMyFriends(), false);
         }
     };
@@ -152,6 +164,7 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
     @Override
     public void onDestroy() {
         getActivity().unregisterReceiver(loginReceiver);
+        getActivity().unregisterReceiver(updateReceiver);
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }

@@ -16,6 +16,10 @@ public class Constants {
     public static final int NOTIFICATION_ACTION_TYPE_REFUSE = 0x02;
 
     public static final String LOGIN_SUCCESS_BROADCAST = "action.login.success";
+    public static final String UPDATE_FROM_SERVER_BROADCAST = "action.friend.refresh";
 
     public static final String LATEST_LOGIN_JID = "latestLoginJid";
+
+    public static final String ACTION_RESPOND_VIA_MESSAGE =
+            "android.intent.action.RESPOND_VIA_MESSAGE";
 }

@@ -226,7 +226,6 @@ public class SplashActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        SharedPreferenceUtil.putString(this, Constants.LATEST_LOGIN_JID, MyApp.gCurrentUsername);
         unregisterReceiver(receiver);
         super.onDestroy();
     }
