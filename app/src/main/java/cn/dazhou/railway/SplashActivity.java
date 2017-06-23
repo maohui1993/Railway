@@ -90,8 +90,8 @@ public class SplashActivity extends AppCompatActivity
         Tool.checkPermission(this, Manifest.permission.ACCESS_NETWORK_STATE);
 //        Tool.checkPermission(this);
         LogUtil.init();
-        ButterKnife.bind(this);
         mPresenter = new SplashPresenter(this);
+        ButterKnife.bind(this);
         fragments.add(HomeFragment.newInstance(false));
         fragments.add(WorkFragment.newInstance(false));
         fragments.add(ContactListFragment.newInstance(false));

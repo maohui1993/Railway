@@ -205,11 +205,6 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
                 if (mOnSendListener != null) {
                     mOnSendListener.onSend(messageInfo);
                 }
-//                new Handler().postDelayed(new Runnable() {
-//                    public void run() {
-//                        messageInfo.setSendState(Constants.CHAT_ITEM_SEND_SUCCESS);
-//                    }
-//                }, 2000);
                 break;
             case Constants.CHAT_ITEM_TYPE_LEFT:
                 if (messageInfo.getVoiceBytes() != null) {
@@ -303,6 +298,10 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         if (moveCursor) {
             chatList.scrollToPosition(mAdapter.getCount() - 1);
         }
+    }
+
+    public void onRefresh(final List<ChatMessageEntity> msgs) {
+        onRefresh(msgs, false);
     }
 
     // 当发送时，回调到ChatActivity，由其确认目前正在跟谁聊天

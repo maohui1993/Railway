@@ -2,7 +2,6 @@ package cn.dazhou.railway;
 
 import android.app.Activity;
 import android.app.Application;
-import android.util.Log;
 
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
@@ -11,12 +10,10 @@ import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.dazhou.im.IMLauncher;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.activity.LoginActivity;
 import cn.dazhou.railway.im.db.UserModel;
 import cn.dazhou.railway.util.IMUtil;
-import cn.dazhou.railway.util.LogUtil;
 import cn.dazhou.railway.util.SharedPreferenceUtil;
 
 /**

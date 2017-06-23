@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.activity;
+package cn.dazhou.railway.im.chat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -15,33 +16,28 @@ import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 
-import java.util.List;
 import java.util.Set;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import cn.dazhou.im.IMLauncher;
-import cn.dazhou.im.entity.ChatMessageEntity;
-import cn.dazhou.im.widget.ChatContentView;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.SplashActivity;
+import cn.dazhou.railway.im.activity.FriendInfoActivity;
+import cn.dazhou.railway.im.db.DataHelper;
 import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.im.db.FriendModel_Table;
-import cn.dazhou.railway.im.listener.OnDataUpdateListener;
-import cn.dazhou.railway.im.presenter.ChatPresenter;
+import cn.dazhou.railway.util.ActivityUtils;
+import cn.dazhou.railway.util.StringUtil;
 
 import static cn.dazhou.railway.config.Constants.DATA_KEY;
 
 /**
  * 启动时需要知道是与谁聊天，故启动的时候要带一个data值传入。
  */
-public class ChatActivity extends AppCompatActivity implements OnDataUpdateListener<ChatMessageEntity> {
+public class ChatActivity extends AppCompatActivity {
 
-    @BindView(R.id.chat_content)
-    ChatContentView mChatContentView;
-    @BindView(R.id.my_toolbar)
     Toolbar mToolbar;
     private ChatPresenter mPresenter;
+    private ChatFragment mChatFragment;
     /**
      * 正在chat的用户jid 形式为【正在聊天的用户jid+@+自身jid】
      */
@@ -51,31 +47,45 @@ public class ChatActivity extends AppCompatActivity implements OnDataUpdateListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        ButterKnife.bind(this);
         mJid = getIntent().getStringExtra(DATA_KEY);
+
+        mChatFragment = (ChatFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+        if (mChatFragment == null) {
+            // Create the fragment
+            mChatFragment = ChatFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(
+                    getSupportFragmentManager(), mChatFragment, R.id.contentFrame);
+        }
+
+        mToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setTitle();
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SplashActivity.startItself(ChatActivity.this);
             }
         });
-        mPresenter = new ChatPresenter(this, mJid);
-        mPresenter.setOnDataUpdateListener(this);
-        mPresenter.init();
-        mToolbar.setOnMenuItemClickListener(mPresenter);
-        // 点击发送按钮时
-        mChatContentView.setOnSendListener(mPresenter);
-        mChatContentView.setOnImageClickListener(mPresenter);
-        mChatContentView.setRefreshListener(mPresenter);
+        mPresenter = new ChatPresenter(this, mChatFragment, mJid);
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.info:
+                        FriendInfoActivity.startItself(ChatActivity.this, StringUtil.getRealJid(mJid));
+                        break;
+                }
+                return false;
+            }
+        });
+
+        // IMChatService#messageEventBus 处理该事件
         EventBus.getDefault().post(mJid);
     }
 
     private void setTitle() {
-        FriendModel friend = SQLite.select()
-                .from(FriendModel.class)
-                .where(FriendModel_Table.jid.eq(mJid))
-                .querySingle();
+        FriendModel friend = DataHelper.getFriend(mJid);
         String title = mJid;
         if (friend != null) {
             title = friend.getName();
@@ -86,8 +96,6 @@ public class ChatActivity extends AppCompatActivity implements OnDataUpdateListe
             }
         }
         mToolbar.setTitle(title);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private String getNameFromServer() {
@@ -124,20 +132,9 @@ public class ChatActivity extends AppCompatActivity implements OnDataUpdateListe
 
     @Override
     public void onBackPressed() {
-        if (!mChatContentView.interceptBackPress()) {
+        if (mChatFragment.back()) {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        mChatContentView.unregister();
-        super.onDestroy();
-    }
-
-    @Override
-    public void onUpdateData(List<ChatMessageEntity> datas, boolean moveCursor) {
-        mChatContentView.onRefresh(datas, moveCursor);
     }
 
 }
