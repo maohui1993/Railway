@@ -79,7 +79,6 @@ public class ChatPresenter implements ChatContract.Presenter {
     }
 
     int page = 1;
-
     @Override
     public void onRefresh() {
         if (mFriendModel != null) {

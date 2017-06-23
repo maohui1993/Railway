@@ -39,7 +39,7 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_chat, container, false);
+        View root = inflater.inflate(R.layout.content_chat, container, false);
         ButterKnife.bind(this, root);
         mPresenter.init();
         // 点击发送按钮时

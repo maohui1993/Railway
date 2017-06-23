@@ -53,7 +53,7 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".im.activity.AddFriendActivity" />
+        <activity android:name=".im.addfriend.AddFriendActivity" />
 
         <service
             android:name=".im.service.IMFriendRequestService"

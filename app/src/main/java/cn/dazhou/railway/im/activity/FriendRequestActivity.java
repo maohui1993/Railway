@@ -22,6 +22,7 @@ import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.adapter.FriendRequestAdapter;
+import cn.dazhou.railway.im.addfriend.AddFriendActivity;
 
 public class FriendRequestActivity extends AppCompatActivity {
     @BindView(R.id.easy_recycler_ver)

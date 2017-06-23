@@ -17,7 +17,7 @@ import cn.dazhou.im.IMLauncher;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
-import cn.dazhou.railway.im.activity.AddFriendActivity;
+import cn.dazhou.railway.im.addfriend.AddFriendActivity;
 import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.im.listener.OnDataUpdateListener;
 import io.reactivex.Observable;
