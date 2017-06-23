@@ -3,7 +3,7 @@ package cn.dazhou.railway.im.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import cn.dazhou.railway.im.activity.LoginActivity;
+import cn.dazhou.railway.im.login.LoginActivity;
 
 /**
  * Created by hooyee on 2017/5/31.

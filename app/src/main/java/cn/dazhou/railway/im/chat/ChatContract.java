@@ -20,6 +20,6 @@ public interface ChatContract {
     }
 
     interface Presenter extends BasePresenter, ChatContentView.OnSendListener, ChatContentView.OnImageClickListener, SwipeRefreshLayout.OnRefreshListener, Toolbar.OnMenuItemClickListener{
-
+        void init();
     }
 }

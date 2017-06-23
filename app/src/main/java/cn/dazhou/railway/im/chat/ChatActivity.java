@@ -10,8 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.raizlabs.android.dbflow.sql.language.SQLite;
-
 import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
@@ -21,10 +19,9 @@ import java.util.Set;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.SplashActivity;
-import cn.dazhou.railway.im.activity.FriendInfoActivity;
+import cn.dazhou.railway.im.friendinfo.FriendInfoActivity;
 import cn.dazhou.railway.im.db.DataHelper;
 import cn.dazhou.railway.im.db.FriendModel;
-import cn.dazhou.railway.im.db.FriendModel_Table;
 import cn.dazhou.railway.util.ActivityUtils;
 import cn.dazhou.railway.util.StringUtil;
 

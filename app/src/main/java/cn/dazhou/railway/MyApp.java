@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.dazhou.railway.config.Constants;
-import cn.dazhou.railway.im.activity.LoginActivity;
+import cn.dazhou.railway.im.login.LoginActivity;
 import cn.dazhou.railway.im.db.UserModel;
 import cn.dazhou.railway.util.IMUtil;
 import cn.dazhou.railway.util.SharedPreferenceUtil;

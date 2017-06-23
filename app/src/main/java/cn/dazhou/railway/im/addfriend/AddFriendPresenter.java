@@ -28,11 +28,6 @@ public class AddFriendPresenter implements AddFriendContract.Presenter {
         mAddFriendView.setPresenter(this);
     }
 
-    @Override
-    public void init() {
-
-    }
-
     List result;
     @Override
     public void searchUser(final String jid) {

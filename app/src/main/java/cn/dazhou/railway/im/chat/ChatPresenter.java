@@ -11,7 +11,7 @@ import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.railway.R;
-import cn.dazhou.railway.im.activity.FriendInfoActivity;
+import cn.dazhou.railway.im.friendinfo.FriendInfoActivity;
 import cn.dazhou.railway.im.activity.FullImageActivity;
 import cn.dazhou.railway.im.db.ChatMessageModel;
 import cn.dazhou.railway.im.db.DataHelper;

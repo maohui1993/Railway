@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.activity;
+package cn.dazhou.railway.im.editinfo;
 
 import android.content.Context;
 import android.content.Intent;

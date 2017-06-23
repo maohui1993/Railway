@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.presenter;
+package cn.dazhou.railway.im.login;
 
 import android.content.Context;
 
@@ -31,27 +31,16 @@ import io.reactivex.schedulers.Schedulers;
  * Created by hooyee on 2017/5/5.
  */
 
-public class LoginPresenter {
+public class LoginPresenter implements LoginContract.Presenter{
     private boolean connected;
     private boolean logined;
-    private IOnLoginListener mLoginListener;
     private Context mContext;
+    private LoginContract.View mLoginView;
 
-    public LoginPresenter(Context context, IOnLoginListener loginListener) {
+    public LoginPresenter(Context context,  LoginContract.View view) {
         mContext = context;
-        mLoginListener = loginListener;
-    }
-
-    private void connection() {
-        // 新启线程连接服务器
-        Observable.create(new ObservableOnSubscribe() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter e) throws Exception {
-                connected = IMLauncher.connect(mContext, SharedPreferenceUtil.getString(mContext, Constants.SERVER_IP, Constants.SERVER_IP_DEFAULT));
-            }
-        })
-        .subscribeOn(Schedulers.io())
-        .subscribe(); // 回调为空
+        mLoginView = view;
+        mLoginView.setPresenter(this);
     }
 
     /**
@@ -59,7 +48,7 @@ public class LoginPresenter {
      * @param username
      * @param password
      */
-    public void login(final String username, final String password) {
+    public boolean login(final String username, final String password) {
         // 新启线程连接服务器
         Observable.create(new ObservableOnSubscribe() {
             @Override
@@ -106,14 +95,15 @@ public class LoginPresenter {
                         }
                         // 先初始化全局user
                         MyApp.gCurrentUser = userModel;
-                        mLoginListener.onSuccess();
+                        mLoginView.success();
                     } else {
-                        mLoginListener.onFail("账号或密码错误");
+                        mLoginView.fail("账号或密码错误");
                     }
                 } else {
-                    mLoginListener.onFail("网络连接异常");
+                    mLoginView.fail("网络连接异常");
                 }
             }
         });
+        return logined;
     }
 }

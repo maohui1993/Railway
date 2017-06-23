@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.adapter.holder;
+package cn.dazhou.railway.im.addfriend;
 
 import android.view.ViewGroup;
 import android.widget.ImageView;

@@ -5,5 +5,4 @@ package cn.dazhou.railway;
  */
 
 public interface BasePresenter {
-    void init();
 }

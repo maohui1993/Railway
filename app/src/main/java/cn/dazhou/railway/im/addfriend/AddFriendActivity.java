@@ -2,44 +2,15 @@ package cn.dazhou.railway.im.addfriend;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import com.jude.easyrecyclerview.EasyRecyclerView;
-import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
-import com.jude.easyrecyclerview.decoration.DividerDecoration;
-import com.jude.rollviewpager.Util;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import cn.dazhou.im.IMLauncher;
-import cn.dazhou.im.entity.UserBean;
-import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
-import cn.dazhou.railway.config.Constants;
-import cn.dazhou.railway.im.adapter.UserAdapter;
-import cn.dazhou.railway.im.chat.ChatFragment;
 import cn.dazhou.railway.util.ActivityUtils;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 public class AddFriendActivity extends AppCompatActivity {
 

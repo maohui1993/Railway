@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.activity;
+package cn.dazhou.railway.im.friendinfo;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,12 +10,9 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.dazhou.im.IMLauncher;
-import cn.dazhou.im.entity.ExtraInfo;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.db.FriendModel;
-import cn.dazhou.railway.im.db.UserModel;
 import cn.dazhou.railway.util.SharedPreferenceUtil;
 import cn.dazhou.railway.util.StringUtil;
 

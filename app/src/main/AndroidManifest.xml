@@ -27,7 +27,7 @@
             android:value="tKiTYcTGAZB0NrpWK19f57Rrp3PzrGOo" />
 
         <activity
-            android:name=".im.activity.LoginActivity"
+            android:name=".im.login.LoginActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
@@ -85,8 +85,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".im.activity.MyselfInfoActivity" />
-        <activity android:name=".im.activity.EditInfoActivity" />
-        <activity android:name=".im.activity.FriendInfoActivity" />
+        <activity android:name=".im.editinfo.EditInfoActivity" />
+        <activity android:name=".im.friendinfo.FriendInfoActivity" />
 
     </application>
 
