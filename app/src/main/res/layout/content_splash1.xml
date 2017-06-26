@@ -24,13 +24,13 @@
         </android.support.v4.view.ViewPager>
 
         <cn.dazhou.pagerslidingtabstrip.PagerSlidingTabStrip
-            android:id="@+id/tabs_1"
+            android:id="@+id/pager_tabs"
             app:pstsShouldExpand="true"
             app:pstsIndicatorHeight="100dp"
             app:pstsIndicatorColor="@color/colorIndicator"
             android:layout_gravity="bottom"
             android:layout_width="match_parent"
-            android:layout_height="75dp" />
+            android:layout_height="@dimen/height_pager_tabs" />
 
     </LinearLayout>
 
