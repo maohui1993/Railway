@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <cn.dazhou.im.widget.ChatContentView
+    <cn.dazhou.im.core.ChatContentView
         android:id="@+id/chat_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></cn.dazhou.im.widget.ChatContentView>
+        android:layout_height="match_parent"></cn.dazhou.im.core.ChatContentView>
 </LinearLayout>

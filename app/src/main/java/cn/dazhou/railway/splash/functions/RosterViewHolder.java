@@ -1,4 +1,4 @@
-package cn.dazhou.railway.splash.fragment;
+package cn.dazhou.railway.splash.functions;
 
 import android.util.Log;
 import android.view.View;

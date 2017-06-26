@@ -24,11 +24,11 @@ import butterknife.ButterKnife;
 import cn.dazhou.pagerslidingtabstrip.PagerSlidingTabStrip;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
-import cn.dazhou.railway.splash.fragment.BaseFragment;
-import cn.dazhou.railway.splash.fragment.ContactListFragment;
-import cn.dazhou.railway.splash.fragment.HomeFragment;
-import cn.dazhou.railway.splash.fragment.SettingFragment;
-import cn.dazhou.railway.splash.fragment.WorkFragment;
+import cn.dazhou.railway.splash.functions.BaseFragment;
+import cn.dazhou.railway.splash.functions.contact.ContactListFragment;
+import cn.dazhou.railway.splash.functions.HomeFragment;
+import cn.dazhou.railway.splash.functions.SettingFragment;
+import cn.dazhou.railway.splash.functions.WorkFragment;
 import cn.dazhou.railway.im.friend.info.MyselfInfoActivity;
 
 /**

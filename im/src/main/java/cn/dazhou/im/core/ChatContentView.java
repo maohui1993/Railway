@@ -1,4 +1,4 @@
-package cn.dazhou.im.widget;
+package cn.dazhou.im.core;
 
 import android.app.Activity;
 import android.content.Context;
@@ -44,6 +44,9 @@ import cn.dazhou.im.fragment.ChatFunctionFragment;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.GlobalOnItemClickManagerUtils;
 import cn.dazhou.im.util.MediaManager;
+import cn.dazhou.im.widget.EmotionInputDetector;
+import cn.dazhou.im.widget.NoScrollViewPager;
+import cn.dazhou.im.widget.SoundView;
 
 /**
  * Created by Hooyee on 2017/5/7.

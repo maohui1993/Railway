@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".splash.fragment.ContactListFragment">
+    tools:context=".splash.functions.contact.ContactListFragment">
 
     <com.jude.easyrecyclerview.EasyRecyclerView
         android:id="@+id/roster_easy_recycler_view"

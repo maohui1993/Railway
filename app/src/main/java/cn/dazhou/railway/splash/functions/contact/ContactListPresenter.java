@@ -1,34 +1,25 @@
-package cn.dazhou.railway.im.presenter;
+package cn.dazhou.railway.splash.functions.contact;
 
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Toast;
 
-import java.lang.ref.WeakReference;
-import java.util.List;
-
 import cn.dazhou.railway.R;
-import cn.dazhou.railway.im.friend.add.AddFriendActivity;
 import cn.dazhou.railway.im.chat.room.ChatRoomActivity;
-import cn.dazhou.railway.im.db.FriendModel;
-import cn.dazhou.railway.im.listener.OnDataUpdateListener;
+import cn.dazhou.railway.im.friend.add.AddFriendActivity;
 
 /**
  * Created by hooyee on 2017/5/31.
  */
 
-public class ContactListPresenter implements View.OnClickListener{
+public class ContactListPresenter implements ContactListContract.Presenter{
     private Context mContext;
-    private OnDataUpdateListener mOnDataUpdateListener;
-    private WeakReference<List<FriendModel>> cache;
+    private ContactListContract.View mView;
 
-    public ContactListPresenter(Context context) {
+    public ContactListPresenter(Context context, ContactListContract.View view) {
         mContext = context;
-    }
-
-    public void setOnDataUpdateListener(OnDataUpdateListener mOnDataUpdateListener) {
-        this.mOnDataUpdateListener = mOnDataUpdateListener;
+        mView = view;
     }
 
     @Override
@@ -44,8 +35,6 @@ public class ContactListPresenter implements View.OnClickListener{
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-////                        IMLauncher.createChatRoom("test2", "liaotian", "123");
-//                        IMLauncher.joinChatRoom("test2", MyApp.gCurrentUsername, "123");
                         ChatRoomActivity.startItself(mContext);
                     }
                 }).start();

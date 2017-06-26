@@ -33,7 +33,7 @@ import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.chat.ChatActivity;
 import cn.dazhou.railway.im.db.ChatMessageModel;
 import cn.dazhou.railway.im.db.FriendModel;
-import cn.dazhou.railway.splash.fragment.ContactListFragment;
+import cn.dazhou.railway.splash.functions.contact.ContactListFragment;
 import cn.dazhou.railway.util.LogUtil;
 
 /**
@@ -117,7 +117,7 @@ public class IMChatService extends Service {
             }
         };
 
-//delay为long,period为long：从现在起过delay毫秒以后，每隔period毫秒执行一次。
+        //delay为long,period为long：从现在起过delay毫秒以后，每隔period毫秒执行一次。
         timer.schedule(task, 1000, 3000);
     }
 
@@ -180,6 +180,7 @@ public class IMChatService extends Service {
                 chatMessageModel.setState(false);
                 sendNotification(chatMessageEntity, chatMessageModel.getJid());
             }
+            // 好友聊天的最后一条消息
             EventBus.getDefault().post(new ContactListFragment.TipMessage(chatMessageModel.getJid(), chatMessageModel.getContent()));
             // 有新消息则在对应的好友上面加上 消息数量
             FriendModel friend = new FriendModel();

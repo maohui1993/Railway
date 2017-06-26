@@ -1,4 +1,4 @@
-package cn.dazhou.railway.splash.fragment;
+package cn.dazhou.railway.splash.functions;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

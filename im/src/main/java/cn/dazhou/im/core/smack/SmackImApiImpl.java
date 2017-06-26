@@ -208,10 +208,6 @@ public class SmackImApiImpl implements IMApi {
         try {
             Roster roster = Roster.getInstanceFor(mConnection);
             roster.createEntry(JidCreate.entityBareFrom(jid), jid, new String[]{"Friends"});
-//            Presence presenceRes = new Presence(Presence.Type.subscribe);
-//            presenceRes.setTo(JidCreate.entityBareFrom(jid));
-//            mConnection.sendStanza(presenceRes);
-//            acceptFriendRequest(jid);
         } catch (Exception e) {
             Log.e("TAG", "SmackImApiImpl.class: " + "好友添加失败");
             Log.e("TAG", "SmackImApiImpl.class: " + e.getMessage());
@@ -460,7 +456,7 @@ public class SmackImApiImpl implements IMApi {
             if (packet instanceof Presence) {
                 Presence presence = (Presence) packet;
                 Jid to = presence.getTo();//接收方
-                FriendRequest friendRequest = null;
+                FriendRequest friendRequest;
 
                 Log.i("TAG", "Type = " + presence.getType());
 

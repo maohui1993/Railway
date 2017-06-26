@@ -5,7 +5,7 @@ import android.support.v7.widget.Toolbar;
 
 import java.util.List;
 
-import cn.dazhou.im.widget.ChatContentView;
+import cn.dazhou.im.core.ChatContentView;
 import cn.dazhou.railway.BasePresenter;
 import cn.dazhou.railway.BaseView;
 

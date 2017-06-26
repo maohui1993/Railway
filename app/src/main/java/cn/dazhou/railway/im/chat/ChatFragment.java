@@ -12,7 +12,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.dazhou.im.widget.ChatContentView;
+import cn.dazhou.im.core.ChatContentView;
 import cn.dazhou.railway.R;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;

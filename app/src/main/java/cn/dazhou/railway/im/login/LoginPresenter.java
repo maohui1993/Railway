@@ -4,17 +4,12 @@ import android.content.Context;
 
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
-import org.jivesoftware.smack.util.FileUtils;
-import org.jivesoftware.smackx.vcardtemp.packet.VCard;
-
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ExtraInfo;
-import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.db.UserModel;
 import cn.dazhou.railway.im.db.UserModel_Table;
-import cn.dazhou.railway.im.listener.IOnLoginListener;
 import cn.dazhou.railway.util.IMUtil;
 import cn.dazhou.railway.util.LogUtil;
 import cn.dazhou.railway.util.SharedPreferenceUtil;

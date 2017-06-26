@@ -1,4 +1,4 @@
-package cn.dazhou.railway.splash.fragment;
+package cn.dazhou.railway.splash.functions.contact;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -28,19 +28,17 @@ import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.db.FriendModel;
-import cn.dazhou.railway.im.listener.OnDataUpdateListener;
-import cn.dazhou.railway.im.presenter.ContactListPresenter;
+import cn.dazhou.railway.splash.functions.BaseFragment;
+import cn.dazhou.railway.splash.functions.RosterAdapter;
+import cn.dazhou.railway.splash.functions.StickyHeaderAdapter;
 import cn.dazhou.railway.util.IMUtil;
 
-public class ContactListFragment extends BaseFragment implements OnDataUpdateListener<FriendModel> {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+public class ContactListFragment extends BaseFragment implements ContactListContract.View {
     private static final String ARG_PARAM1 = "param1";
-    private static final String DATA_KEY = "jid";
 
     private EasyRecyclerView mRosterView;
     private RosterAdapter mRosterAdapter;
-    private ContactListPresenter mPresenter;
+    private ContactListContract.Presenter mPresenter;
 
     public static ContactListFragment newInstance(boolean param1) {
         ContactListFragment fragment = new ContactListFragment();
@@ -53,8 +51,7 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter = new ContactListPresenter(getContext());
-        mPresenter.setOnDataUpdateListener(this);
+        mPresenter = new ContactListPresenter(getContext(), this);
         EventBus.getDefault().register(this);
         registerLoginReceiver();
     }
@@ -62,11 +59,11 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
     private void registerLoginReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.LOGIN_SUCCESS_BROADCAST);
-        getActivity().registerReceiver(loginReceiver, intentFilter);
+        getContext().registerReceiver(loginReceiver, intentFilter);
 
         IntentFilter intentFilter1 = new IntentFilter();
         intentFilter.addAction(Constants.UPDATE_FROM_SERVER_BROADCAST);
-        getActivity().registerReceiver(updateReceiver, intentFilter1);
+        getContext().registerReceiver(updateReceiver, intentFilter1);
     }
 
     @Override
@@ -81,7 +78,7 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
     BroadcastReceiver loginReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent){
-            onUpdateData(MyApp.gCurrentUser.getMyFriends(), false);
+            onUpdateData(MyApp.gCurrentUser.getMyFriends());
         }
     };
 
@@ -89,7 +86,7 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
         @Override
         public void onReceive(Context context, Intent intent){
             IMUtil.updateFriendFromServer(MyApp.gCurrentUser);
-            onUpdateData(MyApp.gCurrentUser.getMyFriends(), false);
+            onUpdateData(MyApp.gCurrentUser.getMyFriends());
         }
     };
 
@@ -100,7 +97,7 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
         itemDecoration.setDrawLastItem(false);
         mRosterView.addItemDecoration(itemDecoration);
         mRosterAdapter = new RosterAdapter(getContext());
-        onUpdateData(MyApp.gCurrentUser.getMyFriends(), false);
+        onUpdateData(MyApp.gCurrentUser.getMyFriends());
         mRosterView.setAdapter(mRosterAdapter);
         // 添加非重用view部分的组件
         mRosterAdapter.addHeader(new RecyclerArrayAdapter.ItemView() {
@@ -118,35 +115,43 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
 
             }
         });
-//
-//        // StickyHeader
-//        StickyHeaderDecoration decoration = new StickyHeaderDecoration(new StickyHeaderAdapter(getContext(), mRosterAdapter.getAllData()));
-//        decoration.setIncludeHeader(false);
-//        mRosterView.addItemDecoration(decoration);
     }
 
     /**
      * 当presenter中有friend数据更新时调用
      * @param datas
      */
-    @Override
-    public void onUpdateData(List<FriendModel> datas, boolean moveCursor) {
+    public void onUpdateData(List<FriendModel> datas) {
         Collections.sort(datas);
-//        mRosterAdapter.clear();
         mRosterAdapter.addAll(datas);
         // StickyHeader
         StickyHeaderDecoration decoration = new StickyHeaderDecoration(new StickyHeaderAdapter(getContext(), mRosterAdapter.getAllData()));
         mRosterView.addItemDecoration(decoration);
     }
 
+    /**
+     * 更新当前好友最后一条消息
+     * @see cn.dazhou.railway.im.service.IMChatService#incomingChatMessageListener
+     * @param tipMessage
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateTipMessage(TipMessage tipMessage) {
         mRosterAdapter.updateData(tipMessage);
     }
 
+    /**
+     * 更新当前好友未读消息量
+     * @see cn.dazhou.railway.im.service.IMChatService#incomingChatMessageListener
+     * @param friendModel
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateTipMessage(FriendModel friendModel) {
         mRosterAdapter.updateData(friendModel);
+    }
+
+    @Override
+    public void setPresenter(ContactListContract.Presenter presenter) {
+        mPresenter = presenter;
     }
 
     public static class TipMessage {
@@ -161,8 +166,8 @@ public class ContactListFragment extends BaseFragment implements OnDataUpdateLis
 
     @Override
     public void onDestroy() {
-        getActivity().unregisterReceiver(loginReceiver);
-        getActivity().unregisterReceiver(updateReceiver);
+        getContext().unregisterReceiver(loginReceiver);
+        getContext().unregisterReceiver(updateReceiver);
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
