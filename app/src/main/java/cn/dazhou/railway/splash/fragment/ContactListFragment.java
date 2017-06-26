@@ -1,4 +1,4 @@
-package cn.dazhou.railway.fragment;
+package cn.dazhou.railway.splash.fragment;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -27,8 +27,6 @@ import java.util.List;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
-import cn.dazhou.railway.im.adapter.RosterAdapter;
-import cn.dazhou.railway.im.adapter.StickyHeaderAdapter;
 import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.im.listener.OnDataUpdateListener;
 import cn.dazhou.railway.im.presenter.ContactListPresenter;

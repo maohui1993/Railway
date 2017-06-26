@@ -1,4 +1,4 @@
-package cn.dazhou.railway.fragment;
+package cn.dazhou.railway.splash.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.dazhou.railway.R;
-import cn.dazhou.railway.im.adapter.GridAdapter;
 
 public class WorkFragment extends BaseFragment {
     private GridView mGridView;

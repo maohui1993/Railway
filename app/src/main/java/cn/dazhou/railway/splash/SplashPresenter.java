@@ -1,4 +1,4 @@
-package cn.dazhou.railway;
+package cn.dazhou.railway.splash;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
+
+import cn.dazhou.railway.R;
 
 /**
  * Created by hooyee on 2017/6/1.

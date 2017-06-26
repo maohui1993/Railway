@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.adapter;
+package cn.dazhou.railway.splash;
 
 import android.content.Context;
 import android.support.annotation.DrawableRes;

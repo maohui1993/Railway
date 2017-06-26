@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.adapter;
+package cn.dazhou.railway.splash.fragment;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,10 +10,7 @@ import android.widget.TextView;
 import com.jude.easyrecyclerview.decoration.StickyHeaderDecoration;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.db.FriendModel;

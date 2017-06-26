@@ -1,4 +1,4 @@
-package cn.dazhou.railway;
+package cn.dazhou.railway.splash;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,12 +22,13 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.dazhou.pagerslidingtabstrip.PagerSlidingTabStrip;
-import cn.dazhou.railway.fragment.BaseFragment;
-import cn.dazhou.railway.fragment.ContactListFragment;
-import cn.dazhou.railway.fragment.HomeFragment;
-import cn.dazhou.railway.fragment.SettingFragment;
-import cn.dazhou.railway.fragment.WorkFragment;
-import cn.dazhou.railway.im.adapter.FunctionTabAdapter;
+import cn.dazhou.railway.MyApp;
+import cn.dazhou.railway.R;
+import cn.dazhou.railway.splash.fragment.BaseFragment;
+import cn.dazhou.railway.splash.fragment.ContactListFragment;
+import cn.dazhou.railway.splash.fragment.HomeFragment;
+import cn.dazhou.railway.splash.fragment.SettingFragment;
+import cn.dazhou.railway.splash.fragment.WorkFragment;
 import cn.dazhou.railway.im.friend.info.MyselfInfoActivity;
 
 /**
@@ -36,7 +37,7 @@ import cn.dazhou.railway.im.friend.info.MyselfInfoActivity;
 
 public class SplashFragment extends Fragment implements SplashContract.View {
     @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    Toolbar mToolbar;
     @BindView(R.id.pager)
     ViewPager mViewPager;
     @BindArray(R.array.titles)
@@ -79,7 +80,6 @@ public class SplashFragment extends Fragment implements SplashContract.View {
         View root = inflater.inflate(R.layout.fragment_content_splash, container, false);
         ButterKnife.bind(this, root);
 
-
         mTabFragments.add(HomeFragment.newInstance(false));
         mTabFragments.add(WorkFragment.newInstance(false));
         mTabFragments.add(ContactListFragment.newInstance(false));
@@ -89,7 +89,8 @@ public class SplashFragment extends Fragment implements SplashContract.View {
         mViewPager.setAdapter(mAdapter);//给ViewPager设置适配器
         mViewPager.clearOnPageChangeListeners();
 
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        mToolbar.setTitle(mTitles[0]);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
 
         mPagerSlidingTabStrip.setViewPager(mViewPager);
         mPagerSlidingTabStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -100,7 +101,7 @@ public class SplashFragment extends Fragment implements SplashContract.View {
             @Override
             public void onPageSelected(int position) {
                 BaseFragment fragment = mTabFragments.get(position);
-                toolbar.setTitle(mTitles[position]);
+                mToolbar.setTitle(mTitles[position]);
                 if (fragment.isMustLogin() && MyApp.gCurrentUser == null) {
                     fragment.requestLogin();
                 }
@@ -116,7 +117,7 @@ public class SplashFragment extends Fragment implements SplashContract.View {
 
     public void initNavigationView() {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                getActivity(), mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                getActivity(), mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawer.setDrawerListener(toggle);
         toggle.syncState();
 

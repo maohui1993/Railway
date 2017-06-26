@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    tools:context=".fragment.WorkFragment">
+    tools:context=".splash.fragment.WorkFragment">
 
     <GridView
         android:id="@+id/grid"

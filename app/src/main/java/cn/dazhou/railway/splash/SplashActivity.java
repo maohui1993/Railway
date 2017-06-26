@@ -1,4 +1,4 @@
-package cn.dazhou.railway;
+package cn.dazhou.railway.splash;
 
 import android.Manifest;
 import android.content.Context;
@@ -12,6 +12,8 @@ import android.view.MenuItem;
 
 import cn.dazhou.im.util.Tool;
 import cn.dazhou.maputil.MapLauncher;
+import cn.dazhou.railway.MyApp;
+import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.SettingActivity;
 import cn.dazhou.railway.im.broadcast.NetworkReceiver;
 import cn.dazhou.railway.util.ActivityUtils;

@@ -6,25 +6,11 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import com.dd.processbutton.iml.ActionProcessButton;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
-import cn.dazhou.railway.SplashActivity;
-import cn.dazhou.railway.config.Constants;
-import cn.dazhou.railway.im.chat.ChatFragment;
-import cn.dazhou.railway.im.listener.IOnLoginListener;
 import cn.dazhou.railway.util.ActivityUtils;
-import cn.dazhou.railway.util.IMUtil;
-import cn.dazhou.railway.util.LogUtil;
-import cn.dazhou.railway.util.SharedPreferenceUtil;
 
 public class LoginActivity extends AppCompatActivity {
     Toolbar mToolbar;

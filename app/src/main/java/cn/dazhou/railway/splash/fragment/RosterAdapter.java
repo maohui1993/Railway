@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.adapter;
+package cn.dazhou.railway.splash.fragment;
 
 import android.content.Context;
 import android.view.ViewGroup;
@@ -11,9 +11,7 @@ import java.util.List;
 
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.im.chat.ChatActivity;
-import cn.dazhou.railway.im.adapter.holder.RosterViewHolder;
 import cn.dazhou.railway.im.db.FriendModel;
-import cn.dazhou.railway.fragment.ContactListFragment;
 
 /**
  * Created by hooyee on 2017/5/8.

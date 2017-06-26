@@ -75,7 +75,7 @@
 
         <activity android:name=".im.chat.room.ChatRoomActivity" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".splash.SplashActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
