@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.activity;
+package cn.dazhou.railway.im.friend.info;
 
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;

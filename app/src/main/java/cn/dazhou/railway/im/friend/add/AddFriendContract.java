@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.addfriend;
+package cn.dazhou.railway.im.friend.add;
 
 import java.util.List;
 

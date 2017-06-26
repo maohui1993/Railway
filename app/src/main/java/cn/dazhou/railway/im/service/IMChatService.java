@@ -33,7 +33,7 @@ import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.chat.ChatActivity;
 import cn.dazhou.railway.im.db.ChatMessageModel;
 import cn.dazhou.railway.im.db.FriendModel;
-import cn.dazhou.railway.im.fragment.ContactListFragment;
+import cn.dazhou.railway.fragment.ContactListFragment;
 import cn.dazhou.railway.util.LogUtil;
 
 /**

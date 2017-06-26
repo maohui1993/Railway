@@ -15,7 +15,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import cn.dazhou.im.entity.FriendRequest;
 import cn.dazhou.railway.config.Constants;
-import cn.dazhou.railway.im.activity.FriendRequestActivity;
+import cn.dazhou.railway.im.friend.request.FriendRequestActivity;
 
 /**
  * 好友请求服务.

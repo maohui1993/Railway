@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.activity;
+package cn.dazhou.railway.im.friend.info;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,7 +22,6 @@ import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.db.UserModel;
-import cn.dazhou.railway.im.editinfo.EditInfoActivity;
 import cn.dazhou.railway.im.login.LoginActivity;
 import cn.dazhou.railway.util.IMUtil;
 import cn.dazhou.railway.util.SharedPreferenceUtil;

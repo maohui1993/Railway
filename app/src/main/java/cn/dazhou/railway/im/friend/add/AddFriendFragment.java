@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.addfriend;
+package cn.dazhou.railway.im.friend.add;
 
 import android.graphics.Color;
 import android.os.Bundle;

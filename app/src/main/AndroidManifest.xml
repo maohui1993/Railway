@@ -40,9 +40,8 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".im.activity.MainActivity" />
         <activity
-            android:name=".im.activity.FullImageActivity"
+            android:name=".im.friend.info.FullImageActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent"
@@ -53,7 +52,7 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".im.addfriend.AddFriendActivity" />
+        <activity android:name=".im.friend.add.AddFriendActivity" />
 
         <service
             android:name=".im.service.IMFriendRequestService"
@@ -65,16 +64,16 @@
         </service>
 
         <activity
-            android:name=".im.activity.FriendRequestActivity"
+            android:name=".im.friend.request.FriendRequestActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".im.activity.SettingActivity" />
+        <activity android:name=".config.SettingActivity" />
 
         <service
             android:name=".im.service.IMChatRoomService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".im.activity.ChatRoomActivity" />
+        <activity android:name=".im.chat.room.ChatRoomActivity" />
         <activity
             android:name=".SplashActivity"
             android:launchMode="singleTask">
@@ -84,9 +83,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".im.activity.MyselfInfoActivity" />
-        <activity android:name=".im.editinfo.EditInfoActivity" />
-        <activity android:name=".im.friendinfo.FriendInfoActivity" />
+        <activity android:name=".im.friend.info.MyselfInfoActivity" />
+        <activity android:name=".im.friend.info.EditInfoActivity" />
+        <activity android:name=".im.friend.info.FriendInfoActivity" />
 
     </application>
 

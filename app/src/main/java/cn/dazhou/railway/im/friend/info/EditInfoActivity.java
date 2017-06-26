@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.editinfo;
+package cn.dazhou.railway.im.friend.info;
 
 import android.content.Context;
 import android.content.Intent;

@@ -19,7 +19,7 @@ import java.util.Set;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.SplashActivity;
-import cn.dazhou.railway.im.friendinfo.FriendInfoActivity;
+import cn.dazhou.railway.im.friend.info.FriendInfoActivity;
 import cn.dazhou.railway.im.db.DataHelper;
 import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.util.ActivityUtils;

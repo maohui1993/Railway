@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.activity;
+package cn.dazhou.railway.im.friend.request;
 
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -21,8 +21,7 @@ import butterknife.ButterKnife;
 import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
-import cn.dazhou.railway.im.adapter.FriendRequestAdapter;
-import cn.dazhou.railway.im.addfriend.AddFriendActivity;
+import cn.dazhou.railway.im.friend.add.AddFriendActivity;
 
 public class FriendRequestActivity extends AppCompatActivity {
     @BindView(R.id.easy_recycler_ver)

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#CCCCCC"
     android:orientation="vertical"
-    tools:context="cn.dazhou.railway.im.activity.SettingActivity">
+    tools:context="cn.dazhou.railway.config.SettingActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

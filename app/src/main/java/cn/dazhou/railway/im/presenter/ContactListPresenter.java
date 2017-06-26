@@ -9,8 +9,8 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import cn.dazhou.railway.R;
-import cn.dazhou.railway.im.addfriend.AddFriendActivity;
-import cn.dazhou.railway.im.activity.ChatRoomActivity;
+import cn.dazhou.railway.im.friend.add.AddFriendActivity;
+import cn.dazhou.railway.im.chat.room.ChatRoomActivity;
 import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.im.listener.OnDataUpdateListener;
 

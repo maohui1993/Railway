@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.fragment;
+package cn.dazhou.railway.fragment;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

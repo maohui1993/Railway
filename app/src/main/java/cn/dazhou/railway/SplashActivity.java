@@ -17,9 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,18 +28,16 @@ import butterknife.ButterKnife;
 import cn.dazhou.im.util.Tool;
 import cn.dazhou.maputil.MapLauncher;
 import cn.dazhou.pagerslidingtabstrip.PagerSlidingTabStrip;
-import cn.dazhou.railway.config.Constants;
-import cn.dazhou.railway.im.activity.MyselfInfoActivity;
-import cn.dazhou.railway.im.activity.SettingActivity;
+import cn.dazhou.railway.im.friend.info.MyselfInfoActivity;
+import cn.dazhou.railway.config.SettingActivity;
 import cn.dazhou.railway.im.adapter.FunctionTabAdapter;
 import cn.dazhou.railway.im.broadcast.NetworkReceiver;
-import cn.dazhou.railway.im.fragment.BaseFragment;
-import cn.dazhou.railway.im.fragment.ContactListFragment;
-import cn.dazhou.railway.im.fragment.HomeFragment;
-import cn.dazhou.railway.im.fragment.SettingFragment;
-import cn.dazhou.railway.im.fragment.WorkFragment;
+import cn.dazhou.railway.fragment.BaseFragment;
+import cn.dazhou.railway.fragment.ContactListFragment;
+import cn.dazhou.railway.fragment.HomeFragment;
+import cn.dazhou.railway.fragment.SettingFragment;
+import cn.dazhou.railway.fragment.WorkFragment;
 import cn.dazhou.railway.util.LogUtil;
-import cn.dazhou.railway.util.SharedPreferenceUtil;
 
 public class SplashActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -74,21 +70,25 @@ public class SplashActivity extends AppCompatActivity
 
     private SplashPresenter mPresenter;
 
+    NetworkReceiver receiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash1);
         MyApp.addActivity(this);
         MapLauncher.init(getApplicationContext());
-        Tool.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        Tool.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-        Tool.checkPermission(this, Manifest.permission.RECORD_AUDIO);
-        Tool.checkPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        Tool.checkPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
-        Tool.checkPermission(this, Manifest.permission.CAMERA);
-        Tool.checkPermission(this, Manifest.permission.VIBRATE);
-        Tool.checkPermission(this, Manifest.permission.ACCESS_NETWORK_STATE);
-//        Tool.checkPermission(this);
+        Tool.checkPermission(this,
+                new String[] {
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.VIBRATE,
+                        Manifest.permission.ACCESS_NETWORK_STATE
+        });
+
         LogUtil.init();
         mPresenter = new SplashPresenter(this);
         ButterKnife.bind(this);
@@ -130,11 +130,10 @@ public class SplashActivity extends AppCompatActivity
         toggle.syncState();
 
         headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_splash1);
-        ImageView header = (ImageView) headerLayout.findViewById(R.id.iv_header);
-        header.setOnClickListener(new View.OnClickListener() {
+        headerLayout.findViewById(R.id.iv_header).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openUserInfo(v);
+                MyselfInfoActivity.startItself(SplashActivity.this);
             }
         });
         navigationView.setNavigationItemSelectedListener(this);
@@ -145,13 +144,6 @@ public class SplashActivity extends AppCompatActivity
         registerReceiver(receiver, filter);
     }
 
-    NetworkReceiver receiver;
-
-
-    void openUserInfo(View v) {
-        Toast.makeText(this, "image", Toast.LENGTH_SHORT).show();
-        MyselfInfoActivity.startItself(this);
-    }
 
     @Override
     protected void onResume() {

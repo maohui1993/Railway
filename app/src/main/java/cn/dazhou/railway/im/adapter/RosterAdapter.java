@@ -13,7 +13,7 @@ import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.im.chat.ChatActivity;
 import cn.dazhou.railway.im.adapter.holder.RosterViewHolder;
 import cn.dazhou.railway.im.db.FriendModel;
-import cn.dazhou.railway.im.fragment.ContactListFragment;
+import cn.dazhou.railway.fragment.ContactListFragment;
 
 /**
  * Created by hooyee on 2017/5/8.
