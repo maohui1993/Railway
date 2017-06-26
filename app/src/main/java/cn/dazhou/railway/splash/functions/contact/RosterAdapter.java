@@ -1,4 +1,4 @@
-package cn.dazhou.railway.splash.functions;
+package cn.dazhou.railway.splash.functions.contact;
 
 import android.content.Context;
 import android.view.ViewGroup;
@@ -12,7 +12,6 @@ import java.util.List;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.im.chat.ChatActivity;
 import cn.dazhou.railway.im.db.FriendModel;
-import cn.dazhou.railway.splash.functions.contact.ContactListFragment;
 
 /**
  * Created by hooyee on 2017/5/8.
@@ -56,6 +55,7 @@ public class RosterAdapter extends RecyclerArrayAdapter<FriendModel> {
     public void updateData(FriendModel friendModel) {
         int index = getPosition(friendModel);
         RosterViewHolder result = viewHolders.get(index);
+        // 增加一条消息
         result.updateMessageCount(1);
     }
 }

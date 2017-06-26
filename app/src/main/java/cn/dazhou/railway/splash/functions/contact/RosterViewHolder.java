@@ -1,4 +1,4 @@
-package cn.dazhou.railway.splash.functions;
+package cn.dazhou.railway.splash.functions.contact;
 
 import android.util.Log;
 import android.view.View;

@@ -29,7 +29,6 @@ import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.splash.functions.BaseFragment;
-import cn.dazhou.railway.splash.functions.RosterAdapter;
 import cn.dazhou.railway.splash.functions.StickyHeaderAdapter;
 import cn.dazhou.railway.util.IMUtil;
 
