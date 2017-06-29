@@ -43,6 +43,8 @@
                 app:arrowPosition="15dp"
                 app:arrowWidth="10dp" />
 
+            <include layout="@layout/file_format"></include>
+
             <cn.dazhou.im.widget.BubbleLinearLayout
                 android:id="@+id/chat_item_layout_content"
                 android:layout_width="wrap_content"

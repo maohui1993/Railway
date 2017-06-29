@@ -3,6 +3,7 @@ package cn.dazhou.im.core;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
+import java.io.File;
 import java.util.List;
 
 import cn.dazhou.im.core.function.IChat;
@@ -47,4 +48,6 @@ public interface IMApi extends IChat, IConnection{
     void saveVCard(ExtraInfo info) throws Exception;
 
     ExtraInfo getVCard(String jid);
+
+    void sendFile(String user, String operator, String serverIp, File file) throws Exception;
 }

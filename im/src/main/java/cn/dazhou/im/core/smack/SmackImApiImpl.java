@@ -22,6 +22,8 @@ import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.filetransfer.FileTransferManager;
+import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
 import org.jivesoftware.smackx.muc.HostedRoom;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.MultiUserChatManager;
@@ -38,6 +40,7 @@ import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.jid.parts.Resourcepart;
 import org.jxmpp.stringprep.XmppStringprepException;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.InetAddress;
@@ -96,19 +99,19 @@ public class SmackImApiImpl implements IMApi {
      * @throws Exception
      */
     @Override
-    public IConnection connect(String ip) throws Exception {
+    public IConnection connect(String ip, int port, int timeout) throws Exception {
         if (connected) {
             return this;
         }
-        XMPPTCPConnectionConfiguration config = null;
+        XMPPTCPConnectionConfiguration config;
         InetAddress inetAddress = InetAddress.getByName(ip);
         config = XMPPTCPConnectionConfiguration.builder()
                 .setXmppDomain(JidCreate.from(ip).asDomainBareJid())
                 .setHostAddress(inetAddress)
-                .setPort(5222)
-                .setConnectTimeout(10000)
+                .setPort(port)
+                .setConnectTimeout(timeout)
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
-                .setSendPresence(false)
+                .setSendPresence(false)   // 处理离线消息
                 .build();
         mConnection = new XMPPTCPConnection(config);
         mConnection.connect();
@@ -195,6 +198,26 @@ public class SmackImApiImpl implements IMApi {
             e.printStackTrace();
         }
         return info;
+    }
+
+    @Override
+    public void sendFile(String user, String operator, String serverIp, File file) throws Exception {
+        FileTransferManager transfer = FileTransferManager.getInstanceFor(getConnection());
+        System.out.println("发送文件给: "+ user + operator + serverIp);
+        OutgoingFileTransfer out = null;//
+        try {
+            out = transfer.createOutgoingFileTransfer(JidCreate.entityFullFrom(user + operator + serverIp));
+        } catch (XmppStringprepException e) {
+            Log.i("TAG", "SmackImApiImpl#sendFile: jid生成失败:" + user + operator + serverIp);
+            e.printStackTrace();
+        }
+
+        try {
+            out.sendFile(file, file.getName());
+        } catch (SmackException e) {
+            Log.i("TAG", "SmackImApiImpl#sendFile: 文件发送失败");
+            throw e;
+        }
     }
 
     @Override

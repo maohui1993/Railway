@@ -48,9 +48,8 @@ public class LoginPresenter implements LoginContract.Presenter{
         Observable.create(new ObservableOnSubscribe() {
             @Override
             public void subscribe(@NonNull ObservableEmitter e) throws Exception {
-                MyApp.gServerIp = SharedPreferenceUtil.getString(mContext, Constants.SERVER_IP,  Constants.SERVER_IP_DEFAULT);
                 try {
-                    connected = IMLauncher.connect(mContext, MyApp.gServerIp);
+                    connected = IMLauncher.connect(mContext, MyApp.gServerIp, MyApp.gServerPort, MyApp.gServerTimeout);
                 } catch (Exception ex) {
                     connected = false;
                     LogUtil.write(ex);

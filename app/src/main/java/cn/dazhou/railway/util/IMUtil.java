@@ -66,7 +66,7 @@ public class IMUtil {
 
     public static void login(final Context context) {
         try {
-            IMLauncher.connect(context, MyApp.gServerIp);
+            IMLauncher.connect(context, MyApp.gServerIp, MyApp.gServerPort, MyApp.gServerTimeout);
             boolean login = IMLauncher.login(MyApp.gCurrentUsername, MyApp.gCurrentUser.getPassword());
             Log.i("TAG", "hasLog = " + login);
         } catch (Exception e) {

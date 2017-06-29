@@ -25,6 +25,7 @@ import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
+import cn.dazhou.im.util.FileUtil;
 import cn.dazhou.im.util.Tool;
 
 /**
@@ -35,6 +36,7 @@ public class ChatFunctionFragment extends BaseFragment {
     private View rootView;
     private static final int CROP_PHOTO = 2;
     private static final int REQUEST_CODE_PICK_IMAGE = 3;
+    private static final int REQUEST_CODE_PICK_FILE = 4;
     private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 6;
     private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE2 = 7;
     private File output;
@@ -102,18 +104,31 @@ public class ChatFunctionFragment extends BaseFragment {
 
     }
 
+    @OnClick(R2.id.chat_function_file)
+    void chooseFile() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(Intent.createChooser(intent, "选择要发送的文件"), REQUEST_CODE_PICK_FILE);
+    }
+
     @Override
     public void onActivityResult(int req, int res, Intent data) {
         switch (req) {
             case CROP_PHOTO:
                 if (res == Activity.RESULT_OK) {
                     try {
-                        ChatMessageEntity messageInfo = new ChatMessageEntity();
+                        if (imageUri == null) {
+                            return;
+                        }
                         Bitmap bmp = Tool.createBitmapByPath(imageUri.getPath(), 300, 400);
                         byte[] bytes = Tool.compressImage(bmp, 1024, 100);
-                        messageInfo.setImageBytes(bytes);
-                        messageInfo.setImagePath(imageUri.getPath());
-                        messageInfo.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
+                        ChatMessageEntity messageInfo = new ChatMessageEntity.Builder()
+                                .imageBytes(bytes)
+                                .imagePath(imageUri.getPath())
+                                // 标记为自己发送的消息，显示在右边
+                                .type(Constants.CHAT_ITEM_TYPE_RIGHT)
+                                .build();
                         EventBus.getDefault().post(messageInfo);
                     } catch (Exception e) {
                     }
@@ -124,6 +139,9 @@ public class ChatFunctionFragment extends BaseFragment {
                 break;
             case REQUEST_CODE_PICK_IMAGE:
                 if (res == Activity.RESULT_OK) {
+                    if (data == null) {
+                        return;
+                    }
                     try {
                         Cursor cursor = getContext().getContentResolver().query(data.getData(), null, null, null, null);
                         cursor.moveToFirst();
@@ -131,13 +149,14 @@ public class ChatFunctionFragment extends BaseFragment {
                         String picturePath = cursor.getString(columnIndex);
                         cursor.close();
 
-                        ChatMessageEntity messageInfo = new ChatMessageEntity();
                         Bitmap bmp = Tool.createBitmapByPath(picturePath, 300, 400);
                         byte[] bytes = Tool.compressImage(bmp, 1024, 100);
-                        messageInfo.setImageBytes(bytes);
-                        messageInfo.setImagePath(picturePath);
-                        // 标记为自己发送的消息，显示在右边
-                        messageInfo.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
+                        ChatMessageEntity messageInfo = new ChatMessageEntity.Builder()
+                                .imageBytes(bytes)
+                                .imagePath(picturePath)
+                                // 标记为自己发送的消息，显示在右边
+                                .type(Constants.CHAT_ITEM_TYPE_RIGHT)
+                                .build();
                         EventBus.getDefault().post(messageInfo);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -147,6 +166,21 @@ public class ChatFunctionFragment extends BaseFragment {
                     Log.d(Constants.TAG, "失败");
                 }
 
+                break;
+
+            case REQUEST_CODE_PICK_FILE:
+                // Get the Uri of the selected file
+                if (data == null) {
+                    return;
+                }
+                Uri uri = data.getData();
+                String filePath = FileUtil.getPathByUri4kitkat(getContext(), uri);
+                ChatMessageEntity messageInfo = new ChatMessageEntity.Builder()
+                        .filePath(filePath)
+                        // 标记为自己发送的消息，显示在右边
+                        .type(Constants.CHAT_ITEM_TYPE_RIGHT)
+                        .build();
+                EventBus.getDefault().post(messageInfo);
                 break;
 
             default:

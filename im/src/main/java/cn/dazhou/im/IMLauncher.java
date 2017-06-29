@@ -9,6 +9,7 @@ import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.search.ReportedData;
 import org.jxmpp.jid.EntityBareJid;
 
+import java.io.File;
 import java.util.List;
 
 import cn.dazhou.im.core.ConnectManager;
@@ -36,10 +37,10 @@ public final class IMLauncher {
         return login;
     }
 
-    public static boolean connect(Context context, String ip) throws Exception {
+    public static boolean connect(Context context, String ip, int port, int timeout) throws Exception {
         boolean result = true;
         try {
-            mImApi = ConnectManager.getConnection(context, ConnectManager.CONNECT_PROTOCOL_XMPP, ip);
+            mImApi = ConnectManager.getConnection(context, ConnectManager.CONNECT_PROTOCOL_XMPP, ip, port, timeout);
         } catch (Exception e) {
             Log.d(TAG, e.getMessage());
             throw e;
@@ -136,5 +137,9 @@ public final class IMLauncher {
 
     public static ExtraInfo getVCard(String jid) {
         return mImApi.getVCard(jid);
+    }
+
+    public static void sendFile(String user, String operator, String serverIp, File file) throws Exception {
+        mImApi.sendFile(user, operator, serverIp, file);
     }
 }

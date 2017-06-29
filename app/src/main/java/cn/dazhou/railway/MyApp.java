@@ -2,6 +2,8 @@ package cn.dazhou.railway;
 
 import android.app.Activity;
 import android.app.Application;
+import android.os.Build;
+import android.os.StrictMode;
 
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
@@ -25,6 +27,8 @@ public class MyApp extends Application {
     public static String gCurrentUsername; // 当前账号
     // 初始化位置在LoginPresenter#login
     public static String gServerIp;
+    public static int gServerPort;
+    public static int gServerTimeout;
 
     @Override
     public void onCreate() {
@@ -32,11 +36,23 @@ public class MyApp extends Application {
         FlowManager.init(new FlowConfig.Builder(getApplicationContext()).build());
         ZXingLibrary.initDisplayOpinion(this);
 
+        // android 7.0系统解决拍照的问题
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            builder.detectFileUriExposure();
+        }
+
         String lastLogin = SharedPreferenceUtil.getString(this, Constants.LATEST_LOGIN_JID, "");
+
+        MyApp.gServerIp = SharedPreferenceUtil.getString(this, Constants.SERVER_IP, Constants.SERVER_IP_DEFAULT);
+        MyApp.gServerPort = SharedPreferenceUtil.getInt(this, Constants.SERVER_PORT,  Constants.SERVER_PORT_DEFAULT);
+        MyApp.gServerTimeout = SharedPreferenceUtil.getInt(this, Constants.SERVER_CONNECT_TIMEOUT,  Constants.SERVER_CONNECT_TIMEOUT_DEFAULT);
+
         if (!"".equals(lastLogin)) {
             gCurrentUsername = lastLogin;
             gCurrentUser = UserModel.getUser(lastLogin);
-            MyApp.gServerIp = SharedPreferenceUtil.getString(this, Constants.SERVER_IP, Constants.SERVER_IP_DEFAULT);
+
             new Thread(new Runnable() {
                 @Override
                 public void run() {

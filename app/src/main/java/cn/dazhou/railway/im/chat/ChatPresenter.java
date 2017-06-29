@@ -47,19 +47,8 @@ public class ChatPresenter implements ChatContract.Presenter {
      */
     @Override
     public void onSend(ChatMessageEntity msg) {
-        ChatMessageModel model = new ChatMessageModel();
-        model.setType(msg.getType());
-        model.setDate(msg.getDate());
-        model.setImagePath(msg.getImagePath());
-        model.setVoicePath(msg.getVoicePath());
-        model.setVoiceTime(msg.getVoiceTime());
-        model.setContent(msg.getContent());
-        model.setFromJid(msg.getFromJid());
-        model.setToJid(msg.getToJid());
-        // model保存的jid应该是 【接收方+@+当前用户】
+        ChatMessageModel model = ChatMessageModel.newInstances(msg);
         model.setJid(mJid);         // 正在聊天的人
-        model.setState(msg.isState());
-
         model.save();
         // 还原真实jid
         String jid = StringUtil.getRealJid(mJid);

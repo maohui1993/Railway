@@ -1,5 +1,7 @@
 package cn.dazhou.im.entity;
 
+import android.net.Uri;
+
 /**
  * Created by hooyee on 2017/5/8.
  * 聊天的数据
@@ -19,7 +21,29 @@ public class ChatMessageEntity {
     private long voiceTime;
     private String jid;            // 当前用户为发送方，则记录接收方jid，为接收方则记录发送方jid
     private String roomJid;        // 如果为群聊，记录群的Jid
+    private String filePath;       // 传送的文件的Uri
     private int sendState;
+
+    public ChatMessageEntity() {
+    }
+
+    public ChatMessageEntity(String imagePath, String voicePath, String content, String fromJid, String toJid, boolean state, int type, long date, byte[] imageBytes, byte[] voiceBytes, long voiceTime, String jid, String roomJid, String fileUri, int sendState) {
+        this.imagePath = imagePath;
+        this.voicePath = voicePath;
+        this.content = content;
+        this.fromJid = fromJid;
+        this.toJid = toJid;
+        this.state = state;
+        this.type = type;
+        this.date = date;
+        this.imageBytes = imageBytes;
+        this.voiceBytes = voiceBytes;
+        this.voiceTime = voiceTime;
+        this.jid = jid;
+        this.roomJid = roomJid;
+        this.filePath = fileUri;
+        this.sendState = sendState;
+    }
 
     public String getImagePath() {
         return imagePath;
@@ -131,5 +155,111 @@ public class ChatMessageEntity {
 
     public void setRoomJid(String roomJid) {
         this.roomJid = roomJid;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String fileUri) {
+        this.filePath = fileUri;
+    }
+
+    public static class Builder {
+        private String imagePath;      // 图片消息，记录图片的位置
+        private String voicePath;      // 语音消息，记录语音的位置
+        private String content;        // 普通文本消息
+        private String fromJid;        // 来自谁的聊天信息
+        private String toJid;          // 发送给谁的聊天信息
+        private boolean state;         // 是否已读
+        private int type;              // 是发送还是接收消息
+        private long date;             // 消息日期
+        private byte[] imageBytes;     // 图片的字节信息，传输时使用
+        private byte[] voiceBytes;     // 语音的字节信息，传输时使用
+        private long voiceTime;
+        private String jid;            // 当前用户为发送方，则记录接收方jid，为接收方则记录发送方jid
+        private String roomJid;        // 如果为群聊，记录群的Jid
+        private String filePath;           // 传送的文件的Uri
+        private int sendState;
+
+        public ChatMessageEntity build() {
+            return new ChatMessageEntity(imagePath, voicePath, content, fromJid, toJid, state, type, date
+                    , imageBytes, voiceBytes, voiceTime, jid, roomJid, filePath, sendState);
+        }
+
+        public Builder imagePath(String imagePath) {
+            this.imagePath = imagePath;
+            return this;
+        }
+
+        public Builder voicePath(String voicePath) {
+            this.voicePath = voicePath;
+            return this;
+        }
+
+        public Builder content(String content) {
+            this.content = content;
+            return this;
+        }
+
+        public Builder fromJid(String fromJid) {
+            this.fromJid = fromJid;
+            return this;
+        }
+
+        public Builder toJid(String toJid) {
+            this.toJid = toJid;
+            return this;
+        }
+
+        public Builder state(boolean state) {
+            this.state = state;
+            return this;
+        }
+
+        public Builder type(int type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder date(long date) {
+            this.date = date;
+            return this;
+        }
+
+        public Builder imageBytes(byte[] imageBytes) {
+            this.imageBytes = imageBytes;
+            return this;
+        }
+
+        public Builder voiceBytes(byte[] voiceBytes) {
+            this.voiceBytes = voiceBytes;
+            return this;
+        }
+
+        public Builder voiceTime(long voiceTime) {
+            this.voiceTime = voiceTime;
+            return this;
+        }
+
+        public Builder jid(String jid) {
+            this.jid = jid;
+            return this;
+        }
+
+        public Builder roomJid(String roomJid) {
+            this.roomJid = roomJid;
+            return this;
+        }
+
+        public Builder filePath(String fileUri) {
+            this.filePath = fileUri;
+            return this;
+        }
+
+        public Builder sendState(int sendState) {
+            this.sendState = sendState;
+            return this;
+        }
     }
 }

@@ -14,10 +14,12 @@ import cn.dazhou.im.util.Tool;
 import cn.dazhou.maputil.MapLauncher;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
+import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.config.SettingActivity;
 import cn.dazhou.railway.im.broadcast.NetworkReceiver;
 import cn.dazhou.railway.util.ActivityUtils;
 import cn.dazhou.railway.util.LogUtil;
+import cn.dazhou.railway.util.SharedPreferenceUtil;
 
 public class SplashActivity extends AppCompatActivity {
 

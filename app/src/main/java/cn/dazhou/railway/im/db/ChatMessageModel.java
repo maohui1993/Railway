@@ -62,14 +62,8 @@ public class ChatMessageModel extends BaseModel{
     String roomJid;
 
     public ChatMessageModel() {
-
     }
 
-    @Override
-    public boolean save() {
-
-        return super.save();
-    }
 
     public boolean isState() {
         return state;
@@ -102,6 +96,21 @@ public class ChatMessageModel extends BaseModel{
             messages.add(message);
         }
         return messages;
+    }
+
+    public static ChatMessageModel newInstances(ChatMessageEntity info) {
+        return new Builder()
+                .imagePath(info.getImagePath())
+                .voicePath(info.getVoicePath())
+                .voiceTime(info.getVoiceTime())
+                .content(info.getContent())
+                .state(info.isState())
+                .date(info.getDate())
+                .jid(info.getJid())
+                .toJid(info.getToJid())
+                .fromJid(info.getFromJid())
+                .type(info.getType())
+                .build();
     }
 
     public int getId() {
@@ -222,6 +231,7 @@ public class ChatMessageModel extends BaseModel{
         private int type;
         private long voiceTime;
         private long date;
+        boolean state;  // 是否已读
 
         public ChatMessageModel build() {
             return new ChatMessageModel(id, imagePath, voicePath, content, fromJid, toJid, jid, type, voiceTime, date);
@@ -262,6 +272,11 @@ public class ChatMessageModel extends BaseModel{
                 jid = jid.split(Constants.JID_SEPARATOR)[0];
             }
             this.jid = jid + Constants.JID_SEPARATOR +  MyApp.gCurrentUsername;
+            return this;
+        }
+
+        public Builder state(boolean state) {
+            this.state = state;
             return this;
         }
 

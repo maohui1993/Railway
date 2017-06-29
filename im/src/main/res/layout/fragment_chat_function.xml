@@ -21,4 +21,13 @@
         android:drawableTop="@mipmap/icon_chat_photograph"
         android:gravity="center"
         android:text="摄像" />
+
+    <TextView
+        android:id="@+id/chat_function_file"
+        style="@style/text_body"
+        android:layout_marginLeft="@dimen/content_horizontal_margin"
+        android:drawablePadding="@dimen/content_vertical_margin"
+        android:drawableTop="@mipmap/icon_chat_file"
+        android:gravity="center"
+        android:text="文件" />
 </LinearLayout>

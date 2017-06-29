@@ -102,6 +102,7 @@ public class MyselfInfoActivity extends AppCompatActivity {
                 IMLauncher.logout();
                 MyApp.gCurrentUser = null;
                 MyApp.gCurrentUsername = "";
+                SharedPreferenceUtil.putString(this, Constants.LATEST_LOGIN_JID, MyApp.gCurrentUsername);
                 IMUtil.stopServiceWhenLogout(this);
                 LoginActivity.startItself(this);
                 IMLauncher.disconnect();

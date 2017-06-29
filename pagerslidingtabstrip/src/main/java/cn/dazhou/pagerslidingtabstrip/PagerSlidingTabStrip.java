@@ -16,14 +16,12 @@
 
 package cn.dazhou.pagerslidingtabstrip;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -34,10 +32,6 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -257,6 +251,7 @@ public class PagerSlidingTabStrip extends LinearLayout {
         tab.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                // false 表示没有滑动效果
                 pager.setCurrentItem(position, false);
             }
         });

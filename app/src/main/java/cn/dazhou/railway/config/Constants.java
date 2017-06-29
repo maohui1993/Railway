@@ -6,6 +6,10 @@ package cn.dazhou.railway.config;
 
 public class Constants {
     public static final String SERVER_IP = "server_ip";
+    public static final String SERVER_PORT = "server_port";
+    public static final String SERVER_CONNECT_TIMEOUT = "server_timeout";
+    public static final int SERVER_CONNECT_TIMEOUT_DEFAULT = 1000 * 5;
+    public static final int SERVER_PORT_DEFAULT = 5222;
     public static final String SERVER_IP_DEFAULT = "192.168.1.39";
     public static final String JID_SEPARATOR = "@";
     public static final String DATA_KEY = "jid";

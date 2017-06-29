@@ -5,7 +5,7 @@ package cn.dazhou.im.core.function;
  */
 
 public interface IConnection {
-    IConnection connect(String ip) throws Exception;
+    IConnection connect(String ip, int port, int timeout) throws Exception;
 
     Object getConnection();
 
