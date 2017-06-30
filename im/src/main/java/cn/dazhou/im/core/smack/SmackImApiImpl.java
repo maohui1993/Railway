@@ -22,6 +22,7 @@ import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.filetransfer.FileTransfer;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
 import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
 import org.jivesoftware.smackx.muc.HostedRoom;
@@ -35,6 +36,7 @@ import org.jivesoftware.smackx.xdata.Form;
 import org.jivesoftware.smackx.xdata.FormField;
 import org.jxmpp.jid.DomainBareJid;
 import org.jxmpp.jid.EntityBareJid;
+import org.jxmpp.jid.EntityFullJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.jid.parts.Resourcepart;
@@ -77,8 +79,6 @@ public class SmackImApiImpl implements IMApi {
     private boolean connected;
     private byte mState;
     private Chat mChat;
-
-    private HashMap<String, MultiUserChat> multiUserChatCache = new HashMap();
 
     private SmackImApiImpl() {
     }
@@ -157,11 +157,23 @@ public class SmackImApiImpl implements IMApi {
     }
 
     @Override
-    public void chatWith(String jid, ChatMessageEntity msg) throws XmppStringprepException, SmackException.NotConnectedException, InterruptedException {
+    public void chatWith(String jid, ChatMessageEntity msg) throws Exception {
         EntityBareJid id = JidCreate.entityBareFrom(jid);
-        mChat = mChatManager.chatWith(id);
-        String msgJson = Tool.toJSON(msg);
-        mChat.send(msgJson);
+        switch (msg.getDataType()) {
+            case text:
+            case voice:
+            case picture:
+                mChat = mChatManager.chatWith(id);
+                String msgJson = Tool.toJSON(msg);
+                mChat.send(msgJson);
+                break;
+            case file:
+                sendFile(jid, msg.getFilePath());
+                break;
+            default:
+                break;
+        }
+
     }
 
     @Override
@@ -201,23 +213,57 @@ public class SmackImApiImpl implements IMApi {
     }
 
     @Override
-    public void sendFile(String user, String operator, String serverIp, File file) throws Exception {
-        FileTransferManager transfer = FileTransferManager.getInstanceFor(getConnection());
-        System.out.println("发送文件给: "+ user + operator + serverIp);
-        OutgoingFileTransfer out = null;//
-        try {
-            out = transfer.createOutgoingFileTransfer(JidCreate.entityFullFrom(user + operator + serverIp));
-        } catch (XmppStringprepException e) {
-            Log.i("TAG", "SmackImApiImpl#sendFile: jid生成失败:" + user + operator + serverIp);
-            e.printStackTrace();
+    public void sendFile(String jid, String filePath) throws Exception {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            return;
         }
-
+        FileTransferManager transfer = FileTransferManager.getInstanceFor(getConnection());
+        System.out.println("发送文件给: "+ jid);
+        OutgoingFileTransfer out = null;
         try {
+            Presence p = Roster.getInstanceFor(mConnection).getPresence(JidCreate.bareFrom(jid));
+            if(p == null){
+                Log.w("TAG", "SmackImApiImpl#sendFile:用户不存在");
+                return;
+            }
+            Jid toUser = p.getFrom();//提取完整的用户名称
+            out = transfer.createOutgoingFileTransfer(toUser.asEntityFullJidOrThrow());
             out.sendFile(file, file.getName());
+
+            task(out);
+
         } catch (SmackException e) {
             Log.i("TAG", "SmackImApiImpl#sendFile: 文件发送失败");
             throw e;
         }
+    }
+
+    private void task(final OutgoingFileTransfer out) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                long startTime = -1;
+                while (!out.isDone()){
+                    if (out.getStatus().equals(FileTransfer.Status.error)){
+                        Log.w("TAG", "文件传输失败：" + out.getError());
+                    }else{
+                        double progress = out.getProgress();
+                        if(progress > 0 && startTime == -1){
+                            startTime = System.currentTimeMillis();
+                        }
+                        progress *= 100;
+                        Log.i("TAG", "status = "+ out.getStatus());
+                        Log.i("TAG", "progress = "+ progress +"%");
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 
     @Override

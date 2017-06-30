@@ -1,7 +1,5 @@
 package cn.dazhou.im.entity;
 
-import android.net.Uri;
-
 /**
  * Created by hooyee on 2017/5/8.
  * 聊天的数据
@@ -23,11 +21,12 @@ public class ChatMessageEntity {
     private String roomJid;        // 如果为群聊，记录群的Jid
     private String filePath;       // 传送的文件的Uri
     private int sendState;
+    private Type dataType;         // 数据类型
 
     public ChatMessageEntity() {
     }
 
-    public ChatMessageEntity(String imagePath, String voicePath, String content, String fromJid, String toJid, boolean state, int type, long date, byte[] imageBytes, byte[] voiceBytes, long voiceTime, String jid, String roomJid, String fileUri, int sendState) {
+    public ChatMessageEntity(String imagePath, String voicePath, String content, String fromJid, String toJid, boolean state, int type, long date, byte[] imageBytes, byte[] voiceBytes, long voiceTime, String jid, String roomJid, String fileUri, int sendState, Type dataType) {
         this.imagePath = imagePath;
         this.voicePath = voicePath;
         this.content = content;
@@ -43,6 +42,7 @@ public class ChatMessageEntity {
         this.roomJid = roomJid;
         this.filePath = fileUri;
         this.sendState = sendState;
+        this.dataType = dataType;
     }
 
     public String getImagePath() {
@@ -165,6 +165,14 @@ public class ChatMessageEntity {
         this.filePath = fileUri;
     }
 
+    public Type getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(Type dataType) {
+        this.dataType = dataType;
+    }
+
     public static class Builder {
         private String imagePath;      // 图片消息，记录图片的位置
         private String voicePath;      // 语音消息，记录语音的位置
@@ -181,10 +189,11 @@ public class ChatMessageEntity {
         private String roomJid;        // 如果为群聊，记录群的Jid
         private String filePath;           // 传送的文件的Uri
         private int sendState;
+        private Type dataType = Type.text;         // 数据类型
 
         public ChatMessageEntity build() {
             return new ChatMessageEntity(imagePath, voicePath, content, fromJid, toJid, state, type, date
-                    , imageBytes, voiceBytes, voiceTime, jid, roomJid, filePath, sendState);
+                    , imageBytes, voiceBytes, voiceTime, jid, roomJid, filePath, sendState, dataType);
         }
 
         public Builder imagePath(String imagePath) {
@@ -261,5 +270,17 @@ public class ChatMessageEntity {
             this.sendState = sendState;
             return this;
         }
+
+        public Builder dataType(Type dataType) {
+            this.dataType = dataType;
+            return this;
+        }
+    }
+
+    public enum Type {
+        file,
+        text,
+        voice,
+        picture
     }
 }

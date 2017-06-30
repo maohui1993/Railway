@@ -211,10 +211,12 @@ public class ChatMessageModel extends BaseModel{
         this.content = content;
         this.fromJid = fromJid;
         this.toJid = toJid;
-        if (jid.contains(Constants.JID_SEPARATOR)) {
-            jid = jid.split(Constants.JID_SEPARATOR)[0];
+        if (jid != null) {
+            if (jid.contains(Constants.JID_SEPARATOR)) {
+                jid = jid.split(Constants.JID_SEPARATOR)[0];
+            }
+            this.jid = jid + Constants.JID_SEPARATOR + MyApp.gCurrentUsername;
         }
-        this.jid = jid + Constants.JID_SEPARATOR + MyApp.gCurrentUsername;
         this.type = type;
         this.voiceTime = voiceTime;
         this.date = date;
@@ -268,6 +270,9 @@ public class ChatMessageModel extends BaseModel{
         }
 
         public Builder jid(String jid) {
+            if (jid == null) {
+                return this;
+            }
             if (jid.contains(Constants.JID_SEPARATOR)) {
                 jid = jid.split(Constants.JID_SEPARATOR)[0];
             }

@@ -10,6 +10,7 @@ import java.util.List;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
+import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.friend.info.FriendInfoActivity;
 import cn.dazhou.railway.im.friend.info.FullImageActivity;

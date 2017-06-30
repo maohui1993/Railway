@@ -3,13 +3,10 @@ package cn.dazhou.im;
 import android.content.Context;
 import android.util.Log;
 
-import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smackx.muc.MultiUserChat;
-import org.jivesoftware.smackx.search.ReportedData;
 import org.jxmpp.jid.EntityBareJid;
 
-import java.io.File;
 import java.util.List;
 
 import cn.dazhou.im.core.ConnectManager;
@@ -139,7 +136,4 @@ public final class IMLauncher {
         return mImApi.getVCard(jid);
     }
 
-    public static void sendFile(String user, String operator, String serverIp, File file) throws Exception {
-        mImApi.sendFile(user, operator, serverIp, file);
-    }
 }

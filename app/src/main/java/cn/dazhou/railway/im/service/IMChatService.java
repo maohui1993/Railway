@@ -5,6 +5,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -14,13 +16,23 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jivesoftware.smack.AbstractXMPPConnection;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.chat2.IncomingChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smackx.filetransfer.FileTransfer;
+import org.jivesoftware.smackx.filetransfer.FileTransferListener;
+import org.jivesoftware.smackx.filetransfer.FileTransferManager;
+import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
+import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
 import org.jxmpp.jid.EntityBareJid;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -48,6 +60,7 @@ public class IMChatService extends Service {
     private static String currentChattingUser = "";
     private XMPPConnection conn;
     private Timer timer = new Timer();
+    private FileTransferManager transferManager;
 
     @Override
     public void onCreate() {
@@ -60,7 +73,7 @@ public class IMChatService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        initChatManager();
+        initManager();
         handleOfflineMessage();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -109,7 +122,7 @@ public class IMChatService extends Service {
             public void run() {
                 if (!conn.isConnected()) {
                     try {
-                        ((AbstractXMPPConnection)conn).connect();
+                        ((AbstractXMPPConnection) conn).connect();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -121,16 +134,19 @@ public class IMChatService extends Service {
         timer.schedule(task, 1000, 3000);
     }
 
-    private void initChatManager() {
+    private void initManager() {
         try {
             conn = (XMPPConnection) IMLauncher.getImApi().getConnection();
             if (conn == null) {
-                Log.i("TAG", "IMChatService#initChatManager(),获取服务器连接为null");
+                Log.i("TAG", "IMChatService#initManager(),获取服务器连接为null");
             }
             chatManager = ChatManager.getInstanceFor(conn);
             chatManager.addIncomingListener(incomingChatMessageListener);
-        }catch (Exception e) {
-            Log.i("TAG", "IMChatService#initChatManager(),获取服务器连接失败:" + e.getMessage());
+
+            transferManager = FileTransferManager.getInstanceFor(conn);
+            transferManager.addFileTransferListener(fileTransferListener);
+        } catch (Exception e) {
+            Log.i("TAG", "IMChatService#initManager(),获取服务器连接失败:" + e.getMessage());
             LogUtil.write(e);
         }
 
@@ -201,8 +217,8 @@ public class IMChatService extends Service {
         mBuilder.setAutoCancel(true);//自己维护通知的消失
         Intent intent = new Intent(context, ChatActivity.class);
         intent.putExtra(cn.dazhou.railway.config.Constants.DATA_KEY, jid);
-//        //使用TaskStackBuilder为“通知页面”设置返回关系
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        //使用TaskStackBuilder为“通知页面”设置返回关系
+//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         //为点击通知后打开的页面设定 返回 页面。（在manifest中指定）
 //        stackBuilder.addParentStack(SplashActivity.class);
 //        stackBuilder.addNextIntent(intent);
@@ -211,6 +227,63 @@ public class IMChatService extends Service {
         mBuilder.setContentIntent(pIntent);
         notificationManager.notify(1, mBuilder.build());
     }
+
+    /**
+     * 文件接收监听器
+     */
+    FileTransferListener fileTransferListener = new FileTransferListener() {
+
+        @Override
+        public void fileTransferRequest(FileTransferRequest request) {
+            //每次有文件发送过来都会调用些方法
+            //调用request的accetp表示接收文件，也可以调用reject方法拒绝接收
+            final IncomingFileTransfer inTransfer = request.accept();
+            try {
+                Log.i("TAG", "接收到文件发送请求，文件名称：" + request.getFileName());
+                //接收到的文件要放在哪里
+                File dir = new File(cn.dazhou.railway.config.Constants.FILE_PATH);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+                final File file = new File(dir, request.getFileName());
+                inTransfer.recieveFile(file);
+                //如果要时时获取文件接收的状态必须在线程中监听，如果在当前线程监听文件状态会导致一下接收为0
+                new Thread() {
+                    @Override
+                    public void run() {
+                        long startTime = System.currentTimeMillis();
+                        while (!inTransfer.isDone()) {
+                            if (inTransfer.getStatus().equals(FileTransfer.Status.error)) {
+                                Log.w("TAG", "error: " + inTransfer.getError());
+                            } else {
+                                double progress = inTransfer.getProgress();
+                                progress *= 100;
+                                Log.i("TAG", "status=" + inTransfer.getStatus());
+                                Log.i("TAG", "progress=" + progress + "%");
+                            }
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        fileScan(file);
+                        Log.i("TAG", "used " + ((System.currentTimeMillis() - startTime) / 1000) + " seconds  ");
+                    }
+                }.start();
+            } catch (SmackException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    public void fileScan(File file){
+        Uri data = Uri.fromFile(file);
+        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE , data));
+    }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void messageEventBus(final String jid) {

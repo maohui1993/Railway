@@ -1,5 +1,7 @@
 package cn.dazhou.railway.config;
 
+import android.os.Environment;
+
 /**
  * Created by hooyee on 2017/5/11.
  */
@@ -26,4 +28,7 @@ public class Constants {
 
     public static final String ACTION_RESPOND_VIA_MESSAGE =
             "android.intent.action.RESPOND_VIA_MESSAGE";
+
+    public static final String FILE_PATH = Environment.getExternalStorageDirectory() + "/railway/file/";
+    public static final String FILE_NAME = "railway.log";
 }

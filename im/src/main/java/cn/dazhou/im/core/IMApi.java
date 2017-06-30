@@ -49,5 +49,5 @@ public interface IMApi extends IChat, IConnection{
 
     ExtraInfo getVCard(String jid);
 
-    void sendFile(String user, String operator, String serverIp, File file) throws Exception;
+    void sendFile(String jid, String filePath) throws Exception;
 }

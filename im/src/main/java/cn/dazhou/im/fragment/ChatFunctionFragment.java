@@ -126,6 +126,7 @@ public class ChatFunctionFragment extends BaseFragment {
                         ChatMessageEntity messageInfo = new ChatMessageEntity.Builder()
                                 .imageBytes(bytes)
                                 .imagePath(imageUri.getPath())
+                                .dataType(ChatMessageEntity.Type.voice)
                                 // 标记为自己发送的消息，显示在右边
                                 .type(Constants.CHAT_ITEM_TYPE_RIGHT)
                                 .build();
@@ -156,6 +157,7 @@ public class ChatFunctionFragment extends BaseFragment {
                                 .imagePath(picturePath)
                                 // 标记为自己发送的消息，显示在右边
                                 .type(Constants.CHAT_ITEM_TYPE_RIGHT)
+                                .dataType(ChatMessageEntity.Type.picture)
                                 .build();
                         EventBus.getDefault().post(messageInfo);
                     } catch (Exception e) {
@@ -179,6 +181,7 @@ public class ChatFunctionFragment extends BaseFragment {
                         .filePath(filePath)
                         // 标记为自己发送的消息，显示在右边
                         .type(Constants.CHAT_ITEM_TYPE_RIGHT)
+                        .dataType(ChatMessageEntity.Type.file)
                         .build();
                 EventBus.getDefault().post(messageInfo);
                 break;
