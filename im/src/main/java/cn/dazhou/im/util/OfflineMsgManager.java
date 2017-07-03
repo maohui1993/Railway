@@ -7,7 +7,6 @@ package cn.dazhou.im.util;
 import android.content.Context;
 import android.util.Log;
 
-import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;

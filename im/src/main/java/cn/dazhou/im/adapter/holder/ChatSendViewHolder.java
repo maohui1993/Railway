@@ -13,6 +13,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 
+import java.io.File;
+import java.text.DecimalFormat;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.dazhou.im.R;
@@ -49,6 +52,8 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
     TextView chatItemVoiceTime;
     @BindView(R2.id.chat_item_progress)
     ProgressBar chatItemProgress;
+    @BindView(R2.id.file_format)
+    View fileContainer;
     private RelativeLayout.LayoutParams layoutParams;
 
     private ChatAdapter1.OnItemClickListener onItemClickListener;
@@ -119,6 +124,13 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
             layoutParams.width = Utils.dp2px(getContext(), 120);
             layoutParams.height = Utils.dp2px(getContext(), 48);
             chatItemLayoutContent.setLayoutParams(layoutParams);
+        } else if (data.getDataType() == ChatMessageEntity.Type.file) {
+            fileContainer.setVisibility(View.VISIBLE);
+            File file = new File(data.getFilePath());
+            String name = file.getName();
+            String size = convertSpaceUnit(file.length());
+            ((TextView)fileContainer.findViewById(R.id.file_name)).setText(name);
+            ((TextView)fileContainer.findViewById(R.id.file_size)).setText(size);
         }
 
         switch (data.getSendState()) {
@@ -137,4 +149,15 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
         }
     }
 
+
+    private String convertSpaceUnit(long size) {
+        float kb = size / 1024.0f;
+        float mb = kb / 1024.0f;
+        DecimalFormat decimalFormat= new DecimalFormat(".00");
+        if (mb < 1) {
+            return decimalFormat.format(kb) + " KB";
+        } else {
+            return decimalFormat.format(mb) + " MB";
+        }
+    }
 }

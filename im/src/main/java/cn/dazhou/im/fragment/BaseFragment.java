@@ -1,6 +1,5 @@
 package cn.dazhou.im.fragment;
 
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
