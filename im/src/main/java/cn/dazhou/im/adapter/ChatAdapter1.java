@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 
+import java.util.List;
+
 import cn.dazhou.im.adapter.holder.ChatAcceptViewHolder;
 import cn.dazhou.im.adapter.holder.ChatSendViewHolder;
 import cn.dazhou.im.entity.ChatMessageEntity;

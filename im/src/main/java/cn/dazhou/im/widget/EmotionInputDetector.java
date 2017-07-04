@@ -314,11 +314,13 @@ public class EmotionInputDetector {
             @Override
             public void onStop(long time, String filePath) {
                 mTextView.setText(Utils.long2String(0));
-                ChatMessageEntity messageInfo = new ChatMessageEntity();
-                messageInfo.setVoicePath(filePath);
-                messageInfo.setVoiceTime(time);
-                messageInfo.setVoiceBytes(MediaManager.getSoundRecord(filePath));
-                messageInfo.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
+                ChatMessageEntity messageInfo = new ChatMessageEntity.Builder()
+                        .voicePath(filePath)
+                        .voiceTime(time)
+                        .voiceBytes(MediaManager.getSoundRecord(filePath))
+                        .type(Constants.CHAT_ITEM_TYPE_RIGHT)
+                        .dataType(ChatMessageEntity.Type.voice)
+                        .build();
                 EventBus.getDefault().post(messageInfo);
             }
 

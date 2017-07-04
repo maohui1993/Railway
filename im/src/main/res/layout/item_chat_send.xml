@@ -76,7 +76,9 @@
                     android:scaleType="fitCenter"
                     android:visibility="gone" />
 
-                <include layout="@layout/file_format" />
+                <include android:id="@+id/file_format"
+                    android:visibility="gone"
+                    layout="@layout/file_format" />
             </cn.dazhou.im.widget.BubbleLinearLayout>
         </RelativeLayout>
 

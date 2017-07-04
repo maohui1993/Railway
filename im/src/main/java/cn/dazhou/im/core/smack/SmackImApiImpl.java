@@ -230,7 +230,6 @@ public class SmackImApiImpl implements IMApi {
             Jid toUser = p.getFrom();//提取完整的用户名称
             out = transfer.createOutgoingFileTransfer(toUser.asEntityFullJidOrThrow());
             out.sendFile(file, file.getName());
-
             task(out);
 
         } catch (SmackException e) {

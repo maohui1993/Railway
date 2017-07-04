@@ -122,6 +122,7 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
      */
     public void onUpdateData(List<FriendModel> datas) {
         Collections.sort(datas);
+        mRosterAdapter.clear();
         mRosterAdapter.addAll(datas);
         // StickyHeader
         StickyHeaderDecoration decoration = new StickyHeaderDecoration(new StickyHeaderAdapter(getContext(), mRosterAdapter.getAllData()));

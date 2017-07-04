@@ -75,6 +75,7 @@ public class IMChatService extends Service {
     }
 
     private void handleOfflineMessage() {
+        Log.i("TAG", "offline!!!!!!!!");
         List<ChatMessageEntity> chatMessageEntities = IMLauncher.getOfflineMessage();
         if (chatMessageEntities != null && chatMessageEntities.size() > 0) {
             for (ChatMessageEntity message : chatMessageEntities) {
@@ -87,6 +88,7 @@ public class IMChatService extends Service {
                         .imagePath(message.getImagePath())
                         .jid(fromUser)
                         .type(message.getType())
+                        .dataType(message.getDataType())
                         .build();
                 chatMessageModel.setVoiceTime(message.getVoiceTime());
                 chatMessageModel.setState(false);
@@ -94,6 +96,7 @@ public class IMChatService extends Service {
                 sendNotification(message, chatMessageModel.getJid());
             }
             chatMessageEntities.clear();
+            Log.i("TAG", "clear!!!!!!!!");
         }
     }
 
@@ -144,6 +147,7 @@ public class IMChatService extends Service {
         } catch (Exception e) {
             Log.i("TAG", "IMChatService#initManager(),获取服务器连接失败:" + e.getMessage());
             LogUtil.write(e);
+            stopItself(this);
         }
 
     }
@@ -160,7 +164,7 @@ public class IMChatService extends Service {
             chatMessageEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
             chatMessageEntity.setDate(System.currentTimeMillis());
             chatMessageEntity.setSendState(Constants.CHAT_ITEM_SEND_SUCCESS);
-            String fromUser = from.getLocalpart().toString().split("@")[0];
+            String fromUser = from.getLocalpart().toString().split(cn.dazhou.railway.config.Constants.JID_SEPARATOR)[0];
             String imagePath = null;
             String voicePath = null;
             // 语音与图片不能同时发送
@@ -179,6 +183,7 @@ public class IMChatService extends Service {
                     .type(chatMessageEntity.getType())
                     .jid(fromUser.toString())
                     .date(System.currentTimeMillis())
+                    .dataType(chatMessageEntity.getDataType())
                     .build();
             chatMessageEntity.setVoicePath(voicePath);
             chatMessageEntity.setImagePath(imagePath);
@@ -243,6 +248,19 @@ public class IMChatService extends Service {
                 }
                 final File file = new File(dir, request.getFileName());
                 inTransfer.recieveFile(file);
+                String jid = request.getRequestor().toString().split(cn.dazhou.railway.config.Constants.JID_SEPARATOR)[0];
+                ChatMessageEntity chatMessage = new ChatMessageEntity.Builder()
+                        .jid(jid)
+                        .filePath(file.getAbsolutePath())
+                        .dataType(ChatMessageEntity.Type.file)
+                        .type(Constants.CHAT_ITEM_TYPE_LEFT)
+                        .build();
+                if (checkJid(jid)) {
+                    // 统一交由ChatContentView#showMessage中展示
+                    EventBus.getDefault().post(chatMessage);
+                } else {
+                    sendNotification(chatMessage, chatMessage.getJid());
+                }
                 //如果要时时获取文件接收的状态必须在线程中监听，如果在当前线程监听文件状态会导致一下接收为0
                 new Thread() {
                     @Override

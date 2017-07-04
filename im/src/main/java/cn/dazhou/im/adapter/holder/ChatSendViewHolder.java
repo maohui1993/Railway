@@ -2,6 +2,7 @@ package cn.dazhou.im.adapter.holder;
 
 import android.os.Handler;
 import android.text.TextPaint;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -72,13 +73,14 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
         chatItemDate.setText(Utils.getFormatTime(data.getDate()));
         chatItemDate.setVisibility(View.VISIBLE);
         Glide.with(getContext()).load(R.drawable.header_02).asBitmap().into(chatItemHeader);
-        if (data.getContent() != null) {
+        if (data.getDataType() == ChatMessageEntity.Type.text) {
             chatItemContentText.setSpanText(handler, data.getContent(), true);
             chatItemVoice.setVisibility(View.GONE);
             chatItemContentText.setVisibility(View.VISIBLE);
             chatItemLayoutContent.setVisibility(View.VISIBLE);
             chatItemVoiceTime.setVisibility(View.GONE);
             chatItemContentImage.setVisibility(View.GONE);
+            fileContainer.setVisibility(View.GONE);
             TextPaint paint = chatItemContentText.getPaint();
             // 计算textview在屏幕上占多宽
             int len = (int) paint.measureText(chatItemContentText.getText().toString().trim());
@@ -90,7 +92,7 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
                 layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
             }
             chatItemLayoutContent.setLayoutParams(layoutParams);
-        } else if (data.getVoicePath() != null) {
+        } else if (data.getDataType() == ChatMessageEntity.Type.voice) {
             chatItemVoice.setVisibility(View.VISIBLE);
             chatItemVoice.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
             chatItemVoice.setVoicePath(data.getVoicePath());
@@ -98,6 +100,7 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
             chatItemContentText.setVisibility(View.GONE);
             chatItemVoiceTime.setVisibility(View.VISIBLE);
             chatItemContentImage.setVisibility(View.GONE);
+            fileContainer.setVisibility(View.GONE);
             chatItemVoiceTime.setText(Utils.formatTime(data.getVoiceTime()));
             chatItemLayoutContent.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -108,12 +111,13 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
             layoutParams.width = Utils.dp2px(getContext(), 120);
             layoutParams.height = Utils.dp2px(getContext(), 48);
             chatItemLayoutContent.setLayoutParams(layoutParams);
-        } else if (data.getImagePath() != null) {
+        } else if (data.getDataType() == ChatMessageEntity.Type.picture) {
             chatItemVoice.setVisibility(View.GONE);
             chatItemLayoutContent.setVisibility(View.GONE);
             chatItemVoiceTime.setVisibility(View.GONE);
             chatItemContentText.setVisibility(View.GONE);
             chatItemContentImage.setVisibility(View.VISIBLE);
+            fileContainer.setVisibility(View.GONE);
             Glide.with(getContext()).load(data.getImagePath()).into(chatItemContentImage);
             chatItemContentImage.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -125,12 +129,28 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
             layoutParams.height = Utils.dp2px(getContext(), 48);
             chatItemLayoutContent.setLayoutParams(layoutParams);
         } else if (data.getDataType() == ChatMessageEntity.Type.file) {
+            chatItemVoice.setVisibility(View.GONE);
+            chatItemVoiceTime.setVisibility(View.GONE);
+            chatItemContentText.setVisibility(View.GONE);
+            chatItemContentImage.setVisibility(View.GONE);
+            chatItemLayoutContent.setVisibility(View.VISIBLE);
             fileContainer.setVisibility(View.VISIBLE);
             File file = new File(data.getFilePath());
             String name = file.getName();
-            String size = convertSpaceUnit(file.length());
+            String size = Utils.convertSpaceUnit(file.length());
             ((TextView)fileContainer.findViewById(R.id.file_name)).setText(name);
             ((TextView)fileContainer.findViewById(R.id.file_size)).setText(size);
+            fileContainer.findViewById(R.id.scroll).setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    fileContainer.getParent().requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
+
+            layoutParams.width = Utils.dp2px(getContext(), 250);
+            layoutParams.height = Utils.dp2px(getContext(), 70);
+            chatItemLayoutContent.setLayoutParams(layoutParams);
         }
 
         switch (data.getSendState()) {
@@ -150,14 +170,5 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
     }
 
 
-    private String convertSpaceUnit(long size) {
-        float kb = size / 1024.0f;
-        float mb = kb / 1024.0f;
-        DecimalFormat decimalFormat= new DecimalFormat(".00");
-        if (mb < 1) {
-            return decimalFormat.format(kb) + " KB";
-        } else {
-            return decimalFormat.format(mb) + " MB";
-        }
-    }
+
 }

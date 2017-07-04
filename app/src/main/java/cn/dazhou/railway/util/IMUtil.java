@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 
@@ -18,8 +20,16 @@ import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.im.db.UserModel;
+import cn.dazhou.railway.im.db.UserModel_Table;
 import cn.dazhou.railway.im.service.IMChatService;
 import cn.dazhou.railway.im.service.IMFriendRequestService;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by hooyee on 2017/6/19.
@@ -64,6 +74,8 @@ public class IMUtil {
         IMFriendRequestService.stopItself(context);
     }
 
+    static boolean connected;
+
     public static void login(final Context context) {
         try {
             IMLauncher.connect(context, MyApp.gServerIp, MyApp.gServerPort, MyApp.gServerTimeout);
@@ -78,6 +90,43 @@ public class IMUtil {
             sw.flush();
             Log.i("TAG", "login fail : " + sw.toString());
         }
+//        Observable.create(new ObservableOnSubscribe() {
+//            @Override
+//            public void subscribe(@NonNull ObservableEmitter e) throws Exception {
+//                try {
+//                    connected = IMLauncher.connect(context, MyApp.gServerIp, MyApp.gServerPort, MyApp.gServerTimeout);
+//                } catch (Exception ex) {
+//                    connected = false;
+//                    LogUtil.write(ex);
+//                    StringWriter sw = new StringWriter();
+//                    PrintWriter pw =  new PrintWriter(sw);
+//                    //将出错的栈信息输出到printWriter中
+//                    ex.printStackTrace(pw);
+//                    pw.flush();
+//                    sw.flush();
+//                    Log.i("TAG", "login fail : " + sw.toString());
+//                }
+//                e.onNext(1);
+//            }
+//        }).subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Consumer() {
+//                    @Override
+//                    public void accept(@NonNull Object o) throws Exception {
+//                        try {
+//                            IMLauncher.login(MyApp.gCurrentUsername, MyApp.gCurrentUser.getPassword());
+//                        } catch (Exception ex) {
+//                            StringWriter sw = new StringWriter();
+//                            PrintWriter pw =  new PrintWriter(sw);
+//                            //将出错的栈信息输出到printWriter中
+//                            ex.printStackTrace(pw);
+//                            pw.flush();
+//                            sw.flush();
+//                            Log.i("TAG", "login fail : " + sw.toString());
+//                        }
+//                    }
+//                });
+
     }
 
     public static void sendBroadcast(Context context, String action) {

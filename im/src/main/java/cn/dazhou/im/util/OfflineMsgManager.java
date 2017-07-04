@@ -72,13 +72,9 @@ public class OfflineMsgManager {
                     // 标识为未读信息
                     chatMessageEntity.setState(false);
                     chatMessageEntities.add(chatMessageEntity);
-//                    EventBus.getDefault().post(chatMessageEntity);
                 }
             }
             offlineManager.deleteMessages();
-            //将状态设置成在线
-            Presence presence = new Presence(Presence.Type.available);
-            connection.sendPacket(presence);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (SmackException.NoResponseException e) {
@@ -87,6 +83,16 @@ public class OfflineMsgManager {
             e.printStackTrace();
         } catch (XMPPException.XMPPErrorException e) {
             e.printStackTrace();
+        } finally {
+            //将状态设置成在线
+            Presence presence = new Presence(Presence.Type.available);
+            try {
+                connection.sendPacket(presence);
+            } catch (SmackException.NotConnectedException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

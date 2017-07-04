@@ -9,6 +9,7 @@ import android.text.SpannableString;
 import android.text.style.ImageSpan;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,6 +29,17 @@ public class Utils {
     public static int dp2px(Context context, float dp) {
         float density = context.getResources().getDisplayMetrics().density;
         return (int) (dp * density + 0.5F);
+    }
+
+    public static String convertSpaceUnit(long size) {
+        float kb = size / 1024.0f;
+        float mb = kb / 1024.0f;
+        DecimalFormat decimalFormat= new DecimalFormat(".00");
+        if (mb < 1) {
+            return decimalFormat.format(kb) + " KB";
+        } else {
+            return decimalFormat.format(mb) + " MB";
+        }
     }
 
     /**

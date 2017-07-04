@@ -57,6 +57,11 @@ public class MyApp extends Application {
                 @Override
                 public void run() {
                     IMUtil.login(MyApp.this);
+//                    try {
+//                        Thread.sleep(1000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
                     IMUtil.startServiceWhenLogin(MyApp.this);
                 }
             }).start();
