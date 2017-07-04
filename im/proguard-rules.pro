@@ -23,3 +23,19 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class cn.dazhou.im.entity.** {*;}
+-keep class cn.dazhou.im.IMLauncher {*;}
+-keep class cn.dazhou.im.util.** {*;}
+
+-keep class cn.dazhou.im.core.ChatContentView {*;}
+
+-keep interface cn.dazhou.im.core.ChatContentView$** {
+    public <methods>;
+}
+-keep interface cn.dazhou.im.core.IMApi {
+    public <methods>;
+}
+-keep interface cn.dazhou.im.core.function.** {
+    public <methods>;
+}
