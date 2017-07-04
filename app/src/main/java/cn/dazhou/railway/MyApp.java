@@ -46,8 +46,8 @@ public class MyApp extends Application {
         String lastLogin = SharedPreferenceUtil.getString(this, Constants.LATEST_LOGIN_JID, "");
 
         MyApp.gServerIp = SharedPreferenceUtil.getString(this, Constants.SERVER_IP, Constants.SERVER_IP_DEFAULT);
-        MyApp.gServerPort = SharedPreferenceUtil.getInt(this, Constants.SERVER_PORT,  Constants.SERVER_PORT_DEFAULT);
-        MyApp.gServerTimeout = SharedPreferenceUtil.getInt(this, Constants.SERVER_CONNECT_TIMEOUT,  Constants.SERVER_CONNECT_TIMEOUT_DEFAULT);
+        MyApp.gServerPort = SharedPreferenceUtil.getInt(this, Constants.SERVER_PORT, Constants.SERVER_PORT_DEFAULT);
+        MyApp.gServerTimeout = SharedPreferenceUtil.getInt(this, Constants.SERVER_CONNECT_TIMEOUT, Constants.SERVER_CONNECT_TIMEOUT_DEFAULT);
 
         if (!"".equals(lastLogin)) {
             gCurrentUsername = lastLogin;
