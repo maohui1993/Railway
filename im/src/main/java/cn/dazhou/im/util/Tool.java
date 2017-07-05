@@ -67,7 +67,7 @@ public class Tool {
 
         Bitmap bmp = decodeSampledBitmapFromFile(path, maxWidth, maxHeight);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
         // 把压缩后的数据baos存放到ByteArrayInputStream中
         ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
         // 把ByteArrayInputStream数据生成图片
@@ -87,7 +87,7 @@ public class Tool {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         // 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
-        image.compress(Bitmap.CompressFormat.PNG, options, baos);
+        image.compress(Bitmap.CompressFormat.JPEG, options, baos);
         // 循环判断如果压缩后图片是否大于100kb,大于继续压缩
         while (baos.toByteArray().length / 1024 > size) {
             options -= 10;// 每次都减少10
@@ -122,7 +122,7 @@ public class Tool {
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         BitmapFactory.decodeFile(filename, options);
 
         // Calculate inSampleSize

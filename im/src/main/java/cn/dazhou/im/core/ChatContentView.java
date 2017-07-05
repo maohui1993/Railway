@@ -39,6 +39,7 @@ import cn.dazhou.im.adapter.ChatAdapter1;
 import cn.dazhou.im.adapter.CommonFragmentPagerAdapter;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.entity.FullImageInfo;
+import cn.dazhou.im.entity.ProcessEvent;
 import cn.dazhou.im.fragment.ChatEmotionFragment;
 import cn.dazhou.im.fragment.ChatFunctionFragment;
 import cn.dazhou.im.util.Constants;
@@ -223,6 +224,15 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         // 将光标移动到最新的消息处
         chatList.scrollToPosition(mAdapter.getCount() - 1);
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateMessage(ProcessEvent event) {
+        ChatMessageEntity message = new ChatMessageEntity();
+        message.setFilePath(event.getFilePath());
+        message.setFileProcess(event.getProcess());
+
+        mAdapter.update(message);
     }
 
     public OnSendListener getOnSendListener() {

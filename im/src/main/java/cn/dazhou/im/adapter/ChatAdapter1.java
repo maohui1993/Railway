@@ -2,6 +2,7 @@ package cn.dazhou.im.adapter;
 
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -44,6 +45,10 @@ public class ChatAdapter1 extends RecyclerArrayAdapter<ChatMessageEntity> {
         return viewHolder;
     }
 
+    public void OnBindViewHolder(BaseViewHolder holder, final int position){
+        super.OnBindViewHolder(holder, position);
+    }
+
     @Override
     public int getCount() {
         return super.getCount();
@@ -60,6 +65,17 @@ public class ChatAdapter1 extends RecyclerArrayAdapter<ChatMessageEntity> {
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
+    }
+
+    public void update(ChatMessageEntity object) {
+        int pos = getPosition(object);
+        if (pos == -1) {
+            pos = 0;
+        }
+        Log.i("FILE", "position = " + pos);
+        ChatMessageEntity goal = getItem(pos);
+        goal.setFileProcess(object.getFileProcess());
+        update(goal, pos);
     }
 
     public interface OnItemClickListener {

@@ -22,6 +22,7 @@ public class ChatMessageEntity {
     private String filePath;       // 传送的文件的path
     private int sendState;
     private Type dataType;         // 数据类型
+    private int fileProcess = 50;       // 文件传输进度
 
     public ChatMessageEntity() {
     }
@@ -171,6 +172,23 @@ public class ChatMessageEntity {
 
     public void setDataType(Type dataType) {
         this.dataType = dataType;
+    }
+
+    public int getFileProcess() {
+        return fileProcess;
+    }
+
+    public void setFileProcess(int fileProcess) {
+        this.fileProcess = fileProcess;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ChatMessageEntity) {
+            ChatMessageEntity e = (ChatMessageEntity) obj;
+            return filePath.equals(e.getFilePath());
+        }
+        return false;
     }
 
     public static class Builder {

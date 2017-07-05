@@ -122,7 +122,7 @@ public class ChatFunctionFragment extends BaseFragment {
                             return;
                         }
                         Bitmap bmp = Tool.createBitmapByPath(imageUri.getPath(), 300, 400);
-                        byte[] bytes = Tool.compressImage(bmp, 1024, 100);
+                        byte[] bytes = Tool.compressImage(bmp, 1024 * 2, 100);
                         ChatMessageEntity messageInfo = new ChatMessageEntity.Builder()
                                 .imageBytes(bytes)
                                 .imagePath(imageUri.getPath())
@@ -151,7 +151,7 @@ public class ChatFunctionFragment extends BaseFragment {
                         cursor.close();
 
                         Bitmap bmp = Tool.createBitmapByPath(picturePath, 300, 400);
-                        byte[] bytes = Tool.compressImage(bmp, 1024, 100);
+                        byte[] bytes = Tool.compressImage(bmp, 1024*2, 100);
                         ChatMessageEntity messageInfo = new ChatMessageEntity.Builder()
                                 .imageBytes(bytes)
                                 .imagePath(picturePath)

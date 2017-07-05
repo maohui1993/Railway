@@ -26,8 +26,8 @@
             android:id="@+id/scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="none"
-            android:fadingEdge="vertical">
+            android:fadingEdge="vertical"
+            android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -54,4 +54,12 @@
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:max="100"
+        android:progress="50" />
 </LinearLayout>

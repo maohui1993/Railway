@@ -58,6 +58,7 @@ import cn.dazhou.im.core.function.IConnection;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.entity.ExtraInfo;
 import cn.dazhou.im.entity.FriendRequest;
+import cn.dazhou.im.entity.ProcessEvent;
 import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.im.entity.UserExtensionElement;
 import cn.dazhou.im.util.OfflineMsgManager;
@@ -230,19 +231,21 @@ public class SmackImApiImpl implements IMApi {
             Jid toUser = p.getFrom();//提取完整的用户名称
             out = transfer.createOutgoingFileTransfer(toUser.asEntityFullJidOrThrow());
             out.sendFile(file, file.getName());
-            task(out);
+            task(out, filePath);
 
         } catch (SmackException e) {
             Log.i("TAG", "SmackImApiImpl#sendFile: 文件发送失败");
             throw e;
         }
+
     }
 
-    private void task(final OutgoingFileTransfer out) {
+    private void task(final OutgoingFileTransfer out, final String filePath) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 long startTime = -1;
+                ProcessEvent event = new ProcessEvent(filePath);
                 while (!out.isDone()){
                     if (out.getStatus().equals(FileTransfer.Status.error)){
                         Log.w("TAG", "文件传输失败：" + out.getError());
@@ -252,15 +255,19 @@ public class SmackImApiImpl implements IMApi {
                             startTime = System.currentTimeMillis();
                         }
                         progress *= 100;
+                        event.setProcess((int)progress);
+                        EventBus.getDefault().post(event);
                         Log.i("TAG", "status = "+ out.getStatus());
                         Log.i("TAG", "progress = "+ progress +"%");
                     }
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
+                event.setProcess(100);
+                EventBus.getDefault().post(event);
             }
         }).start();
     }

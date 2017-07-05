@@ -1,6 +1,7 @@
 package cn.dazhou.im.adapter.holder;
 
 import android.os.Handler;
+import android.os.Process;
 import android.text.TextPaint;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,7 +16,6 @@ import com.bumptech.glide.Glide;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 
 import java.io.File;
-import java.text.DecimalFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -140,6 +140,7 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
             String size = Utils.convertSpaceUnit(file.length());
             ((TextView)fileContainer.findViewById(R.id.file_name)).setText(name);
             ((TextView)fileContainer.findViewById(R.id.file_size)).setText(size);
+            ((ProgressBar)fileContainer.findViewById(R.id.progress)).setProgress(data.getFileProcess());
             fileContainer.findViewById(R.id.scroll).setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -149,7 +150,7 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
             });
 
             layoutParams.width = Utils.dp2px(getContext(), 250);
-            layoutParams.height = Utils.dp2px(getContext(), 70);
+            layoutParams.height = Utils.dp2px(getContext(), 75);
             chatItemLayoutContent.setLayoutParams(layoutParams);
         }
 
