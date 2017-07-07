@@ -71,6 +71,10 @@
                     android:visibility="gone" />
 
                 <include layout="@layout/file_format" android:id="@+id/file_format"/>
+
+                <include
+                    android:id="@+id/video"
+                    layout="@layout/video_content" />
             </cn.dazhou.im.widget.BubbleLinearLayout>
         </RelativeLayout>
 

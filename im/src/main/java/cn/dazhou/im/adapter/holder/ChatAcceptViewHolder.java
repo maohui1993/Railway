@@ -3,10 +3,13 @@ package cn.dazhou.im.adapter.holder;
 import android.os.Handler;
 import android.text.TextPaint;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,11 +25,15 @@ import cn.dazhou.im.R2;
 import cn.dazhou.im.adapter.ChatAdapter1;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
+import cn.dazhou.im.util.MediaPlayerUtils;
 import cn.dazhou.im.util.Utils;
 import cn.dazhou.im.widget.BubbleImageView;
 import cn.dazhou.im.widget.BubbleLinearLayout;
 import cn.dazhou.im.widget.GifTextView;
 import cn.dazhou.im.widget.SoundView;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 /**
  * Created by hooyee on 2017/5/10.
@@ -49,6 +56,12 @@ public class ChatAcceptViewHolder extends BaseViewHolder<ChatMessageEntity> {
     TextView chatItemVoiceTime;
     @BindView(R2.id.file_format)
     View fileContainer;
+    @BindView(R2.id.file_video)
+    ImageView video;
+    @BindView(R2.id.video_content)
+    SurfaceView surfaceView;
+    @BindView(R2.id.video_suspend)
+    ImageView suspend;
     private RelativeLayout.LayoutParams layoutParams;
 
     private ChatAdapter1.OnItemClickListener onItemClickListener;
@@ -131,8 +144,9 @@ public class ChatAcceptViewHolder extends BaseViewHolder<ChatMessageEntity> {
             File file = new File(data.getFilePath());
             String name = file.getName();
             String size = Utils.convertSpaceUnit(file.length());
-            ((TextView)fileContainer.findViewById(R.id.file_name)).setText(name);
-            ((TextView)fileContainer.findViewById(R.id.file_size)).setText(size);
+            ((TextView) fileContainer.findViewById(R.id.file_name)).setText(name);
+            ((TextView) fileContainer.findViewById(R.id.file_size)).setText(size);
+            ((ProgressBar) fileContainer.findViewById(R.id.progress)).setProgress(data.getFileProcess());
             fileContainer.findViewById(R.id.scroll).setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -142,7 +156,57 @@ public class ChatAcceptViewHolder extends BaseViewHolder<ChatMessageEntity> {
             });
 
             layoutParams.width = Utils.dp2px(getContext(), 250);
-            layoutParams.height = Utils.dp2px(getContext(), 70);
+            layoutParams.height = Utils.dp2px(getContext(), 75);
+            chatItemLayoutContent.setLayoutParams(layoutParams);
+        } else if (data.getDataType() == ChatMessageEntity.Type.video) {
+            chatItemVoice.setVisibility(GONE);
+            chatItemVoiceTime.setVisibility(GONE);
+            chatItemContentText.setVisibility(GONE);
+            chatItemContentImage.setVisibility(GONE);
+            chatItemLayoutContent.setVisibility(View.VISIBLE);
+            fileContainer.setVisibility(GONE);
+            video.setVisibility(View.VISIBLE);
+            video.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    surfaceView.setVisibility(View.VISIBLE);
+                    video.setVisibility(GONE);
+//                    video.setEnabled(false);
+//                    video.setFocusable(false);
+                    surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
+                        @Override
+                        public void surfaceCreated(final SurfaceHolder holder) {
+                            onItemClickListener.onVideoClick(data.getFilePath(), surfaceView);
+                            surfaceView.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+                        }
+
+                        @Override
+                        public void surfaceDestroyed(SurfaceHolder holder) {
+
+                        }
+                    });
+
+                }
+            });
+
+            surfaceView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    byte state = onItemClickListener.onSuspendOrRestart();
+                    if (state == MediaPlayerUtils.PLAYING) {
+                        suspend.setVisibility(GONE);
+                    } else {
+                        suspend.setVisibility(VISIBLE);
+                    }
+                }
+            });
+            layoutParams.width = Utils.dp2px(getContext(), 200);
+            layoutParams.height = Utils.dp2px(getContext(), 150);
             chatItemLayoutContent.setLayoutParams(layoutParams);
         }
     }

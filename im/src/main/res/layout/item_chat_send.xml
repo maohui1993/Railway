@@ -81,32 +81,9 @@
                     layout="@layout/file_format"
                     android:visibility="gone" />
 
-                <ImageView
-                    android:id="@+id/file_video"
-                    android:layout_width="200dp"
-                    android:layout_height="150dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/video"
-                    android:visibility="gone" />
-
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <SurfaceView
-                        android:id="@+id/video_content"
-                        android:layout_width="200dp"
-                        android:layout_height="150dp"
-                        android:visibility="gone" />
-                    <ImageView
-                        android:id="@+id/video_suspend"
-                        android:src="@drawable/suspend"
-                        android:visibility="gone"
-                        android:layout_gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </FrameLayout>
-
+                <include
+                    android:id="@+id/video"
+                    layout="@layout/video_content" />
             </cn.dazhou.im.widget.BubbleLinearLayout>
         </RelativeLayout>
 

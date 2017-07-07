@@ -22,7 +22,7 @@ public class ChatMessageEntity {
     private String filePath;       // 传送的文件的path
     private int sendState;
     private Type dataType;         // 数据类型
-    private int fileProcess = 50;       // 文件传输进度
+    private int fileProcess = 100;       // 文件传输进度
 
     public ChatMessageEntity() {
     }

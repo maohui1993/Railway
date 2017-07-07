@@ -35,8 +35,10 @@ import java.util.TimerTask;
 
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ChatMessageEntity;
+import cn.dazhou.im.entity.ProcessEvent;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.ImageUtil;
+import cn.dazhou.im.util.JudgeMultiMediaType;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.chat.ChatActivity;
 import cn.dazhou.railway.im.db.ChatMessageModel;
@@ -233,7 +235,7 @@ public class IMChatService extends Service {
      * 文件接收监听器
      */
     FileTransferListener fileTransferListener = new FileTransferListener() {
-
+        JudgeMultiMediaType judgeMultiMediaType = new JudgeMultiMediaType();
         @Override
         public void fileTransferRequest(FileTransferRequest request) {
             //每次有文件发送过来都会调用些方法
@@ -249,30 +251,38 @@ public class IMChatService extends Service {
                 final File file = new File(dir, request.getFileName());
                 inTransfer.recieveFile(file);
                 String jid = request.getRequestor().toString().split(cn.dazhou.railway.config.Constants.JID_SEPARATOR)[0];
+
+                int fileType = judgeMultiMediaType.getMediaFileType(file.getPath());
+                ChatMessageEntity.Type type = judgeMultiMediaType.isVideoFile(fileType) ? ChatMessageEntity.Type.video : ChatMessageEntity.Type.file;
+
                 ChatMessageEntity chatMessage = new ChatMessageEntity.Builder()
                         .jid(jid)
                         .filePath(file.getAbsolutePath())
-                        .dataType(ChatMessageEntity.Type.file)
+                        .dataType(type)
                         .type(Constants.CHAT_ITEM_TYPE_LEFT)
                         .build();
+                ChatMessageModel chatMessageModel = ChatMessageModel.newInstances(chatMessage);
+                chatMessageModel.save();
                 if (checkJid(jid)) {
                     // 统一交由ChatContentView#showMessage中展示
                     EventBus.getDefault().post(chatMessage);
                 } else {
-                    sendNotification(chatMessage, chatMessage.getJid());
+                    sendNotification(chatMessage, chatMessageModel.getJid());
                 }
                 //如果要时时获取文件接收的状态必须在线程中监听，如果在当前线程监听文件状态会导致一下接收为0
                 new Thread() {
                     @Override
                     public void run() {
                         long startTime = System.currentTimeMillis();
+                        ProcessEvent event = new ProcessEvent(file.getAbsolutePath());
                         while (!inTransfer.isDone()) {
                             if (inTransfer.getStatus().equals(FileTransfer.Status.error)) {
                                 Log.w("TAG", "error: " + inTransfer.getError());
                             } else {
                                 double progress = inTransfer.getProgress();
                                 progress *= 100;
-                                Log.i("TAG", "status=" + inTransfer.getStatus());
+                                event.setProcess((int)progress);
+                                EventBus.getDefault().post(event);
                                 Log.i("TAG", "progress=" + progress + "%");
                             }
                             try {
@@ -281,6 +291,8 @@ public class IMChatService extends Service {
                                 e.printStackTrace();
                             }
                         }
+                        event.setProcess(100);
+                        EventBus.getDefault().post(event);
                         fileScan(file);
                         Log.i("TAG", "used " + ((System.currentTimeMillis() - startTime) / 1000) + " seconds  ");
                     }

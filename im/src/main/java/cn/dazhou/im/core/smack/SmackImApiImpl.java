@@ -165,6 +165,7 @@ public class SmackImApiImpl implements IMApi {
                 String msgJson = ImageUtil.toJSON(msg);
                 mChat.send(msgJson);
                 break;
+            case video:
             case file:
                 sendFile(jid, msg.getFilePath());
                 break;

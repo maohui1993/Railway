@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
@@ -66,6 +67,8 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
     SurfaceView surfaceView;
     @BindView(R2.id.video_suspend)
     ImageView suspend;
+    @BindView(R2.id.progress_video)
+    ProgressBar videoProgress;
     private RelativeLayout.LayoutParams layoutParams;
 
     private ChatAdapter1.OnItemClickListener onItemClickListener;
@@ -175,13 +178,21 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
             chatItemLayoutContent.setVisibility(View.VISIBLE);
             fileContainer.setVisibility(GONE);
             video.setVisibility(View.VISIBLE);
+            videoProgress.setVisibility(VISIBLE);
+            if (data.getFileProcess() == videoProgress.getMax()) {
+//                videoProgress.setVisibility(GONE);
+            } else {
+                videoProgress.setProgress(data.getFileProcess());
+            }
             video.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(videoProgress.getProgress() != videoProgress.getMax()) {
+                        Toast.makeText(getContext(), "接受中···", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     surfaceView.setVisibility(View.VISIBLE);
                     video.setVisibility(GONE);
-//                    video.setEnabled(false);
-//                    video.setFocusable(false);
                     surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
                         @Override
                         public void surfaceCreated(final SurfaceHolder holder) {

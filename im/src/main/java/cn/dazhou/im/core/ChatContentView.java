@@ -237,6 +237,10 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
 
     }
 
+    /**
+     * 更新文件下载进度
+     * @param event
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateMessage(ProcessEvent event) {
         ChatMessageEntity message = new ChatMessageEntity();
