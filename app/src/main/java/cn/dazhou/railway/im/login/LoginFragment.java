@@ -80,11 +80,22 @@ public class LoginFragment extends Fragment implements LoginContract.View {
         switch (v.getId()) {
             case R.id.btn_login :
                 // Mode.ENDLESS情况下，progress大于0才会启动动画效果
-                mLoginPbt.setProgress(1);
-                changeEditEnable();
-                mPresenter.login(mUsernameEdit.getText().toString(), mPasswordEdit.getText().toString());
+                if (checkNotNull(mUsernameEdit.getText().toString()) && checkNotNull(mPasswordEdit.getText().toString())) {
+                    mLoginPbt.setProgress(1);
+                    changeEditEnable();
+                    mPresenter.login(mUsernameEdit.getText().toString(), mPasswordEdit.getText().toString());
+                } else {
+                    Toast.makeText(getContext(), "请输入用户名和密码", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
+    }
+
+    private boolean checkNotNull(String s) {
+        if (s == null || "".equals(s.trim())) {
+            return false;
+        }
+        return true;
     }
 
     /**

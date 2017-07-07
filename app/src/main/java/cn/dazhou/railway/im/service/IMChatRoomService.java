@@ -1,13 +1,11 @@
 package cn.dazhou.railway.im.service;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Message;
@@ -21,7 +19,7 @@ import java.util.Set;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
-import cn.dazhou.im.util.Tool;
+import cn.dazhou.im.util.ImageUtil;
 import cn.dazhou.railway.im.db.ChatMessageModel;
 import cn.dazhou.railway.util.LogUtil;
 
@@ -56,7 +54,7 @@ public class IMChatRoomService extends Service {
     MessageListener messageListener = new MessageListener() {
         @Override
         public void processMessage(Message message) {
-            ChatMessageEntity chatMessageEntity = (ChatMessageEntity) Tool.parseJSON(message.getBody(), ChatMessageEntity.class);
+            ChatMessageEntity chatMessageEntity = (ChatMessageEntity) ImageUtil.parseJSON(message.getBody(), ChatMessageEntity.class);
             // 标志为接收到的消息
             chatMessageEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
             String fromUser = message.getFrom().getLocalpartOrNull().toString().split("@")[0];
@@ -64,9 +62,9 @@ public class IMChatRoomService extends Service {
             String voicePath = null;
             // 语音与图片不能同时发送
             if (chatMessageEntity.getImageBytes() != null) {
-                imagePath = Tool.saveByteToLocalFile(chatMessageEntity.getImageBytes(), System.currentTimeMillis() + ".png");
+                imagePath = ImageUtil.saveByteToLocalFile(chatMessageEntity.getImageBytes(), System.currentTimeMillis() + ".png");
             } else if (chatMessageEntity.getVoiceBytes() != null) {
-                voicePath = Tool.saveByteToLocalFile(chatMessageEntity.getVoiceBytes(), System.currentTimeMillis() + ".aar");
+                voicePath = ImageUtil.saveByteToLocalFile(chatMessageEntity.getVoiceBytes(), System.currentTimeMillis() + ".aar");
             }
             ChatMessageModel chatMessageModel = new ChatMessageModel.Builder()
                     .content(chatMessageEntity.getContent())

@@ -19,6 +19,11 @@ import java.util.regex.Pattern;
  * 邮箱：rance935@163.com
  */
 public class Utils {
+
+    public static boolean checkNotNull(Object obj) {
+        return obj == null ? false : true;
+    }
+
     /**
      * dp转dip
      *

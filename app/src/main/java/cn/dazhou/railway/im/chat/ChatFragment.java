@@ -66,7 +66,7 @@ public class ChatFragment extends Fragment implements ChatContract.View {
 
     @Override
     public void onDestroy() {
-        mChatContentView.unregister();
+        mChatContentView.destroy();
         super.onDestroy();
     }
 }

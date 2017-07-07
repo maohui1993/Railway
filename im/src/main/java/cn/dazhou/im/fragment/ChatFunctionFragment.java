@@ -26,7 +26,8 @@ import cn.dazhou.im.R2;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.FileUtil;
-import cn.dazhou.im.util.Tool;
+import cn.dazhou.im.util.JudgeMultiMediaType;
+import cn.dazhou.im.util.ImageUtil;
 
 /**
  * 作者：Rance on 2016/12/13 16:01
@@ -41,6 +42,7 @@ public class ChatFunctionFragment extends BaseFragment {
     private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE2 = 7;
     private File output;
     private Uri imageUri;
+    private JudgeMultiMediaType mJudgeMultiMediaType = new JudgeMultiMediaType();
 
     @Nullable
     @Override
@@ -121,8 +123,8 @@ public class ChatFunctionFragment extends BaseFragment {
                         if (imageUri == null) {
                             return;
                         }
-                        Bitmap bmp = Tool.createBitmapByPath(imageUri.getPath(), 300, 400);
-                        byte[] bytes = Tool.compressImage(bmp, 1024 * 2, 100);
+                        Bitmap bmp = ImageUtil.createBitmapByPath(imageUri.getPath(), 300, 400);
+                        byte[] bytes = ImageUtil.compressImage(bmp, 1024 * 2, 100);
                         ChatMessageEntity messageInfo = new ChatMessageEntity.Builder()
                                 .imageBytes(bytes)
                                 .imagePath(imageUri.getPath())
@@ -150,8 +152,8 @@ public class ChatFunctionFragment extends BaseFragment {
                         String picturePath = cursor.getString(columnIndex);
                         cursor.close();
 
-                        Bitmap bmp = Tool.createBitmapByPath(picturePath, 300, 400);
-                        byte[] bytes = Tool.compressImage(bmp, 1024*2, 100);
+                        Bitmap bmp = ImageUtil.createBitmapByPath(picturePath, 300, 400);
+                        byte[] bytes = ImageUtil.compressImage(bmp, 1024*2, 100);
                         ChatMessageEntity messageInfo = new ChatMessageEntity.Builder()
                                 .imageBytes(bytes)
                                 .imagePath(picturePath)
@@ -177,11 +179,16 @@ public class ChatFunctionFragment extends BaseFragment {
                 }
                 Uri uri = data.getData();
                 String filePath = FileUtil.getPathByUri4kitkat(getContext(), uri);
+                int fileType = mJudgeMultiMediaType.getMediaFileType(filePath);
+                ChatMessageEntity.Type type = mJudgeMultiMediaType.isVideoFile(fileType) ? ChatMessageEntity.Type.video : ChatMessageEntity.Type.file;
+
+                Log.i("FILE", "type = " + type);
+
                 ChatMessageEntity messageInfo = new ChatMessageEntity.Builder()
                         .filePath(filePath)
                         // 标记为自己发送的消息，显示在右边
                         .type(Constants.CHAT_ITEM_TYPE_RIGHT)
-                        .dataType(ChatMessageEntity.Type.file)
+                        .dataType(type)
                         .build();
                 EventBus.getDefault().post(messageInfo);
                 break;

@@ -27,7 +27,8 @@ public class ChatMessageEntity {
     public ChatMessageEntity() {
     }
 
-    public ChatMessageEntity(String imagePath, String voicePath, String content, String fromJid, String toJid, boolean state, int type, long date, byte[] imageBytes, byte[] voiceBytes, long voiceTime, String jid, String roomJid, String fileUri, int sendState, Type dataType) {
+    public ChatMessageEntity(String imagePath, String voicePath, String content, String fromJid, String toJid, boolean state, int type, long date,
+                             byte[] imageBytes, byte[] voiceBytes, long voiceTime, String jid, String roomJid, String fileUri, int sendState, Type dataType) {
         this.imagePath = imagePath;
         this.voicePath = voicePath;
         this.content = content;
@@ -299,6 +300,7 @@ public class ChatMessageEntity {
         file,
         text,
         voice,
-        picture
+        picture,
+        video
     }
 }

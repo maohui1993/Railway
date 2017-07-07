@@ -3,6 +3,8 @@ package cn.dazhou.im.adapter;
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -45,10 +47,6 @@ public class ChatAdapter1 extends RecyclerArrayAdapter<ChatMessageEntity> {
         return viewHolder;
     }
 
-    public void OnBindViewHolder(BaseViewHolder holder, final int position){
-        super.OnBindViewHolder(holder, position);
-    }
-
     @Override
     public int getCount() {
         return super.getCount();
@@ -84,5 +82,9 @@ public class ChatAdapter1 extends RecyclerArrayAdapter<ChatMessageEntity> {
         void onImageClick(View view, ChatMessageEntity message);
 
         void onVoiceClick(SoundView soundView);
+
+        void onVideoClick(String fileUri, SurfaceView surfaceView);
+
+        byte onSuspendOrRestart();
     }
 }

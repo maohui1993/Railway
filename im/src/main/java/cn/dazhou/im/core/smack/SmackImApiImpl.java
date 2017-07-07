@@ -36,7 +36,6 @@ import org.jivesoftware.smackx.xdata.Form;
 import org.jivesoftware.smackx.xdata.FormField;
 import org.jxmpp.jid.DomainBareJid;
 import org.jxmpp.jid.EntityBareJid;
-import org.jxmpp.jid.EntityFullJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.jid.parts.Resourcepart;
@@ -49,9 +48,7 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import cn.dazhou.im.core.IMApi;
 import cn.dazhou.im.core.function.IConnection;
@@ -62,7 +59,7 @@ import cn.dazhou.im.entity.ProcessEvent;
 import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.im.entity.UserExtensionElement;
 import cn.dazhou.im.util.OfflineMsgManager;
-import cn.dazhou.im.util.Tool;
+import cn.dazhou.im.util.ImageUtil;
 
 /**
  * Created by hooyee on 2017/5/5.
@@ -165,7 +162,7 @@ public class SmackImApiImpl implements IMApi {
             case voice:
             case picture:
                 mChat = mChatManager.chatWith(id);
-                String msgJson = Tool.toJSON(msg);
+                String msgJson = ImageUtil.toJSON(msg);
                 mChat.send(msgJson);
                 break;
             case file:
@@ -187,7 +184,7 @@ public class SmackImApiImpl implements IMApi {
         if (mChat == null) {
             return;
         }
-        String msgJson = Tool.toJSON(msg);
+        String msgJson = ImageUtil.toJSON(msg);
         mChat.send(msgJson);
     }
 

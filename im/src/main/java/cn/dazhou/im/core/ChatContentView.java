@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,6 +14,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +31,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +50,7 @@ import cn.dazhou.im.fragment.ChatFunctionFragment;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.GlobalOnItemClickManagerUtils;
 import cn.dazhou.im.util.MediaManager;
+import cn.dazhou.im.util.MediaPlayerUtils;
 import cn.dazhou.im.widget.EmotionInputDetector;
 import cn.dazhou.im.widget.NoScrollViewPager;
 import cn.dazhou.im.widget.SoundView;
@@ -93,6 +99,9 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     AnimationDrawable animationDrawable = null;
     private ImageView animView;
 
+    private MediaPlayerUtils mMediaPlayer;
+
+
     public ChatContentView(Context context) {
         this(context, null);
     }
@@ -110,14 +119,16 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         this.mOnImageClickListener = onImageClickListener;
     }
 
-    public void unregister() {
+    public void destroy() {
         EventBus.getDefault().unregister(this);
+        mMediaPlayer.release();
     }
 
     private void init(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.chat_content_view, this);
         ButterKnife.bind(this);
+        mMediaPlayer = new MediaPlayerUtils(context);
 
         fragments = new ArrayList<>();
         chatEmotionFragment = new ChatEmotionFragment();
@@ -290,6 +301,21 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
                 animView.setImageResource(res);
             }
         });
+    }
+
+    @Override
+    public void onVideoClick(String fileUri, SurfaceView surfaceView) {
+        Uri uri = Uri.fromFile(new File(fileUri));
+        try {
+            mMediaPlayer.startPlay(uri, surfaceView);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public byte onSuspendOrRestart() {
+        return mMediaPlayer.suspendOrRestart();
     }
 
     public boolean interceptBackPress() {

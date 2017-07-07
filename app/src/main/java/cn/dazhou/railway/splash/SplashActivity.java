@@ -10,16 +10,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import cn.dazhou.im.util.Tool;
+import cn.dazhou.im.util.ImageUtil;
 import cn.dazhou.maputil.MapLauncher;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
-import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.config.SettingActivity;
 import cn.dazhou.railway.im.broadcast.NetworkReceiver;
 import cn.dazhou.railway.util.ActivityUtils;
 import cn.dazhou.railway.util.LogUtil;
-import cn.dazhou.railway.util.SharedPreferenceUtil;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -31,7 +29,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash1);
         MapLauncher.init(getApplicationContext());
-        Tool.checkPermission(this,
+        ImageUtil.checkPermission(this,
                 new String[] {
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE,

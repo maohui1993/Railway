@@ -9,10 +9,10 @@
     <TextView
         android:id="@+id/chat_item_date"
         style="@style/text_body"
-        android:layout_gravity="center_horizontal"
-        android:visibility="gone"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -62,33 +62,61 @@
                 <cn.dazhou.im.widget.GifTextView
                     android:id="@+id/chat_item_content_text"
                     style="@style/text_subhead_black"
-                    android:visibility="gone"
                     android:layout_marginRight="@dimen/content_horizontal_margin"
                     android:padding="@dimen/content_vertical_margin"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
 
                 <cn.dazhou.im.widget.SoundView
                     android:id="@+id/chat_item_voice"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:src="@mipmap/icon_voice_right3"
                     android:scaleType="fitCenter"
+                    android:src="@mipmap/icon_voice_right3"
                     android:visibility="gone" />
 
-                <include android:id="@+id/file_format"
-                    android:visibility="gone"
-                    layout="@layout/file_format" />
+                <include
+                    android:id="@+id/file_format"
+                    layout="@layout/file_format"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/file_video"
+                    android:layout_width="200dp"
+                    android:layout_height="150dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/video"
+                    android:visibility="gone" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <SurfaceView
+                        android:id="@+id/video_content"
+                        android:layout_width="200dp"
+                        android:layout_height="150dp"
+                        android:visibility="gone" />
+                    <ImageView
+                        android:id="@+id/video_suspend"
+                        android:src="@drawable/suspend"
+                        android:visibility="gone"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </FrameLayout>
+
             </cn.dazhou.im.widget.BubbleLinearLayout>
         </RelativeLayout>
 
         <TextView
             android:id="@+id/chat_item_voice_time"
             style="@style/text_body"
-            android:visibility="gone"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/content_vertical_margin"
-            android:layout_toLeftOf="@+id/chat_item_layout" />
+            android:layout_toLeftOf="@+id/chat_item_layout"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/chat_item_fail"
@@ -97,8 +125,8 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/content_vertical_margin"
             android:layout_toLeftOf="@+id/chat_item_voice_time"
-            android:src="@drawable/msg_state_fail_resend"
             android:focusable="false"
+            android:src="@drawable/msg_state_fail_resend"
             android:visibility="gone" />
 
         <ProgressBar

@@ -36,7 +36,7 @@ import java.util.TimerTask;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
-import cn.dazhou.im.util.Tool;
+import cn.dazhou.im.util.ImageUtil;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.chat.ChatActivity;
 import cn.dazhou.railway.im.db.ChatMessageModel;
@@ -159,7 +159,7 @@ public class IMChatService extends Service {
         @Override
         public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
             Log.i("TAG", message.getBody());
-            ChatMessageEntity chatMessageEntity = (ChatMessageEntity) Tool.parseJSON(message.getBody(), ChatMessageEntity.class);
+            ChatMessageEntity chatMessageEntity = (ChatMessageEntity) ImageUtil.parseJSON(message.getBody(), ChatMessageEntity.class);
             // 标志为接收到的消息
             chatMessageEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
             chatMessageEntity.setDate(System.currentTimeMillis());
@@ -169,9 +169,9 @@ public class IMChatService extends Service {
             String voicePath = null;
             // 语音与图片不能同时发送
             if (chatMessageEntity.getImageBytes() != null) {
-                imagePath = Tool.saveByteToLocalFile(chatMessageEntity.getImageBytes(), System.currentTimeMillis() + ".png");
+                imagePath = ImageUtil.saveByteToLocalFile(chatMessageEntity.getImageBytes(), System.currentTimeMillis() + ".png");
             } else if (chatMessageEntity.getVoiceBytes() != null) {
-                voicePath = Tool.saveByteToLocalFile(chatMessageEntity.getVoiceBytes(), System.currentTimeMillis() + ".aar");
+                voicePath = ImageUtil.saveByteToLocalFile(chatMessageEntity.getVoiceBytes(), System.currentTimeMillis() + ".aar");
             }
             ChatMessageModel chatMessageModel = new ChatMessageModel.Builder()
                     .content(chatMessageEntity.getContent())

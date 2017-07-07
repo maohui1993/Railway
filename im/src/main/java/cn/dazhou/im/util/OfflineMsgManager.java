@@ -65,7 +65,7 @@ public class OfflineMsgManager {
 
                     String from = message.getFrom().toString().split("/")[0];
                     message.setSubject(from);
-                    ChatMessageEntity chatMessageEntity = (ChatMessageEntity) Tool.parseJSON(message.getBody(), ChatMessageEntity.class);
+                    ChatMessageEntity chatMessageEntity = (ChatMessageEntity) ImageUtil.parseJSON(message.getBody(), ChatMessageEntity.class);
                     // 标志为接收到的消息
                     chatMessageEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
                     chatMessageEntity.setFromJid(from);

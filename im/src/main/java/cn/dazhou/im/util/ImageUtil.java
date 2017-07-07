@@ -22,7 +22,7 @@ import java.io.IOException;
  * Created by hooyee on 2017/5/8.
  */
 
-public class Tool {
+public class ImageUtil {
     private static Gson gson;
 
     public static Object parseJSON(String jsonString, Class classType) {
