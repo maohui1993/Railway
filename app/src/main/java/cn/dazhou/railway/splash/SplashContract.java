@@ -20,5 +20,6 @@ public interface SplashContract {
         DrawerLayout getDrawerLayout();
         void changeText();
         boolean canBack();
+        void toSetting();
     }
 }

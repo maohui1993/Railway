@@ -23,6 +23,7 @@ public class SplashActivity extends AppCompatActivity {
 
     NetworkReceiver receiver;
     SplashPresenter mPresenter;
+    SplashFragment mSplashFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class SplashActivity extends AppCompatActivity {
         LogUtil.init();
         MyApp.addActivity(this);
 
-        SplashFragment mSplashFragment = (SplashFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+        mSplashFragment = (SplashFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
         if (mSplashFragment == null) {
             // Create the fragment
             mSplashFragment = SplashFragment.newInstance();
@@ -86,7 +87,8 @@ public class SplashActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_setting:
-                SettingActivity.startItself(this);
+//                SettingActivity.startItself(this);
+                mSplashFragment.toSetting();
                 break;
             case R.id.menu_barcode:
                 mPresenter.parseQRcode();

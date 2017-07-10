@@ -27,7 +27,7 @@ import cn.dazhou.railway.R;
 import cn.dazhou.railway.splash.functions.BaseFragment;
 import cn.dazhou.railway.splash.functions.contact.ContactListFragment;
 import cn.dazhou.railway.splash.functions.HomeFragment;
-import cn.dazhou.railway.splash.functions.SettingFragment;
+import cn.dazhou.railway.splash.functions.setting.SettingFragment;
 import cn.dazhou.railway.splash.functions.WorkFragment;
 import cn.dazhou.railway.im.friend.info.MyselfInfoActivity;
 
@@ -154,5 +154,10 @@ public class SplashFragment extends Fragment implements SplashContract.View {
         } else {
             return true;
         }
+    }
+
+    @Override
+    public void toSetting() {
+        mViewPager.setCurrentItem(3, false);
     }
 }

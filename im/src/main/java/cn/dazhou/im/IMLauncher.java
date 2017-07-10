@@ -70,6 +70,9 @@ public final class IMLauncher {
     }
 
     public static boolean logout() {
+        if(mImApi == null) {
+            return true;
+        }
         mImApi.disconnect();
         return true;
     }
