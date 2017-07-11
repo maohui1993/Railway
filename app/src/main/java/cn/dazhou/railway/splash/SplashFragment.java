@@ -126,6 +126,9 @@ public class SplashFragment extends Fragment implements SplashContract.View {
             @Override
             public void onClick(View v) {
                 MyselfInfoActivity.startItself(getContext());
+                if (mDrawer.isDrawerOpen(GravityCompat.START)) {
+                    mDrawer.closeDrawer(GravityCompat.START);
+                }
             }
         });
         navigationView.setNavigationItemSelectedListener(mPresenter);
