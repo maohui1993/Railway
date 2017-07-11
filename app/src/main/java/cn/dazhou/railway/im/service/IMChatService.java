@@ -1,5 +1,6 @@
 package cn.dazhou.railway.im.service;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -183,7 +184,7 @@ public class IMChatService extends Service {
                     .voiceTime(chatMessageEntity.getVoiceTime())
                     .imagePath(imagePath)
                     .type(chatMessageEntity.getType())
-                    .jid(fromUser.toString())
+                    .jid(fromUser)
                     .date(System.currentTimeMillis())
                     .dataType(chatMessageEntity.getDataType())
                     .build();
@@ -215,6 +216,7 @@ public class IMChatService extends Service {
                 context).setSmallIcon(R.drawable.message)
                 .setContentTitle(getResources().getString(R.string.new_message))
                 .setContentText(msg.getContent())
+                .setDefaults(Notification.DEFAULT_ALL)
                 .setOngoing(true);
         mBuilder.setTicker("一个新来的消息");//第一次提示消息的时候显示在通知栏上
         mBuilder.setAutoCancel(true);//自己维护通知的消失

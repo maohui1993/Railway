@@ -104,8 +104,8 @@ public class MyselfInfoActivity extends AppCompatActivity {
                 MyApp.gCurrentUsername = "";
                 SharedPreferenceUtil.putString(this, Constants.LATEST_LOGIN_JID, MyApp.gCurrentUsername);
                 IMUtil.stopServiceWhenLogout(this);
-                LoginActivity.startItself(this);
                 IMLauncher.disconnect();
+                LoginActivity.startItself(this);
                 finish();
                 break;
             case R.id.qr_code:

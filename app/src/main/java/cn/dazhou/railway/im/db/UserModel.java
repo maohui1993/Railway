@@ -9,6 +9,8 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.List;
 
+import cn.dazhou.im.entity.ExtraInfo;
+
 /**
  * Created by hooyee on 2017/5/18.
  */
@@ -94,4 +96,5 @@ public class UserModel extends BaseModel{
     public void setTel(String tel) {
         this.tel = tel;
     }
+
 }

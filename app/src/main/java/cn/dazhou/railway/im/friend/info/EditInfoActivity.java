@@ -10,11 +10,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ExtraInfo;
+import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 
@@ -44,29 +46,32 @@ public class EditInfoActivity extends AppCompatActivity {
                 switch (info.getTitle()) {
                     case TITLE_NAME :
                         info.setName(mEdit.getText().toString());
+                        MyApp.gCurrentUser.setNickName(info.getName());
                         break;
                     case TITLE_ADDR :
                         info.setAddr(mEdit.getText().toString());
                         break;
                     case TITLE_TEL :
                         info.setTel(mEdit.getText().toString());
+                        MyApp.gCurrentUser.setTel(info.getTel());
                         break;
                     default:
                         break;
                 }
                 try {
                     IMLauncher.saveVCard(info);
+                    MyApp.gCurrentUser.save();
+                    finish();
                 } catch (Exception e) {
                     Log.i("TAG", "保存个人信息失败");
                     Log.i("TAG", "异常信息：" + e.getMessage());
+                    Toast.makeText(EditInfoActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
                 return false;
             }
         });
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -75,13 +75,13 @@ public class LoginPresenter implements LoginContract.Presenter{
                                 .querySingle();
 
                         if (userModel == null) {
-                            ExtraInfo user = IMLauncher.getVCard(StringUtil.getRealJid(username));
+                            ExtraInfo info = IMLauncher.getVCard(StringUtil.getRealJid(username));
                             userModel = new UserModel();
                             userModel.setUsername(username);
                             userModel.setPassword(password);
                             userModel.setFirstLogin(true);
-                            userModel.setNickName(user.getName());
-                            userModel.setTel(user.getTel());
+                            userModel.setNickName(info.getName());
+                            userModel.setTel(info.getTel());
                             userModel.save();
                             IMUtil.updateFriendFromServer(userModel);
                         }

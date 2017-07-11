@@ -6,7 +6,7 @@ import android.os.Environment;
  * Created by hooyee on 2017/5/11.
  */
 
-public class Constants {
+public final class Constants {
     public static final String SERVER_IP = "server_ip";
     public static final String SERVER_PORT = "server_port";
     public static final String SERVER_CONNECT_TIMEOUT = "server_timeout";

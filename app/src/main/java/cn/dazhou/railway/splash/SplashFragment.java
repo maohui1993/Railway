@@ -140,6 +140,7 @@ public class SplashFragment extends Fragment implements SplashContract.View {
     public void changeText() {
         if (MyApp.gCurrentUser != null) {
             TextView mNameTx = (TextView) mHeaderLayout.findViewById(R.id.tx_name);
+//            mNameTx.setText(MyApp.gCurrentUser.getNickName());
             mNameTx.setText(MyApp.gCurrentUser.getNickName());
             TextView mJidTx = (TextView) mHeaderLayout.findViewById(R.id.tx_jid);
             mJidTx.setText(MyApp.gCurrentUser.getUsername());

@@ -211,8 +211,7 @@ public class SmackImApiImpl implements IMApi {
         return info;
     }
 
-    @Override
-    public void sendFile(String jid, String filePath) throws Exception {
+    private void sendFile(String jid, String filePath) throws Exception {
         File file = new File(filePath);
         if (!file.exists()) {
             return;
@@ -229,7 +228,7 @@ public class SmackImApiImpl implements IMApi {
             Jid toUser = p.getFrom();//提取完整的用户名称
             out = transfer.createOutgoingFileTransfer(toUser.asEntityFullJidIfPossible());
             out.sendFile(file, file.getName());
-            task(out, filePath);
+            transferFileTask(out, filePath);
 
         } catch (SmackException e) {
             Log.i("TAG", "SmackImApiImpl#sendFile: 文件发送失败");
@@ -238,7 +237,7 @@ public class SmackImApiImpl implements IMApi {
 
     }
 
-    private void task(final OutgoingFileTransfer out, final String filePath) {
+    private void transferFileTask(final OutgoingFileTransfer out, final String filePath) {
         new Thread(new Runnable() {
             @Override
             public void run() {
