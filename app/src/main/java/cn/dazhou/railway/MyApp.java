@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Build;
 import android.os.StrictMode;
+import android.util.Log;
 
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
@@ -15,6 +16,7 @@ import java.util.List;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.login.LoginActivity;
 import cn.dazhou.railway.im.db.UserModel;
+import cn.dazhou.railway.splash.SplashActivity;
 import cn.dazhou.railway.util.IMUtil;
 import cn.dazhou.railway.util.SharedPreferenceUtil;
 
@@ -33,6 +35,7 @@ public class MyApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         FlowManager.init(new FlowConfig.Builder(getApplicationContext()).build());
         ZXingLibrary.initDisplayOpinion(this);
 
@@ -65,7 +68,7 @@ public class MyApp extends Application {
                     IMUtil.startServiceWhenLogin(MyApp.this);
                 }
             }).start();
-
+            SplashActivity.startItself(this);
         } else {
             LoginActivity.startItself(this);
         }

@@ -1,6 +1,7 @@
 package cn.dazhou.railway.splash.functions.setting;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -8,8 +9,10 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Toast;
 
+import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
+import cn.dazhou.railway.util.IMUtil;
 import cn.dazhou.railway.util.SharedPreferenceUtil;
 
 /**
@@ -38,13 +41,14 @@ public class SettingPresenter implements SettingContract.Presenter {
                         && mView.getPort().equals(String.valueOf(defaultPort))) {
 
                 } else {
-                    SharedPreferenceUtil.putString(mContext, Constants.SERVER_IP, mView.getIp());
                     try {
                         SharedPreferenceUtil.putInt(mContext, Constants.SERVER_PORT, Integer.valueOf(mView.getPort()));
+                        SharedPreferenceUtil.putString(mContext, Constants.SERVER_IP, mView.getIp());
                     } catch (Exception e) {
                         Toast.makeText(mContext, "请输入正确的端口号", Toast.LENGTH_SHORT).show();
                         return;
                     }
+                    IMUtil.logout(mContext);
                     Toast.makeText(mContext, "服务器配置已修改，应用即将重启", Toast.LENGTH_SHORT).show();
                     needReboot = true;
                     mHandler.postDelayed(new Runnable() {

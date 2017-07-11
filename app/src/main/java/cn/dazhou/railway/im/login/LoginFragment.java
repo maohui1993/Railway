@@ -56,6 +56,7 @@ public class LoginFragment extends Fragment implements LoginContract.View {
         IMUtil.startServiceWhenLogin(getContext());
         SharedPreferenceUtil.putString(getContext(), Constants.LATEST_LOGIN_JID, MyApp.gCurrentUsername);
         SplashActivity.startItself(getContext());
+        getActivity().finish();
     }
 
     @Override

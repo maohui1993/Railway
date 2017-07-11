@@ -46,6 +46,7 @@
             android:id="@+id/edit_server_port"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
+            android:digits="0123456789"
             android:paddingLeft="@dimen/content_horizontal_margin"
             android:paddingRight="@dimen/content_horizontal_margin" />
     </LinearLayout>

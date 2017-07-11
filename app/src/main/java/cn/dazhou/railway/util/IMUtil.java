@@ -76,6 +76,15 @@ public class IMUtil {
 
     static boolean connected;
 
+    public static void logout(Context context) {
+        IMLauncher.logout();
+        MyApp.gCurrentUser = null;
+        MyApp.gCurrentUsername = "";
+        SharedPreferenceUtil.putString(context, Constants.LATEST_LOGIN_JID, MyApp.gCurrentUsername);
+        IMUtil.stopServiceWhenLogout(context);
+        IMLauncher.disconnect();
+    }
+
     public static void login(final Context context) {
         try {
             IMLauncher.connect(context, MyApp.gServerIp, MyApp.gServerPort, MyApp.gServerTimeout);

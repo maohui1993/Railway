@@ -99,12 +99,13 @@ public class MyselfInfoActivity extends AppCompatActivity {
                 EditInfoActivity.startItself(this, telInfo);
                 break;
             case R.id.mt_logout:
-                IMLauncher.logout();
-                MyApp.gCurrentUser = null;
-                MyApp.gCurrentUsername = "";
-                SharedPreferenceUtil.putString(this, Constants.LATEST_LOGIN_JID, MyApp.gCurrentUsername);
-                IMUtil.stopServiceWhenLogout(this);
-                IMLauncher.disconnect();
+//                IMLauncher.logout();
+//                MyApp.gCurrentUser = null;
+//                MyApp.gCurrentUsername = "";
+//                SharedPreferenceUtil.putString(this, Constants.LATEST_LOGIN_JID, MyApp.gCurrentUsername);
+//                IMUtil.stopServiceWhenLogout(this);
+//                IMLauncher.disconnect();
+                IMUtil.logout(this);
                 LoginActivity.startItself(this);
                 finish();
                 break;

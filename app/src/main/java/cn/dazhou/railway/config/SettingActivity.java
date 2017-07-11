@@ -34,6 +34,7 @@ public class SettingActivity extends AppCompatActivity {
         String ip = mServerIpEdit.getText().toString().trim();
         if (!"".equals(ip)) {
             SharedPreferenceUtil.putString(this, Constants.SERVER_IP, ip);
+            SharedPreferenceUtil.putString(this, Constants.LATEST_LOGIN_JID, "");
             MyApp.gServerIp = ip;
         }
     }
