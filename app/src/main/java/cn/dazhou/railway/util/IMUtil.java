@@ -21,8 +21,10 @@ import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.im.db.UserModel;
 import cn.dazhou.railway.im.db.UserModel_Table;
+import cn.dazhou.railway.im.login.LoginActivity;
 import cn.dazhou.railway.im.service.IMChatService;
 import cn.dazhou.railway.im.service.IMFriendRequestService;
+import cn.dazhou.railway.splash.SplashActivity;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -75,6 +77,34 @@ public class IMUtil {
     }
 
     static boolean connected;
+
+    public static void checkUser(final Context context) {
+        String lastLogin = SharedPreferenceUtil.getString(context, Constants.LATEST_LOGIN_JID, "");
+
+        MyApp.gServerIp = SharedPreferenceUtil.getString(context, Constants.SERVER_IP, Constants.SERVER_IP_DEFAULT);
+        MyApp.gServerPort = SharedPreferenceUtil.getInt(context, Constants.SERVER_PORT, Constants.SERVER_PORT_DEFAULT);
+        MyApp.gServerTimeout = SharedPreferenceUtil.getInt(context, Constants.SERVER_CONNECT_TIMEOUT, Constants.SERVER_CONNECT_TIMEOUT_DEFAULT);
+
+        if (!"".equals(lastLogin)) {
+            MyApp.gCurrentUsername = lastLogin;
+            MyApp.gCurrentUser = UserModel.getUser(lastLogin);
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    IMUtil.login(context);
+//                    try {
+//                        Thread.sleep(1000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+                    IMUtil.startServiceWhenLogin(context);
+                }
+            }).start();
+        } else {
+            LoginActivity.startItself(context);
+        }
+    }
 
     public static void logout(Context context) {
         IMLauncher.logout();

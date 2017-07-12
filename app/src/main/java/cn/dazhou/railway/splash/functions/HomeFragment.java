@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -25,7 +26,7 @@ public class HomeFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         mHomeWeb = (WebView) root.findViewById(R.id.wv_home);
-        mHomeWeb.loadUrl("http://baidu.com");
+        mHomeWeb.loadUrl("http://192.168.1.185:8088/html/index.html");
         //覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
         mHomeWeb.setWebViewClient(new WebViewClient(){
             @Override
@@ -35,6 +36,15 @@ public class HomeFragment extends BaseFragment {
                 return true;
             }
         });
+        //支持js
+        mHomeWeb.getSettings().setJavaScriptEnabled(true);
+        mHomeWeb.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         return root;
+    }
+
+    @Override
+    public void onDestroy() {
+        mHomeWeb.clearCache(true);
+        super.onDestroy();
     }
 }

@@ -17,6 +17,7 @@ import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.SettingActivity;
 import cn.dazhou.railway.im.broadcast.NetworkReceiver;
 import cn.dazhou.railway.util.ActivityUtils;
+import cn.dazhou.railway.util.IMUtil;
 import cn.dazhou.railway.util.LogUtil;
 
 public class SplashActivity extends AppCompatActivity {
@@ -28,6 +29,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        IMUtil.checkUser(this);
         setContentView(R.layout.activity_splash1);
         MapLauncher.init(getApplicationContext());
         ImageUtil.checkPermission(this,

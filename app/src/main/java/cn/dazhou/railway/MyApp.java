@@ -45,33 +45,6 @@ public class MyApp extends Application {
             builder.detectFileUriExposure();
         }
 
-        String lastLogin = SharedPreferenceUtil.getString(this, Constants.LATEST_LOGIN_JID, "");
-
-        MyApp.gServerIp = SharedPreferenceUtil.getString(this, Constants.SERVER_IP, Constants.SERVER_IP_DEFAULT);
-        MyApp.gServerPort = SharedPreferenceUtil.getInt(this, Constants.SERVER_PORT, Constants.SERVER_PORT_DEFAULT);
-        MyApp.gServerTimeout = SharedPreferenceUtil.getInt(this, Constants.SERVER_CONNECT_TIMEOUT, Constants.SERVER_CONNECT_TIMEOUT_DEFAULT);
-
-        if (!"".equals(lastLogin)) {
-            gCurrentUsername = lastLogin;
-            gCurrentUser = UserModel.getUser(lastLogin);
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    IMUtil.login(MyApp.this);
-//                    try {
-//                        Thread.sleep(1000);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-                    IMUtil.startServiceWhenLogin(MyApp.this);
-                }
-            }).start();
-            SplashActivity.startItself(this);
-        } else {
-            LoginActivity.startItself(this);
-        }
-
     }
 
     static List<Activity> activitys = new ArrayList<>();
