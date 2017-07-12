@@ -69,6 +69,8 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
     ImageView suspend;
     @BindView(R2.id.progress_video)
     ProgressBar videoProgress;
+    @BindView(R2.id.video)
+    View videoContent;
     private RelativeLayout.LayoutParams layoutParams;
 
     private ChatAdapter1.OnItemClickListener onItemClickListener;
@@ -93,6 +95,7 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
             chatItemContentText.setVisibility(View.VISIBLE);
             chatItemLayoutContent.setVisibility(View.VISIBLE);
             chatItemVoiceTime.setVisibility(GONE);
+            videoContent.setVisibility(GONE);
             chatItemContentImage.setVisibility(GONE);
             fileContainer.setVisibility(GONE);
             video.setVisibility(GONE);
@@ -103,7 +106,7 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
                 layoutParams.width = len + Utils.dp2px(getContext(), 30);
                 layoutParams.height = Utils.dp2px(getContext(), 48);
             } else {
-                layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
+                layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT;
                 layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
             }
             chatItemLayoutContent.setLayoutParams(layoutParams);
@@ -113,6 +116,7 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
             chatItemVoice.setVoicePath(data.getVoicePath());
             chatItemLayoutContent.setVisibility(View.VISIBLE);
             chatItemContentText.setVisibility(GONE);
+            videoContent.setVisibility(GONE);
             chatItemVoiceTime.setVisibility(View.VISIBLE);
             chatItemContentImage.setVisibility(GONE);
             fileContainer.setVisibility(GONE);
@@ -132,6 +136,7 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
             chatItemLayoutContent.setVisibility(GONE);
             chatItemVoiceTime.setVisibility(GONE);
             chatItemContentText.setVisibility(GONE);
+            videoContent.setVisibility(GONE);
             chatItemContentImage.setVisibility(View.VISIBLE);
             fileContainer.setVisibility(GONE);
             video.setVisibility(GONE);
@@ -150,6 +155,7 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
             chatItemVoiceTime.setVisibility(GONE);
             chatItemContentText.setVisibility(GONE);
             chatItemContentImage.setVisibility(GONE);
+            videoContent.setVisibility(GONE);
             chatItemLayoutContent.setVisibility(View.VISIBLE);
             fileContainer.setVisibility(View.VISIBLE);
             video.setVisibility(GONE);
@@ -177,6 +183,7 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
             chatItemContentImage.setVisibility(GONE);
             chatItemLayoutContent.setVisibility(View.VISIBLE);
             fileContainer.setVisibility(GONE);
+            videoContent.setVisibility(VISIBLE);
             video.setVisibility(View.VISIBLE);
             videoProgress.setVisibility(VISIBLE);
             if (data.getFileProcess() == videoProgress.getMax()) {

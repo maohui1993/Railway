@@ -56,6 +56,8 @@ public class ChatAcceptViewHolder extends BaseViewHolder<ChatMessageEntity> {
     TextView chatItemVoiceTime;
     @BindView(R2.id.file_format)
     View fileContainer;
+    @BindView(R2.id.video)
+    View videoContent;
     @BindView(R2.id.file_video)
     ImageView video;
     @BindView(R2.id.video_content)
@@ -82,6 +84,7 @@ public class ChatAcceptViewHolder extends BaseViewHolder<ChatMessageEntity> {
         if (data.getDataType() == ChatMessageEntity.Type.text) {
             chatItemContentText.setSpanText(handler, data.getContent(), true);
             chatItemVoice.setVisibility(View.GONE);
+            videoContent.setVisibility(GONE);
             chatItemContentText.setVisibility(View.VISIBLE);
             chatItemLayoutContent.setVisibility(View.VISIBLE);
             chatItemVoiceTime.setVisibility(View.GONE);
@@ -93,13 +96,14 @@ public class ChatAcceptViewHolder extends BaseViewHolder<ChatMessageEntity> {
                 layoutParams.width = len + Utils.dp2px(getContext(), 30);
                 layoutParams.height = Utils.dp2px(getContext(), 48);
             } else {
-                layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
+                layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT;
                 layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
             }
             chatItemLayoutContent.setLayoutParams(layoutParams);
         } else if (data.getDataType() == ChatMessageEntity.Type.voice) {
             chatItemVoice.setType(Constants.CHAT_ITEM_TYPE_LEFT);
             chatItemVoice.setVisibility(View.VISIBLE);
+            videoContent.setVisibility(GONE);
             chatItemVoice.setVoicePath(data.getVoicePath());
             chatItemLayoutContent.setVisibility(View.VISIBLE);
             chatItemContentText.setVisibility(View.GONE);
@@ -118,6 +122,7 @@ public class ChatAcceptViewHolder extends BaseViewHolder<ChatMessageEntity> {
         } else if (data.getDataType() == ChatMessageEntity.Type.picture) {
             chatItemVoice.setVisibility(View.GONE);
             chatItemLayoutContent.setVisibility(View.GONE);
+            videoContent.setVisibility(GONE);
             chatItemVoiceTime.setVisibility(View.GONE);
             chatItemContentText.setVisibility(View.GONE);
             chatItemContentImage.setVisibility(View.VISIBLE);
@@ -138,6 +143,7 @@ public class ChatAcceptViewHolder extends BaseViewHolder<ChatMessageEntity> {
             chatItemVoice.setVisibility(View.GONE);
             chatItemVoiceTime.setVisibility(View.GONE);
             chatItemContentText.setVisibility(View.GONE);
+            videoContent.setVisibility(GONE);
             chatItemContentImage.setVisibility(View.GONE);
             fileContainer.setVisibility(View.VISIBLE);
             chatItemLayoutContent.setVisibility(View.VISIBLE);
@@ -163,6 +169,7 @@ public class ChatAcceptViewHolder extends BaseViewHolder<ChatMessageEntity> {
             chatItemVoiceTime.setVisibility(GONE);
             chatItemContentText.setVisibility(GONE);
             chatItemContentImage.setVisibility(GONE);
+            videoContent.setVisibility(VISIBLE);
             chatItemLayoutContent.setVisibility(View.VISIBLE);
             fileContainer.setVisibility(GONE);
             video.setVisibility(View.VISIBLE);

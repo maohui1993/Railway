@@ -83,6 +83,7 @@
 
                 <include
                     android:id="@+id/video"
+                    android:visibility="gone"
                     layout="@layout/video_content" />
             </cn.dazhou.im.widget.BubbleLinearLayout>
         </RelativeLayout>
