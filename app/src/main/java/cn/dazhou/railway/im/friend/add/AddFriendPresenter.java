@@ -1,11 +1,15 @@
 package cn.dazhou.railway.im.friend.add;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import java.util.List;
 
 import cn.dazhou.im.IMLauncher;
+import cn.dazhou.railway.MyApp;
+import cn.dazhou.railway.config.Constants;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -50,6 +54,37 @@ public class AddFriendPresenter implements AddFriendContract.Presenter {
                         mAddFriendView.result(result);
                     }
                 });
+    }
 
+    @Override
+    public void onItemClick(int position) {
+        newAlertDialog(mContext, position);
+    }
+
+    private void sendRequest(int position) {
+        StringBuilder sb = new StringBuilder(mAddFriendView.getData().get(position).getUsername());
+        // 拼写jid
+        sb.append(Constants.JID_SEPARATOR).append(MyApp.gServerIp);
+        IMLauncher.addFriend(sb.toString());
+    }
+
+    private void newAlertDialog(Context context, final int position) {
+        new AlertDialog.Builder(context)
+                .setTitle("添加好友")
+                .setMessage("是否确认添加" + mAddFriendView.getData().get(position).getUsername() + "为好友")
+                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sendRequest(position);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        return;
+                    }
+                })
+                .create()
+        .show();
     }
 }

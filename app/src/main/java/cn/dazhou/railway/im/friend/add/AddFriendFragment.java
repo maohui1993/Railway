@@ -5,14 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.jude.easyrecyclerview.EasyRecyclerView;
-import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 import com.jude.easyrecyclerview.decoration.DividerDecoration;
 import com.jude.rollviewpager.Util;
 
@@ -22,11 +20,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.UserBean;
-import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
-import cn.dazhou.railway.config.Constants;
 
 /**
  * Created by hooyee on 2017/6/23.
@@ -65,16 +60,7 @@ public class AddFriendFragment extends Fragment implements AddFriendContract.Vie
         mEasyRecyclerView.setAdapter(mAdapter);
         mEasyRecyclerView.addItemDecoration(itemDecoration);
 
-        mAdapter.setOnItemClickListener(new RecyclerArrayAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                StringBuilder sb = new StringBuilder(mAdapter.getAllData().get(position).getUsername());
-                // 拼写jid
-                sb.append(Constants.JID_SEPARATOR).append(MyApp.gServerIp);
-                Log.i("TAG", "添加的用户Jid: " + sb.toString());
-                IMLauncher.addFriend(sb.toString());
-            }
-        });
+        mAdapter.setOnItemClickListener(mPresenter);
         return root;
     }
 
@@ -88,5 +74,10 @@ public class AddFriendFragment extends Fragment implements AddFriendContract.Vie
     public void result(List data) {
         mAdapter.clear();
         mAdapter.addAll(data);
+    }
+
+    @Override
+    public List<UserBean> getData() {
+        return mAdapter.getAllData();
     }
 }
