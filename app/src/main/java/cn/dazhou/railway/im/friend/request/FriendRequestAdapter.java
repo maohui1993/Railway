@@ -9,13 +9,14 @@ import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 import java.util.List;
 
 import cn.dazhou.im.entity.UserBean;
+import cn.dazhou.railway.im.db.FriendRequestModel;
 
 /**
  * Created by hooyee on 2017/5/26.
  */
 
-public class FriendRequestAdapter  extends RecyclerArrayAdapter<UserBean> {
-    public FriendRequestAdapter(Context context, List<UserBean> objects) {
+public class FriendRequestAdapter  extends RecyclerArrayAdapter<FriendRequestModel> {
+    public FriendRequestAdapter(Context context, List<FriendRequestModel> objects) {
         super(context, objects);
     }
 

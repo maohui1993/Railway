@@ -111,7 +111,7 @@ public final class IMLauncher {
         return mImApi.searchUserFromServer(username);
     }
 
-    public static boolean acceptFriendRequest(String jid) {
+    public static Roster acceptFriendRequest(String jid) {
         return mImApi.acceptFriendRequest(jid);
     }
 

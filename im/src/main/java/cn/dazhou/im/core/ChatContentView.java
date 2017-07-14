@@ -13,10 +13,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -51,6 +53,7 @@ import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.GlobalOnItemClickManagerUtils;
 import cn.dazhou.im.util.MediaManager;
 import cn.dazhou.im.util.MediaPlayerUtils;
+import cn.dazhou.im.util.Utils;
 import cn.dazhou.im.widget.EmotionInputDetector;
 import cn.dazhou.im.widget.NoScrollViewPager;
 import cn.dazhou.im.widget.SoundView;
@@ -58,7 +61,7 @@ import cn.dazhou.im.widget.SoundView;
 /**
  * Created by Hooyee on 2017/5/7.
  * mail: hooyee_moly@foxmail.com
- *
+ * <p>
  * EventBus接受到的<ChatMessageEntity>事件信息都在这里集中处理
  */
 
@@ -135,7 +138,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         fragments.add(chatEmotionFragment);
         chatFunctionFragment = new ChatFunctionFragment();
         fragments.add(chatFunctionFragment);
-        fragmentAdapter = new CommonFragmentPagerAdapter(((AppCompatActivity)context).getSupportFragmentManager(), fragments);
+        fragmentAdapter = new CommonFragmentPagerAdapter(((AppCompatActivity) context).getSupportFragmentManager(), fragments);
         viewpager.setAdapter(fragmentAdapter);
         viewpager.setCurrentItem(0);
         EventBus.getDefault().register(this);
@@ -160,18 +163,6 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         mAdapter.setOnItemClickListener(this);
         chatList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-        mAdapter.setError(R.layout.view_error, new RecyclerArrayAdapter.OnErrorListener() {
-            @Override
-            public void onErrorShow() {
-                mAdapter.resumeMore();
-            }
-
-            @Override
-            public void onErrorClick() {
-                mAdapter.resumeMore();
-            }
-        });
-//        chatList.setAdapter(mAdapter);
         chatList.setAdapterWithProgress(mAdapter);
         chatList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -194,6 +185,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
+
     }
 
     public void initChatDatas(List<ChatMessageEntity> chatDatas) {
@@ -207,6 +199,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
 
     /**
      * 负责展示消息
+     *
      * @param messageInfo
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -225,7 +218,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
                 if (messageInfo.getVoiceBytes() != null) {
                     // 释放资源
                     messageInfo.setVoiceBytes(null);
-                } else if(messageInfo.getImageBytes() != null) {
+                } else if (messageInfo.getImageBytes() != null) {
                     // 资源释放
                     messageInfo.setImageBytes(null);
                 }
@@ -239,6 +232,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
 
     /**
      * 更新文件下载进度
+     *
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -330,13 +324,31 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         chatList.setRefreshListener(listener);
     }
 
-    Handler handler = new Handler();
+    public void setLoadingTip(final String tip) {
+        mAdapter.addHeader(new RecyclerArrayAdapter.ItemView() {
+            @Override
+            public View onCreateView(ViewGroup parent) {
+                TextView tv = new TextView(getContext());
+                tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dp2px(getContext(), 20)));
+                tv.setGravity(Gravity.CENTER);
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                tv.setText(tip);
+                return tv;
+            }
+
+            @Override
+            public void onBindView(View headerView) {
+
+            }
+        });
+    }
 
 
     public void onRefresh(final List<ChatMessageEntity> msgs, final boolean moveCursor) {
         if (msgs == null || msgs.size() == 0) {
             return;
         }
+        mAdapter.removeAllHeader();
         mAdapter.insertAll(msgs, 0);
         if (moveCursor) {
             chatList.scrollToPosition(mAdapter.getCount() - 1);
@@ -356,4 +368,5 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     public interface OnImageClickListener {
         void onImageClick();
     }
+
 }

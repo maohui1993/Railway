@@ -287,13 +287,13 @@ public class SmackImApiImpl implements IMApi {
         return null;
     }
 
-    public boolean acceptFriendRequest(String jid) {
+    public Roster acceptFriendRequest(String jid) {
         try {
             Presence presenceRes = new Presence(Presence.Type.subscribed);
             presenceRes.setTo(JidCreate.entityBareFrom(jid));
             mConnection.sendStanza(presenceRes);
-            addFriend(jid);
-            return true;
+            Roster roster = addFriend(jid);
+            return roster;
         } catch (XmppStringprepException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -301,7 +301,7 @@ public class SmackImApiImpl implements IMApi {
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
 
     public boolean rejectFriendRequest(String jid) {

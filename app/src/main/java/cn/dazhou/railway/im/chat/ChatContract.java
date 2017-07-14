@@ -17,6 +17,7 @@ public interface ChatContract {
     interface View extends BaseView<ChatContract.Presenter> {
         boolean back();
         void refresh(List data);
+        void showLoadingTip(String tip);
     }
 
     interface Presenter extends BasePresenter, ChatContentView.OnSendListener, ChatContentView.OnImageClickListener, SwipeRefreshLayout.OnRefreshListener, Toolbar.OnMenuItemClickListener{

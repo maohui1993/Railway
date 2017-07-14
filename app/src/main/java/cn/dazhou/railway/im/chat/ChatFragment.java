@@ -65,6 +65,11 @@ public class ChatFragment extends Fragment implements ChatContract.View {
     }
 
     @Override
+    public void showLoadingTip(String tip) {
+        mChatContentView.setLoadingTip(tip);
+    }
+
+    @Override
     public void onDestroy() {
         mChatContentView.destroy();
         super.onDestroy();

@@ -8,6 +8,7 @@ import android.widget.Toast;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.chat.room.ChatRoomActivity;
 import cn.dazhou.railway.im.friend.add.AddFriendActivity;
+import cn.dazhou.railway.im.friend.request.FriendRequestActivity;
 
 /**
  * Created by hooyee on 2017/5/31.
@@ -27,7 +28,8 @@ public class ContactListPresenter implements ContactListContract.Presenter{
         switch (v.getId()) {
             case R.id.new_friend:
                 Toast.makeText(mContext, "new Friend", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(mContext, AddFriendActivity.class);
+//                AddFriendActivity.startItself(mContext);
+                Intent intent = new Intent(mContext, FriendRequestActivity.class);
                 mContext.startActivity(intent);
                 break;
             case R.id.chat_group:

@@ -19,8 +19,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.dazhou.im.entity.UserBean;
+import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
+import cn.dazhou.railway.im.db.DataHelper;
+import cn.dazhou.railway.im.db.FriendRequestModel;
 import cn.dazhou.railway.im.friend.add.AddFriendActivity;
 
 public class FriendRequestActivity extends AppCompatActivity {
@@ -39,14 +42,17 @@ public class FriendRequestActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
 
         String jid = getIntent().getStringExtra(Constants.DATA_KEY);
-        UserBean user = new UserBean();
-        user.setUsername(jid);
-        user.setName(jid);
-        datas.add(user);
+//        UserBean user = new UserBean();
+//        user.setUsername(jid);
+//        user.setName(jid);
+//        datas.add(user);
+        List<FriendRequestModel> requests = DataHelper.getFriendRequests(MyApp.gCurrentUsername);
+        mAdapter = new FriendRequestAdapter(this, requests);
 
-        mAdapter = new FriendRequestAdapter(this, datas);
+        DataHelper.getFriendRequests(MyApp.gCurrentUsername);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mEasyRecyclerView.setLayoutManager(layoutManager);
+        mAdapter.setNoMore(R.layout.view_nomore);
         DividerDecoration itemDecoration = new DividerDecoration(Color.GRAY, Util.dip2px(this, 0.5f), Util.dip2px(this, 72), 0);
         itemDecoration.setDrawLastItem(false);
         mEasyRecyclerView.setAdapter(mAdapter);

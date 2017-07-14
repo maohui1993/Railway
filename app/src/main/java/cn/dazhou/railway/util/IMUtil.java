@@ -44,25 +44,29 @@ public class IMUtil {
 
         Set<RosterEntry> entries = roster.getEntries();
         for (RosterEntry entry : entries) {
-            FriendModel friend = new FriendModel();
-            // raw-jid形式为  username@hostname
-            String rawJid = entry.getJid().toString();
-            Log.i("TAG", "friend type = " + entry.getType().name());
             String possessor = user.getUsername();
-            // 存储的jid形式为  username@possessor
-            friend.setJid(rawJid.split(Constants.JID_SEPARATOR)[0] + Constants.JID_SEPARATOR + possessor);
-            friend.setRelation(FriendModel.typeToInt(entry.getType().name()));
-            friend.setRawJid(rawJid);
-            friend.setName(entry.getName());
-            friend.setPossessor(possessor);
-            ExtraInfo info = IMLauncher.getVCard(rawJid);
-            friend.setNickName(info.getName());
-            friend.setTel(info.getTel());
+            FriendModel friend = toFriendModel(entry, possessor);
             user.getMyFriends().add(friend);
             user.setFirstLogin(false);
             user.save();
         }
         return user.getMyFriends();
+    }
+
+    public static FriendModel toFriendModel(RosterEntry entry, String possessor) {
+        FriendModel friend = new FriendModel();
+        // raw-jid形式为  username@hostname
+        String rawJid = entry.getJid().toString();
+        // 存储的jid形式为  username@possessor
+        friend.setJid(StringUtil.getWrapJid(rawJid, possessor));
+        friend.setRelation(FriendModel.typeToInt(entry.getType().name()));
+        friend.setRawJid(rawJid);
+        friend.setName(entry.getName());
+        friend.setPossessor(possessor);
+        ExtraInfo info = IMLauncher.getVCard(rawJid);
+        friend.setNickName(info.getName());
+        friend.setTel(info.getTel());
+        return friend;
     }
 
     public static void startServiceWhenLogin(Context context) {
@@ -122,7 +126,7 @@ public class IMUtil {
             Log.i("TAG", "hasLog = " + login);
         } catch (Exception e) {
             StringWriter sw = new StringWriter();
-            PrintWriter pw =  new PrintWriter(sw);
+            PrintWriter pw = new PrintWriter(sw);
             //将出错的栈信息输出到printWriter中
             e.printStackTrace(pw);
             pw.flush();
