@@ -77,6 +77,8 @@ public class ChatPresenter implements ChatContract.Presenter {
 
     Handler handler = new Handler();
 
+    boolean wholeLoaded = false;
+
     @Override
     public void onRefresh() {
         if (mFriendModel == null) {
@@ -85,8 +87,9 @@ public class ChatPresenter implements ChatContract.Presenter {
         final List<ChatMessageModel> chatMessageModels = mFriendModel.getMyChatMessages(page);
         if (chatMessageModels != null && chatMessageModels.size() > 0) {
             mChatView.showLoadingTip("加载更多...");
-        } else {
+        } else if (!wholeLoaded){
             mChatView.showLoadingTip("已全部加载...");
+            wholeLoaded = true;
         }
         handler.postDelayed(new Runnable() {
             @Override
@@ -95,7 +98,6 @@ public class ChatPresenter implements ChatContract.Presenter {
                 mChatView.refresh(ChatMessageModel.toChatMessageEntity(chatMessageModels));
             }
         }, 1000);
-
     }
 
     @Override
