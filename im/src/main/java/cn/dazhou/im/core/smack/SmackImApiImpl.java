@@ -7,6 +7,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.MessageListener;
+import org.jivesoftware.smack.ReconnectionManager;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.StanzaListener;
 import org.jivesoftware.smack.XMPPConnection;
@@ -113,6 +114,8 @@ public class SmackImApiImpl implements IMApi {
                 .build();
         mConnection = new XMPPTCPConnection(config);
         mConnection.connect();
+        ReconnectionManager manager = ReconnectionManager.getInstanceFor(mConnection);
+        manager.enableAutomaticReconnection();
         addPacketSendListener(new MyStanzaListener());
         connected = true;
         return this;
@@ -150,6 +153,14 @@ public class SmackImApiImpl implements IMApi {
             OfflineMsgManager.getInstance(mContext).dealOfflineMsg(mConnection);
         } catch (Exception e) {
             mState = NOT_LOGIN_STATE;
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            //将出错的栈信息输出到printWriter中
+            e.printStackTrace(pw);
+            pw.flush();
+            sw.flush();
+            Log.i("login-test", "login fail : " + sw.toString());
+            disconnect();
             throw e;
         }
     }
