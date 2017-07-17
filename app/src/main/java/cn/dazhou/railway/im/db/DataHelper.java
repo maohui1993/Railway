@@ -56,6 +56,7 @@ public class DataHelper {
                 // 存储的jid形式为  username@possessor
                 .where(FriendRequestModel_Table.fromJid.eq(fromJid))
                 .and(FriendRequestModel_Table.toJid.eq(toJid))
+                .orderBy(FriendRequestModel_Table.id.desc())
                 .querySingle();
     }
 

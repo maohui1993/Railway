@@ -1,6 +1,5 @@
 package cn.dazhou.railway.im.friend.request;
 
-import android.provider.ContactsContract;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,7 +14,6 @@ import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 import cn.dazhou.im.IMLauncher;
-import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
@@ -59,8 +57,9 @@ public class FriendRequestViewHolder extends BaseViewHolder<FriendRequestModel> 
                     try {
                         RosterEntry entry = roster.getEntry(JidCreate.bareFrom(StringUtil.getRealJid(mUsernameText.getText().toString())));
                         FriendModel friendModel = IMUtil.toFriendModel(entry, MyApp.gCurrentUsername);
+                        friendModel.save();
                         MyApp.gCurrentUser.getMyFriends().add(friendModel);
-                        MyApp.gCurrentUser.save();
+//                        MyApp.gCurrentUser.save();
                     } catch (XmppStringprepException e) {
                         e.printStackTrace();
                     }

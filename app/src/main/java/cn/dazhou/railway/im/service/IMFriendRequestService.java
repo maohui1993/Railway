@@ -14,7 +14,9 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import cn.dazhou.im.entity.FriendRequest;
+import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.config.Constants;
+import cn.dazhou.railway.im.db.FriendRequestModel;
 import cn.dazhou.railway.im.friend.request.FriendRequestActivity;
 
 /**
@@ -65,8 +67,14 @@ public class IMFriendRequestService extends Service {
                 .setDefaults(NotificationCompat.DEFAULT_ALL);
         mBuilder.setTicker("一个新来的消息");//第一次提示消息的时候显示在通知栏上
         mBuilder.setAutoCancel(true);//自己维护通知的消失
+
         Intent intent = new Intent(context, FriendRequestActivity.class);
-        intent.putExtra(Constants.DATA_KEY, jid);
+        FriendRequestModel request = new FriendRequestModel();
+        request.setFromJid(jid);
+        request.setToJid(MyApp.gCurrentUsername);
+        request.setState(FriendRequestModel.State.NOT_HANDLE);
+        intent.putExtra(Constants.DATA_KEY, request);
+
         PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pIntent);
 //        mBuilder.setFullScreenIntent(pIntent,true);

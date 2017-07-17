@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.jude.easyrecyclerview.decoration.DividerDecoration;
@@ -22,9 +23,11 @@ import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
+import cn.dazhou.railway.im.chat.ChatActivity;
 import cn.dazhou.railway.im.db.DataHelper;
 import cn.dazhou.railway.im.db.FriendRequestModel;
 import cn.dazhou.railway.im.friend.add.AddFriendActivity;
+import cn.dazhou.railway.splash.SplashActivity;
 
 public class FriendRequestActivity extends AppCompatActivity {
     @BindView(R.id.easy_recycler_ver)
@@ -41,12 +44,21 @@ public class FriendRequestActivity extends AppCompatActivity {
 
         setSupportActionBar(mToolbar);
 
-        String jid = getIntent().getStringExtra(Constants.DATA_KEY);
-//        UserBean user = new UserBean();
-//        user.setUsername(jid);
-//        user.setName(jid);
-//        datas.add(user);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
+        FriendRequestModel request = getIntent().getParcelableExtra(Constants.DATA_KEY);
+
         List<FriendRequestModel> requests = DataHelper.getFriendRequests(MyApp.gCurrentUsername);
+        if (request != null) {
+            request.save();
+            requests.add(request);
+        }
         mAdapter = new FriendRequestAdapter(this, requests);
 
         DataHelper.getFriendRequests(MyApp.gCurrentUsername);

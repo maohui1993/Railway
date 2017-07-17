@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -186,15 +185,6 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
             }
         });
 
-    }
-
-    public void initChatDatas(List<ChatMessageEntity> chatDatas) {
-        mAdapter.addAll(chatDatas);
-        chatList.scrollToPosition(mAdapter.getCount() - 1);
-    }
-
-    public void addMessage(ChatMessageEntity msg) {
-        mAdapter.add(msg);
     }
 
     /**
