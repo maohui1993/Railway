@@ -28,8 +28,14 @@ import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
 import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
 import org.jxmpp.jid.EntityBareJid;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -45,6 +51,7 @@ import cn.dazhou.railway.im.chat.ChatActivity;
 import cn.dazhou.railway.im.db.ChatMessageModel;
 import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.splash.functions.contact.ContactListFragment;
+import cn.dazhou.railway.util.IMUtil;
 import cn.dazhou.railway.util.LogUtil;
 
 /**
@@ -66,8 +73,8 @@ public class IMChatService extends Service {
         super.onCreate();
         context = this;
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        checkHeartbeat();
         EventBus.getDefault().register(this);
-//        reConnect();
     }
 
     @Override
@@ -118,22 +125,16 @@ public class IMChatService extends Service {
         super.onDestroy();
     }
 
-    private void reConnect() {
+    private void checkHeartbeat() {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                if (!conn.isConnected()) {
-                    try {
-                        ((AbstractXMPPConnection) conn).connect();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                sendHeartbeatPackage();
             }
         };
 
         //delay为long,period为long：从现在起过delay毫秒以后，每隔period毫秒执行一次。
-        timer.schedule(task, 1000, 3000);
+        timer.schedule(task, 1000 * 10, 1000 * 10);
     }
 
     private void initManager() {
@@ -233,6 +234,25 @@ public class IMChatService extends Service {
                 break;
         }
         return tip;
+    }
+
+    private void sendHeartbeatPackage() {
+        try {
+            URL url = new URL("http://192.168.1.6:8088");
+            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000);
+            connection.connect();
+            int code = connection.getResponseCode();
+            Log.i("login-test", "code = " + code);
+            if (code == 200 && !conn.isConnected()) {
+                IMUtil.login(context);
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void sendNotification(ChatMessageEntity msg, String jid) {
