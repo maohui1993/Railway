@@ -56,6 +56,8 @@ public class ChatMessageModel extends BaseModel{
 
     @Column
     private String filePath;
+    @Column
+    private int sendState;     // 发送状态
 
 
     @Column
@@ -87,6 +89,7 @@ public class ChatMessageModel extends BaseModel{
         Log.i("TAG", "models.size = " + models.size());
         for(ChatMessageModel model : models) {
             ChatMessageEntity message = new ChatMessageEntity();
+            message.setId(model.getId());
             message.setImagePath(model.imagePath);
             message.setVoicePath(model.voicePath);
             message.setContent(model.content);
@@ -101,6 +104,7 @@ public class ChatMessageModel extends BaseModel{
             message.setVoiceTime(model.voiceTime);
             message.setDataType(model.getDataType());
             message.setFilePath(model.getFilePath());
+            message.setSendState(model.getSendState());
             messages.add(message);
         }
         return messages;
@@ -120,6 +124,7 @@ public class ChatMessageModel extends BaseModel{
                 .type(info.getType())
                 .filePath(info.getFilePath())
                 .dataType(info.getDataType())
+                .sendState(info.getSendState())
                 .build();
     }
 
@@ -230,8 +235,16 @@ public class ChatMessageModel extends BaseModel{
         this.filePath = filePath;
     }
 
+    public int getSendState() {
+        return sendState;
+    }
+
+    public void setSendState(int sendState) {
+        this.sendState = sendState;
+    }
+
     private ChatMessageModel(int id, String imagePath, String voicePath, String content, String fromJid, String toJid, String jid,
-                             int type, long voiceTime, long date, ChatMessageEntity.Type dataType, String filePath) {
+                             int type, long voiceTime, long date, ChatMessageEntity.Type dataType, String filePath, int sendState) {
         this.id = id;
         this.imagePath = imagePath;
         this.voicePath = voicePath;
@@ -249,6 +262,7 @@ public class ChatMessageModel extends BaseModel{
         this.date = date;
         this.dataType = dataType;
         this.filePath = filePath;
+        this.sendState = sendState;
     }
 
     public static class Builder {
@@ -265,9 +279,10 @@ public class ChatMessageModel extends BaseModel{
         boolean state;  // 是否已读
         private ChatMessageEntity.Type dataType;
         private String filePath;
+        private int sendState;
 
         public ChatMessageModel build() {
-            return new ChatMessageModel(id, imagePath, voicePath, content, fromJid, toJid, jid, type, voiceTime, date, dataType, filePath);
+            return new ChatMessageModel(id, imagePath, voicePath, content, fromJid, toJid, jid, type, voiceTime, date, dataType, filePath, sendState);
         }
 
         public Builder id(int id) {
@@ -338,6 +353,11 @@ public class ChatMessageModel extends BaseModel{
 
         public Builder filePath(String filePath) {
             this.filePath = filePath;
+            return this;
+        }
+
+        public Builder sendState(int sendState) {
+            this.sendState = sendState;
             return this;
         }
     }

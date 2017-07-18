@@ -7,6 +7,9 @@ package cn.dazhou.im.entity;
 public class ProcessEvent {
     String filePath;
     int process;
+    int type;
+    long date;
+    ChatMessageEntity.Type dataType;
 
     public ProcessEvent(String filePath) {
         this.filePath = filePath;
@@ -26,5 +29,29 @@ public class ProcessEvent {
 
     public void setProcess(int process) {
         this.process = process;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public long getDate() {
+        return date;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
+    }
+
+    public ChatMessageEntity.Type getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(ChatMessageEntity.Type dataType) {
+        this.dataType = dataType;
     }
 }

@@ -245,6 +245,12 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
             case Constants.CHAT_ITEM_SEND_ERROR:
                 chatItemProgress.setVisibility(GONE);
                 chatItemFail.setVisibility(View.VISIBLE);
+                chatItemFail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onItemClickListener.onFailTipClick(data);
+                    }
+                });
                 break;
             case Constants.CHAT_ITEM_SEND_SUCCESS:
                 chatItemProgress.setVisibility(GONE);
@@ -252,6 +258,4 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
                 break;
         }
     }
-
-
 }

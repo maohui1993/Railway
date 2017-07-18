@@ -2,11 +2,13 @@ package cn.dazhou.im.core;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -201,7 +203,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
                 messageInfo.setDate(System.currentTimeMillis());
                 // 发送按钮点击时，由上层决定消息是发送给谁，ChatContentView只做消息的展示，不做逻辑控制
                 if (mOnSendListener != null) {
-                    mOnSendListener.onSend(messageInfo);
+                    mOnSendListener.onSend(messageInfo, true);
                 }
                 break;
             case Constants.CHAT_ITEM_TYPE_LEFT:
@@ -230,6 +232,9 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         ChatMessageEntity message = new ChatMessageEntity();
         message.setFilePath(event.getFilePath());
         message.setFileProcess(event.getProcess());
+        message.setType(event.getType());
+        message.setDate(event.getDate());
+        message.setDataType(event.getDataType());
 
         mAdapter.update(message);
     }
@@ -302,6 +307,29 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     }
 
     @Override
+    public void onFailTipClick(final ChatMessageEntity entity) {
+        new AlertDialog.Builder(getContext())
+                .setMessage("是否重发？")
+                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        entity.setSendState(Constants.CHAT_ITEM_SENDING);
+                        mOnSendListener.onSend(entity, false);
+                        mAdapter.updateSendState(entity);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        return;
+                    }
+                })
+                .create()
+                .show();
+
+    }
+
+    @Override
     public byte onSuspendOrRestart() {
         return mMediaPlayer.suspendOrRestart();
     }
@@ -351,7 +379,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
 
     // 当发送时，回调到ChatActivity，由其确认目前正在跟谁聊天
     public interface OnSendListener {
-        void onSend(ChatMessageEntity msg);
+        void onSend(ChatMessageEntity msg, boolean saveMessage);
     }
 
     // 当发送时，回调到ChatActivity，由其确认目前正在跟谁聊天

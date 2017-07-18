@@ -6,6 +6,7 @@ package cn.dazhou.im.entity;
  */
 
 public class ChatMessageEntity {
+    private int id;
     private String imagePath;      // 图片消息，记录图片的位置
     private String voicePath;      // 语音消息，记录语音的位置
     private String content;        // 普通文本消息
@@ -183,11 +184,22 @@ public class ChatMessageEntity {
         this.fileProcess = fileProcess;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof ChatMessageEntity) {
             ChatMessageEntity e = (ChatMessageEntity) obj;
-            return filePath.equals(e.getFilePath());
+//            return filePath.equals(e.getFilePath());
+            return date == e.getDate()
+                    && type == e.getType()
+                    && dataType == e.getDataType();
         }
         return false;
     }

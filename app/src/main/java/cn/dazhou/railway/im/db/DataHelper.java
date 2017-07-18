@@ -23,6 +23,13 @@ public class DataHelper {
                 .querySingle();
     }
 
+    public static ChatMessageModel getChatMessageById(int id) {
+        return SQLite.select()
+                .from(ChatMessageModel.class)
+                .where(ChatMessageModel_Table.id.eq(id))
+                .querySingle();
+    }
+
     public static List<ChatMessageModel> getChatMessages(FriendModel friend) {
         List<ChatMessageModel> chatMessageModels = null;
         if(friend != null) {

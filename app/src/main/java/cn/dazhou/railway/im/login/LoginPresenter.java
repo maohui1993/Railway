@@ -1,8 +1,12 @@
 package cn.dazhou.railway.im.login;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ExtraInfo;
@@ -66,6 +70,7 @@ public class LoginPresenter implements LoginContract.Presenter{
                     } catch (Exception e) {
                         logined = false;
                         LogUtil.write(e);
+
                     }
                     MyApp.gCurrentUsername = username;
                     if (logined) {

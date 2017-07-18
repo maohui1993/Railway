@@ -44,6 +44,7 @@ public class RosterAdapter extends RecyclerArrayAdapter<FriendModel> {
 
     public void updateData(ContactListFragment.TipMessage tipMessage) {
         FriendModel model = new FriendModel();
+        // 构造一个friend出来便于从数据中找到正确的friend
         model.setJid(tipMessage.jid);
         model.setPossessor(MyApp.gCurrentUsername);
         int index = getPosition(model);

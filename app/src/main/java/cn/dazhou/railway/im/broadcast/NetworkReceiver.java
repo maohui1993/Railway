@@ -21,14 +21,14 @@ public class NetworkReceiver extends BroadcastReceiver {
                 && NetworkInfo.State.CONNECTED != wifiState
                 && NetworkInfo.State.CONNECTED == mobileState) {
             // 手机网络连接成功
-            IMUtil.login(context);
+      //      IMUtil.login(context);
         } else if (wifiState != null && mobileState != null
                 && NetworkInfo.State.CONNECTED != wifiState
                 && NetworkInfo.State.CONNECTED != mobileState) {
             // 手机没有任何的网络
         } else if (wifiState != null && NetworkInfo.State.CONNECTED == wifiState) {
             // 无线网络连接成功
-            IMUtil.login(context);
+       //     IMUtil.login(context);
         }
     }
 

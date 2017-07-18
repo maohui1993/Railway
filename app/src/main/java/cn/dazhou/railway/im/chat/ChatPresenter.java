@@ -52,12 +52,10 @@ public class ChatPresenter implements ChatContract.Presenter {
      * 发送消息时，存储数据
      *
      * @param msg
+     * @param saveMessage 是否存储数据
      */
     @Override
-    public void onSend(ChatMessageEntity msg) {
-        ChatMessageModel model = ChatMessageModel.newInstances(msg);
-        model.setJid(mJid);         // 正在聊天的人
-        model.save();
+    public void onSend(ChatMessageEntity msg, boolean saveMessage) {
         // 还原真实jid
         String jid = StringUtil.getRealJid(mJid);
         try {
@@ -66,6 +64,17 @@ public class ChatPresenter implements ChatContract.Presenter {
         } catch (Exception e) {
             msg.setSendState(Constants.CHAT_ITEM_SEND_ERROR);
             e.printStackTrace();
+        } finally {
+            if (saveMessage) {
+                ChatMessageModel model = ChatMessageModel.newInstances(msg);
+                model.setJid(mJid);         // 正在聊天的人
+                model.save();
+                msg.setId(model.getId());
+            } else {
+                ChatMessageModel model = DataHelper.getChatMessageById(msg.getId());
+                model.setSendState(msg.getSendState());
+                model.update();
+            }
         }
     }
 

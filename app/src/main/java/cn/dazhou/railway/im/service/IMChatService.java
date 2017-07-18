@@ -200,8 +200,8 @@ public class IMChatService extends Service {
                 chatMessageModel.setState(false);
                 sendNotification(chatMessageEntity, chatMessageModel.getJid());
             }
-            // 好友聊天的最后一条消息
-            EventBus.getDefault().post(new ContactListFragment.TipMessage(chatMessageModel.getJid(), chatMessageModel.getContent()));
+            String tip = getTipString(chatMessageModel);
+            EventBus.getDefault().post(new ContactListFragment.TipMessage(chatMessageModel.getJid(), tip));
             // 有新消息则在对应的好友上面加上 消息数量
             FriendModel friend = new FriendModel();
             friend.setJid(chatMessageModel.getJid());
@@ -209,6 +209,31 @@ public class IMChatService extends Service {
             chatMessageModel.save();
         }
     };
+
+    private String getTipString(ChatMessageModel chatMessageModel) {
+        String tip = null;
+        // 好友聊天的最后一条消息
+        switch (chatMessageModel.getDataType()) {
+            case file:
+                tip = "[文件消息]";
+                break;
+            case picture:
+                tip = "[图片消息]";
+                break;
+            case video:
+                tip = "[视频消息]";
+                break;
+            case voice:
+                tip = "[语音消息]";
+                break;
+            case text:
+                tip = chatMessageModel.getContent();
+                break;
+            default:
+                break;
+        }
+        return tip;
+    }
 
     private void sendNotification(ChatMessageEntity msg, String jid) {
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -257,10 +282,11 @@ public class IMChatService extends Service {
                 int fileType = judgeMultiMediaType.getMediaFileType(file.getPath());
                 ChatMessageEntity.Type type = judgeMultiMediaType.isVideoFile(fileType) ? ChatMessageEntity.Type.video : ChatMessageEntity.Type.file;
 
-                ChatMessageEntity chatMessage = new ChatMessageEntity.Builder()
+                final ChatMessageEntity chatMessage = new ChatMessageEntity.Builder()
                         .jid(jid)
                         .filePath(file.getAbsolutePath())
                         .dataType(type)
+                        .date(System.currentTimeMillis())
                         .type(Constants.CHAT_ITEM_TYPE_LEFT)
                         .build();
                 ChatMessageModel chatMessageModel = ChatMessageModel.newInstances(chatMessage);
@@ -277,6 +303,9 @@ public class IMChatService extends Service {
                     public void run() {
                         long startTime = System.currentTimeMillis();
                         ProcessEvent event = new ProcessEvent(file.getAbsolutePath());
+                        event.setType(chatMessage.getType());
+                        event.setDate(chatMessage.getDate());
+                        event.setDataType(chatMessage.getDataType());
                         while (!inTransfer.isDone()) {
                             if (inTransfer.getStatus().equals(FileTransfer.Status.error)) {
                                 Log.w("TAG", "error: " + inTransfer.getError());

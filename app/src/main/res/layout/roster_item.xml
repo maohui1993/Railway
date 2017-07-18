@@ -42,6 +42,9 @@
                 android:id="@+id/person_sign"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLength="10"
+                android:lines="1"
+                android:ellipsize="end"
                 android:singleLine="true"
                 android:textColor="@android:color/darker_gray" />
         </LinearLayout>

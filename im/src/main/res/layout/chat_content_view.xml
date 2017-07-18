@@ -13,6 +13,7 @@
         android:background="@color/bg_content"/>
 
     <include
+        android:id="@+id/bottom_input"
         layout="@layout/include_reply_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

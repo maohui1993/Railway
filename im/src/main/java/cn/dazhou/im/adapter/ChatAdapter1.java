@@ -76,6 +76,17 @@ public class ChatAdapter1 extends RecyclerArrayAdapter<ChatMessageEntity> {
         update(goal, pos);
     }
 
+    public void updateSendState(ChatMessageEntity entity) {
+        int pos = getPosition(entity);
+        if (pos == -1) {
+            pos = 0;
+        }
+        Log.i("FILE", "position = " + pos);
+        ChatMessageEntity goal = getItem(pos);
+        goal.setSendState(entity.getSendState());
+        update(goal, pos);
+    }
+
     public interface OnItemClickListener {
         void onHeaderClick(int position);
 
@@ -86,5 +97,7 @@ public class ChatAdapter1 extends RecyclerArrayAdapter<ChatMessageEntity> {
         void onVideoClick(String fileUri, SurfaceView surfaceView);
 
         byte onSuspendOrRestart();
+
+        void onFailTipClick(ChatMessageEntity data);
     }
 }

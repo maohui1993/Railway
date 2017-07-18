@@ -128,7 +128,7 @@ public class ChatFunctionFragment extends BaseFragment {
                         ChatMessageEntity messageInfo = new ChatMessageEntity.Builder()
                                 .imageBytes(bytes)
                                 .imagePath(imageUri.getPath())
-                                .dataType(ChatMessageEntity.Type.voice)
+                                .dataType(ChatMessageEntity.Type.picture)
                                 // 标记为自己发送的消息，显示在右边
                                 .type(Constants.CHAT_ITEM_TYPE_RIGHT)
                                 .build();
