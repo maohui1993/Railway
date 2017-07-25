@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.friend.info;
+package cn.dazhou.im.activity;
 
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
@@ -24,8 +24,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.dazhou.im.entity.FullImageInfo;
-import cn.dazhou.railway.R;
-
+import cn.dazhou.im.R;
+import cn.dazhou.im.R2;
 
 /**
  * 作者：Rance on 2016/12/15 15:56
@@ -33,9 +33,9 @@ import cn.dazhou.railway.R;
  */
 public class FullImageActivity extends Activity {
 
-    @BindView(R.id.full_image)
+    @BindView(R2.id.full_image)
     ImageView fullImage;
-    @BindView(R.id.full_lay)
+    @BindView(R2.id.full_lay)
     LinearLayout fullLay;
     private int mLeft;
     private int mTop;
@@ -120,7 +120,7 @@ public class FullImageActivity extends Activity {
         });
     }
 
-    @OnClick(R.id.full_image)
+    @OnClick(R2.id.full_image)
     public void onClick() {
         activityExitAnim(new Runnable() {
             @Override

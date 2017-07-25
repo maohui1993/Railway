@@ -8,16 +8,16 @@ import android.view.MenuItem;
 
 import java.util.List;
 
+import cn.dazhou.database.ChatMessageModel;
+import cn.dazhou.database.DataHelper;
+import cn.dazhou.database.FriendModel;
+import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.railway.R;
-import cn.dazhou.railway.im.db.ChatMessageModel;
-import cn.dazhou.railway.im.db.DataHelper;
-import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.im.friend.info.FriendInfoActivity;
-import cn.dazhou.railway.im.friend.info.FullImageActivity;
-import cn.dazhou.railway.util.StringUtil;
+import cn.dazhou.im.activity.FullImageActivity;
 
 /**
  * Created by hooyee on 2017/6/23.
@@ -29,7 +29,6 @@ public class ChatPresenter implements ChatContract.Presenter {
     private Context mContext;
     private FriendModel mFriendModel;
     private int page = 1;
-
 
     public ChatPresenter(Context context, ChatContract.View view, String jid) {
         mContext = context;
@@ -66,7 +65,7 @@ public class ChatPresenter implements ChatContract.Presenter {
             e.printStackTrace();
         } finally {
             if (saveMessage) {
-                ChatMessageModel model = ChatMessageModel.newInstances(msg);
+                ChatMessageModel model = ChatMessageModel.newInstance(msg);
                 model.setJid(mJid);         // 正在聊天的人
                 model.save();
                 msg.setId(model.getId());

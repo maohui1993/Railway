@@ -12,8 +12,8 @@ import com.jude.easyrecyclerview.decoration.StickyHeaderDecoration;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.dazhou.database.FriendModel;
 import cn.dazhou.railway.R;
-import cn.dazhou.railway.im.db.FriendModel;
 
 /**
  * Created by hooyee on 2017/06/08.

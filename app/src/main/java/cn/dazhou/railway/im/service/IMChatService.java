@@ -14,7 +14,6 @@ import android.util.Log;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.chat2.Chat;
@@ -28,11 +27,8 @@ import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
 import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
 import org.jxmpp.jid.EntityBareJid;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -40,7 +36,12 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.dazhou.database.ChatMessageModel;
+import cn.dazhou.database.FriendModel;
+import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.im.IMLauncher;
+import cn.dazhou.im.acpect.db.ChatMessageDbApi;
+import cn.dazhou.im.acpect.db.FriendDbApi;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.entity.ProcessEvent;
 import cn.dazhou.im.util.Constants;
@@ -48,8 +49,6 @@ import cn.dazhou.im.util.ImageUtil;
 import cn.dazhou.im.util.JudgeMultiMediaType;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.chat.ChatActivity;
-import cn.dazhou.railway.im.db.ChatMessageModel;
-import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.splash.functions.contact.ContactListFragment;
 import cn.dazhou.railway.util.IMUtil;
 import cn.dazhou.railway.util.LogUtil;
@@ -71,16 +70,19 @@ public class IMChatService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.i("IM-Service", "onCreate");
         context = this;
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        checkHeartbeat();
         EventBus.getDefault().register(this);
+        handleOfflineMessage();
+//        checkHeartbeat();
+        Log.i("IM-Service", notificationManager.toString());
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.i("IM-Service", "start");
         initManager();
-        handleOfflineMessage();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -92,18 +94,11 @@ public class IMChatService extends Service {
                 // 标志为接收到的消息
                 message.setType(Constants.CHAT_ITEM_TYPE_LEFT);
                 String fromUser = message.getFromJid().split("@")[0];
-                ChatMessageModel chatMessageModel = new ChatMessageModel.Builder()
-                        .content(message.getContent())
-                        .voicePath(message.getVoicePath())
-                        .imagePath(message.getImagePath())
-                        .jid(fromUser)
-                        .type(message.getType())
-                        .dataType(message.getDataType())
-                        .build();
-                chatMessageModel.setVoiceTime(message.getVoiceTime());
-                chatMessageModel.setState(false);
-                chatMessageModel.save();
-                sendNotification(message, chatMessageModel.getJid());
+                message.setJid(fromUser);
+                ChatMessageDbApi chatMessageModel = ChatMessageModel.newInstance(message);
+                chatMessageModel.updateJid(StringUtil.getWrapJid(fromUser));
+                chatMessageModel.saveMessage();
+                sendNotification(message, chatMessageModel.jid());
             }
             chatMessageEntities.clear();
             Log.i("TAG", "clear!!!!!!!!");
@@ -133,7 +128,6 @@ public class IMChatService extends Service {
             }
         };
 
-        //delay为long,period为long：从现在起过delay毫秒以后，每隔period毫秒执行一次。
         timer.schedule(task, 1000 * 10, 1000 * 10);
     }
 
@@ -142,6 +136,7 @@ public class IMChatService extends Service {
             conn = (XMPPConnection) IMLauncher.getImApi().getConnection();
             if (conn == null) {
                 Log.i("TAG", "IMChatService#initManager(),获取服务器连接为null");
+                return;
             }
             chatManager = ChatManager.getInstanceFor(conn);
             chatManager.addIncomingListener(incomingChatMessageListener);
@@ -164,57 +159,57 @@ public class IMChatService extends Service {
         public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
             Log.i("TAG", message.getBody());
             ChatMessageEntity chatMessageEntity = (ChatMessageEntity) ImageUtil.parseJSON(message.getBody(), ChatMessageEntity.class);
+            if (chatMessageEntity == null) {
+                return;
+            }
+            chatMessageEntity.setDate(System.currentTimeMillis());
             // 标志为接收到的消息
             chatMessageEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
             chatMessageEntity.setDate(System.currentTimeMillis());
             chatMessageEntity.setSendState(Constants.CHAT_ITEM_SEND_SUCCESS);
-            String fromUser = from.getLocalpart().toString().split(cn.dazhou.railway.config.Constants.JID_SEPARATOR)[0];
-            String imagePath = null;
-            String voicePath = null;
+            String fromUser = from.getLocalpart().toString().split(Constants.JID_SEPARATOR)[0];
+            chatMessageEntity.setJid(fromUser);
             // 语音与图片不能同时发送
             if (chatMessageEntity.getImageBytes() != null) {
-                imagePath = ImageUtil.saveByteToLocalFile(chatMessageEntity.getImageBytes(), System.currentTimeMillis() + ".png");
+                String imagePath = ImageUtil.saveByteToLocalFile(chatMessageEntity.getImageBytes(), System.currentTimeMillis() + ".png");
+                chatMessageEntity.setImagePath(imagePath);
             } else if (chatMessageEntity.getVoiceBytes() != null) {
-                voicePath = ImageUtil.saveByteToLocalFile(chatMessageEntity.getVoiceBytes(), System.currentTimeMillis() + ".aar");
+                String voicePath = ImageUtil.saveByteToLocalFile(chatMessageEntity.getVoiceBytes(), System.currentTimeMillis() + ".aar");
+                chatMessageEntity.setVoicePath(voicePath);
             }
-            ChatMessageModel chatMessageModel = new ChatMessageModel.Builder()
-                    .content(chatMessageEntity.getContent())
-                    .fromJid(chatMessageEntity.getFromJid())
-                    .toJid(chatMessageEntity.getToJid())
-                    .voicePath(voicePath)
-                    .voiceTime(chatMessageEntity.getVoiceTime())
-                    .imagePath(imagePath)
-                    .type(chatMessageEntity.getType())
-                    .jid(fromUser)
-                    .date(System.currentTimeMillis())
-                    .dataType(chatMessageEntity.getDataType())
-                    .build();
-            chatMessageEntity.setVoicePath(voicePath);
-            chatMessageEntity.setImagePath(imagePath);
+
+            ChatMessageDbApi chatDb = ChatMessageModel.newInstance(chatMessageEntity);
+            chatDb.updateJid(StringUtil.getWrapJid(fromUser));
             // 若聊天对象的窗口已经打开，则不发送通知
             if (checkJid(fromUser)) {
-                chatMessageModel.setState(true);
+                chatDb.updateState(true);
                 // 统一交由ChatContentView#showMessage中展示
                 EventBus.getDefault().post(chatMessageEntity);
                 Log.d(Constants.TAG, "New message from " + from + ": " + "to " + message.getFrom() + "body:" + message.getBody());
             } else {
-                chatMessageModel.setState(false);
-                sendNotification(chatMessageEntity, chatMessageModel.getJid());
+                chatDb.updateState(false);
+                sendNotification(chatMessageEntity, chatDb.jid());
             }
-            String tip = getTipString(chatMessageModel);
-            EventBus.getDefault().post(new ContactListFragment.TipMessage(chatMessageModel.getJid(), tip));
+            String tip = getTipString(chatDb);
+            EventBus.getDefault().post(new ContactListFragment.TipMessage(chatDb.jid(), tip));
             // 有新消息则在对应的好友上面加上 消息数量
-            FriendModel friend = new FriendModel();
-            friend.setJid(chatMessageModel.getJid());
-            EventBus.getDefault().post(friend);
-            chatMessageModel.save();
+
+            FriendDbApi friendDb = new FriendModel();
+            friendDb.jid(chatDb.jid());
+            /**
+             * 有新消息则在对应的好友上面加上 消息数量
+             * @see cn.dazhou.railway.splash.functions.contact.ContactListFragment#updateTipMessage
+             * @param friendModel
+             */
+            EventBus.getDefault().post(friendDb);
+            chatDb.saveMessage();
         }
     };
 
-    private String getTipString(ChatMessageModel chatMessageModel) {
+    private String getTipString(ChatMessageDbApi chatDbApi) {
         String tip = null;
         // 好友聊天的最后一条消息
-        switch (chatMessageModel.getDataType()) {
+        switch (chatDbApi.dataType()) {
             case file:
                 tip = "[文件消息]";
                 break;
@@ -228,7 +223,7 @@ public class IMChatService extends Service {
                 tip = "[语音消息]";
                 break;
             case text:
-                tip = chatMessageModel.getContent();
+                tip = chatDbApi.textContent();
                 break;
             default:
                 break;
@@ -263,7 +258,7 @@ public class IMChatService extends Service {
                 .setContentText(msg.getContent())
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setOngoing(true);
-        mBuilder.setTicker("一个新来的消息");//第一次提示消息的时候显示在通知栏上
+        mBuilder.setTicker("一个新的消息");//第一次提示消息的时候显示在通知栏上
         mBuilder.setAutoCancel(true);//自己维护通知的消失
         Intent intent = new Intent(context, ChatActivity.class);
         intent.putExtra(cn.dazhou.railway.config.Constants.DATA_KEY, jid);
@@ -303,13 +298,13 @@ public class IMChatService extends Service {
                 ChatMessageEntity.Type type = judgeMultiMediaType.isVideoFile(fileType) ? ChatMessageEntity.Type.video : ChatMessageEntity.Type.file;
 
                 final ChatMessageEntity chatMessage = new ChatMessageEntity.Builder()
-                        .jid(jid)
+                        .jid(StringUtil.getRealJid(jid))
                         .filePath(file.getAbsolutePath())
                         .dataType(type)
                         .date(System.currentTimeMillis())
                         .type(Constants.CHAT_ITEM_TYPE_LEFT)
                         .build();
-                ChatMessageModel chatMessageModel = ChatMessageModel.newInstances(chatMessage);
+                ChatMessageModel chatMessageModel = ChatMessageModel.newInstance(chatMessage);
                 chatMessageModel.save();
                 if (checkJid(jid)) {
                     // 统一交由ChatContentView#showMessage中展示

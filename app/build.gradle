@@ -30,6 +30,7 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
     compile project(':maputil')
     compile project(':im')
+    compile project(':database')
     compile project(':pagerslidingtabstrip')
     compile 'cn.yipianfengye.android:zxing-library:2.1'
     compile 'com.jakewharton:butterknife:8.5.1'

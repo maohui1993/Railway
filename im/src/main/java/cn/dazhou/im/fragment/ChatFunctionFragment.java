@@ -86,7 +86,8 @@ public class ChatFunctionFragment extends BaseFragment {
          * 隐式打开拍照的Activity，并且传入CROP_PHOTO常量作为拍照结束后回调的标志
          */
         imageUri = Uri.fromFile(output);
-        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.setAction(MediaStore.ACTION_VIDEO_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intent, CROP_PHOTO);
 

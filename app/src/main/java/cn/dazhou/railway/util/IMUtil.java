@@ -14,13 +14,14 @@ import java.io.StringWriter;
 import java.util.List;
 import java.util.Set;
 
+import cn.dazhou.database.FriendModel;
+import cn.dazhou.database.UserModel;
+import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ExtraInfo;
+import cn.dazhou.im.util.Config;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.config.Constants;
-import cn.dazhou.railway.im.db.FriendModel;
-import cn.dazhou.railway.im.db.UserModel;
-import cn.dazhou.railway.im.db.UserModel_Table;
 import cn.dazhou.railway.im.login.LoginActivity;
 import cn.dazhou.railway.im.service.IMChatService;
 import cn.dazhou.railway.im.service.IMFriendRequestService;
@@ -88,9 +89,11 @@ public class IMUtil {
         MyApp.gServerIp = SharedPreferenceUtil.getString(context, Constants.SERVER_IP, Constants.SERVER_IP_DEFAULT);
         MyApp.gServerPort = SharedPreferenceUtil.getInt(context, Constants.SERVER_PORT, Constants.SERVER_PORT_DEFAULT);
         MyApp.gServerTimeout = SharedPreferenceUtil.getInt(context, Constants.SERVER_CONNECT_TIMEOUT, Constants.SERVER_CONNECT_TIMEOUT_DEFAULT);
+        Config.gServerIp = MyApp.gServerIp;
 
         if (!"".equals(lastLogin)) {
             MyApp.gCurrentUsername = lastLogin;
+            Config.gCurrentUsername = MyApp.gCurrentUsername;
             MyApp.gCurrentUser = UserModel.getUser(lastLogin);
 
             new Thread(new Runnable() {
@@ -114,6 +117,7 @@ public class IMUtil {
         IMLauncher.logout();
         MyApp.gCurrentUser = null;
         MyApp.gCurrentUsername = "";
+        Config.gCurrentUsername = MyApp.gCurrentUsername;
         SharedPreferenceUtil.putString(context, Constants.LATEST_LOGIN_JID, MyApp.gCurrentUsername);
         IMUtil.stopServiceWhenLogout(context);
         IMLauncher.disconnect();
@@ -157,7 +161,7 @@ public class IMUtil {
 //                    @Override
 //                    public void accept(@NonNull Object o) throws Exception {
 //                        try {
-//                            IMLauncher.login(MyApp.gCurrentUsername, MyApp.gCurrentUser.getPassword());
+//                            IMLauncher.login(MyApp.gCurrentUsername, MyApp.gCurrentUsername.getPassword());
 //                        } catch (Exception ex) {
 //                            StringWriter sw = new StringWriter();
 //                            PrintWriter pw =  new PrintWriter(sw);

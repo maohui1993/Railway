@@ -13,15 +13,15 @@ import org.jivesoftware.smack.roster.RosterEntry;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
 
+import cn.dazhou.database.DataHelper;
+import cn.dazhou.database.FriendModel;
+import cn.dazhou.database.FriendRequestModel;
+import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
-import cn.dazhou.railway.im.db.DataHelper;
-import cn.dazhou.railway.im.db.FriendModel;
-import cn.dazhou.railway.im.db.FriendRequestModel;
 import cn.dazhou.railway.util.IMUtil;
-import cn.dazhou.railway.util.StringUtil;
 
 /**
  * Created by hooyee on 2017/5/26.
@@ -55,11 +55,11 @@ public class FriendRequestViewHolder extends BaseViewHolder<FriendRequestModel> 
                 case R.id.bt_submit :
                     Roster roster = IMLauncher.acceptFriendRequest(mUsernameText.getText().toString());
                     try {
-                        RosterEntry entry = roster.getEntry(JidCreate.bareFrom(StringUtil.getRealJid(mUsernameText.getText().toString())));
+                        RosterEntry entry = roster.getEntry(JidCreate.bareFrom(StringUtil.getRealJid(mUsernameText.getText().toString(), MyApp.gServerIp)));
                         FriendModel friendModel = IMUtil.toFriendModel(entry, MyApp.gCurrentUsername);
                         friendModel.save();
                         MyApp.gCurrentUser.getMyFriends().add(friendModel);
-//                        MyApp.gCurrentUser.save();
+//                        MyApp.gCurrentUsername.save();
                     } catch (XmppStringprepException e) {
                         e.printStackTrace();
                     }

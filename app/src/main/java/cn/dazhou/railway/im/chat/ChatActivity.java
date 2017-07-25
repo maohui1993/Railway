@@ -16,14 +16,15 @@ import org.jivesoftware.smack.roster.RosterEntry;
 
 import java.util.Set;
 
+import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.im.IMLauncher;
+import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.splash.SplashActivity;
 import cn.dazhou.railway.im.friend.info.FriendInfoActivity;
-import cn.dazhou.railway.im.db.DataHelper;
-import cn.dazhou.railway.im.db.FriendModel;
+import cn.dazhou.database.DataHelper;
+import cn.dazhou.database.FriendModel;
 import cn.dazhou.railway.util.ActivityUtils;
-import cn.dazhou.railway.util.StringUtil;
 
 import static cn.dazhou.railway.config.Constants.DATA_KEY;
 
@@ -70,7 +71,7 @@ public class ChatActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.info:
-                        FriendInfoActivity.startItself(ChatActivity.this, StringUtil.getRealJid(mJid));
+                        FriendInfoActivity.startItself(ChatActivity.this, StringUtil.getRealJid(mJid, MyApp.gServerIp));
                         break;
                 }
                 return false;

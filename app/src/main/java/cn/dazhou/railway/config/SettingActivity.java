@@ -10,6 +10,7 @@ import android.widget.EditText;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.dazhou.im.util.Config;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.util.SharedPreferenceUtil;
@@ -36,6 +37,7 @@ public class SettingActivity extends AppCompatActivity {
             SharedPreferenceUtil.putString(this, Constants.SERVER_IP, ip);
             SharedPreferenceUtil.putString(this, Constants.LATEST_LOGIN_JID, "");
             MyApp.gServerIp = ip;
+            Config.gServerIp = ip;
         }
     }
 

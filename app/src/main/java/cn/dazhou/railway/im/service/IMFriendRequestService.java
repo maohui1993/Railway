@@ -13,10 +13,10 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import cn.dazhou.database.FriendRequestModel;
 import cn.dazhou.im.entity.FriendRequest;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.config.Constants;
-import cn.dazhou.railway.im.db.FriendRequestModel;
 import cn.dazhou.railway.im.friend.request.FriendRequestActivity;
 
 /**

@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.db;
+package cn.dazhou.database;
 
 import android.util.Log;
 
@@ -13,16 +13,15 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.List;
 
-import cn.dazhou.railway.MyApp;
-import cn.dazhou.railway.config.Constants;
-import cn.dazhou.railway.util.StringUtil;
+import cn.dazhou.im.acpect.db.FriendDbApi;
+import cn.dazhou.im.util.Constants;
 
 /**
  * Created by hooyee on 2017/5/17.
  */
 
 @Table(database = RailwayDatabase.class)
-public class FriendModel extends BaseModel implements Comparable<FriendModel> {
+public class FriendModel extends BaseModel implements Comparable<FriendModel>, FriendDbApi {
     @PrimaryKey
     @Column
     private String jid;         // 好友账号@所属人账号<好友username@所属人username>
@@ -122,7 +121,7 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel> {
     }
 
     public void setJid(String jid) {
-        this.jid = StringUtil.getWrapJid(jid);
+        this.jid = jid;
     }
 
     /**
@@ -217,5 +216,10 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel> {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public void jid(String jid) {
+        setJid(jid);
     }
 }

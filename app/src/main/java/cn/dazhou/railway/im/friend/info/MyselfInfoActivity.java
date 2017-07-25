@@ -16,12 +16,12 @@ import com.uuzuche.lib_zxing.activity.CodeUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.dazhou.database.UserModel;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ExtraInfo;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
-import cn.dazhou.railway.im.db.UserModel;
 import cn.dazhou.railway.im.login.LoginActivity;
 import cn.dazhou.railway.util.IMUtil;
 import cn.dazhou.railway.util.SharedPreferenceUtil;
@@ -100,7 +100,7 @@ public class MyselfInfoActivity extends AppCompatActivity {
                 break;
             case R.id.mt_logout:
 //                IMLauncher.logout();
-//                MyApp.gCurrentUser = null;
+//                MyApp.gCurrentUsername = null;
 //                MyApp.gCurrentUsername = "";
 //                SharedPreferenceUtil.putString(this, Constants.LATEST_LOGIN_JID, MyApp.gCurrentUsername);
 //                IMUtil.stopServiceWhenLogout(this);

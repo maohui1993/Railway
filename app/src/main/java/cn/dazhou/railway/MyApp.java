@@ -12,12 +12,7 @@ import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.dazhou.railway.config.Constants;
-import cn.dazhou.railway.im.db.UserModel;
-import cn.dazhou.railway.im.login.LoginActivity;
-import cn.dazhou.railway.splash.SplashActivity;
-import cn.dazhou.railway.util.IMUtil;
-import cn.dazhou.railway.util.SharedPreferenceUtil;
+import cn.dazhou.database.UserModel;
 
 /**
  * Created by hooyee on 2017/5/17.

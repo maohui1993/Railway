@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.db;
+package cn.dazhou.database;
 
 import com.raizlabs.android.dbflow.annotation.Database;
 

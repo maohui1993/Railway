@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -33,16 +34,18 @@ public class SplashActivity extends AppCompatActivity {
         IMUtil.checkUser(this);
         setContentView(R.layout.activity_splash1);
         MapLauncher.init(getApplicationContext());
-        ImageUtil.checkPermission(this,
-                new String[] {
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.RECORD_AUDIO,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.VIBRATE,
-                        Manifest.permission.ACCESS_NETWORK_STATE
-        });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ImageUtil.checkPermission(this,
+                    new String[] {
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.RECORD_AUDIO,
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.VIBRATE,
+                            Manifest.permission.ACCESS_NETWORK_STATE
+                    });
+        }
         LogUtil.init();
         MyApp.addActivity(this);
 

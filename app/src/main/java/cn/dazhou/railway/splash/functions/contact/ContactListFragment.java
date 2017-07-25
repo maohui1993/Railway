@@ -24,10 +24,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.Collections;
 import java.util.List;
 
+import cn.dazhou.database.FriendModel;
+import cn.dazhou.im.acpect.db.FriendDbApi;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
-import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.splash.functions.BaseFragment;
 import cn.dazhou.railway.splash.functions.StickyHeaderAdapter;
 import cn.dazhou.railway.util.IMUtil;
@@ -145,7 +146,7 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
      * @param friendModel
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateTipMessage(FriendModel friendModel) {
+    public void updateTipMessage(FriendDbApi friendModel) {
         mRosterAdapter.updateData(friendModel);
     }
 

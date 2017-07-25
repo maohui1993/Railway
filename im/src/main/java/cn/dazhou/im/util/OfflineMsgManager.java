@@ -49,8 +49,7 @@ public class OfflineMsgManager {
      * @param connection
      */
     public void dealOfflineMsg(XMPPConnection connection) {
-        OfflineMessageManager offlineManager = new OfflineMessageManager(
-                connection);
+        OfflineMessageManager offlineManager = new OfflineMessageManager(connection);
 
         try {
             List<Message> messages = offlineManager.getMessages();
@@ -60,19 +59,7 @@ public class OfflineMsgManager {
             Log.i("离线消息数量: ", "" + offlineManager.getMessageCount());
             for (Message message : messages){
                 Log.i("收到离线消息", "Received from 【" + message.getFrom() + "】 message: " + message.getBody());
-                if (message != null && message.getBody() != null
-                        && !message.getBody().equals("null")) {
-
-                    String from = message.getFrom().toString().split("/")[0];
-                    message.setSubject(from);
-                    ChatMessageEntity chatMessageEntity = (ChatMessageEntity) ImageUtil.parseJSON(message.getBody(), ChatMessageEntity.class);
-                    // 标志为接收到的消息
-                    chatMessageEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
-                    chatMessageEntity.setFromJid(from);
-                    // 标识为未读信息
-                    chatMessageEntity.setState(false);
-                    chatMessageEntities.add(chatMessageEntity);
-                }
+                messageProcess(message);
             }
             offlineManager.deleteMessages();
         } catch (InterruptedException e) {
@@ -92,6 +79,24 @@ public class OfflineMsgManager {
                 e.printStackTrace();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    private void messageProcess(Message message) {
+        if (message != null && message.getBody() != null
+                && !message.getBody().equals("null")) {
+
+            String from = message.getFrom().toString().split("/")[0];
+            message.setSubject(from);
+            ChatMessageEntity chatMessageEntity = (ChatMessageEntity) ImageUtil.parseJSON(message.getBody(), ChatMessageEntity.class);
+            // 标志为接收到的消息
+            if(chatMessageEntity != null) {
+                chatMessageEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
+                chatMessageEntity.setFromJid(from);
+                // 标识为未读信息
+                chatMessageEntity.setState(false);
+                chatMessageEntities.add(chatMessageEntity);
             }
         }
     }

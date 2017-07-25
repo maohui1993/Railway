@@ -10,11 +10,11 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.dazhou.database.FriendModel;
+import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
-import cn.dazhou.railway.im.db.FriendModel;
 import cn.dazhou.railway.util.SharedPreferenceUtil;
-import cn.dazhou.railway.util.StringUtil;
 
 public class FriendInfoActivity extends AppCompatActivity {
     @BindView(R.id.tx_nick_name)

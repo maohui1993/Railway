@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.db;
+package cn.dazhou.database;
 
 import android.util.Log;
 
@@ -12,16 +12,15 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.dazhou.im.acpect.db.ChatMessageDbApi;
 import cn.dazhou.im.entity.ChatMessageEntity;
-import cn.dazhou.railway.MyApp;
-import cn.dazhou.railway.config.Constants;
 
 /**
  * Created by hooyee on 2017/5/17.
  */
 
 @Table(database = RailwayDatabase.class)
-public class ChatMessageModel extends BaseModel{
+public class ChatMessageModel extends BaseModel implements ChatMessageDbApi {
     @PrimaryKey(autoincrement = true)
     int id;
 
@@ -62,9 +61,9 @@ public class ChatMessageModel extends BaseModel{
 
     @Column
     @ForeignKey(tableClass = FriendModel.class,
-    references = {@ForeignKeyReference(columnName = "jid", foreignKeyColumnName = "jid")})
+            references = {@ForeignKeyReference(columnName = "jid", foreignKeyColumnName = "jid")})
     String jid;    // 当前用户为发送方，则记录接收方jid，为接收方则记录发送方jid
-//
+    //
 //    @Column
 //    @ForeignKey(tableClass = ChatRoomModel.class,
 //            references = {@ForeignKeyReference(columnName = "roomJid", foreignKeyColumnName = "roomJid")})
@@ -87,7 +86,7 @@ public class ChatMessageModel extends BaseModel{
         }
         List<ChatMessageEntity> messages = new ArrayList<ChatMessageEntity>();
         Log.i("TAG", "models.size = " + models.size());
-        for(ChatMessageModel model : models) {
+        for (ChatMessageModel model : models) {
             ChatMessageEntity message = new ChatMessageEntity();
             message.setId(model.getId());
             message.setImagePath(model.imagePath);
@@ -97,7 +96,7 @@ public class ChatMessageModel extends BaseModel{
             message.setDate(model.date);
             // model存储的为 聊天对象的jid + @ +自身的jid
             // 发送的消息应该只要包含接受方的jid
-            message.setJid(model.jid.split(Constants.JID_SEPARATOR)[0]);
+            message.setJid(model.jid.split("@")[0]);
             message.setToJid(model.toJid);
             message.setFromJid(model.fromJid);
             message.setType(model.getType());
@@ -110,7 +109,7 @@ public class ChatMessageModel extends BaseModel{
         return messages;
     }
 
-    public static ChatMessageModel newInstances(ChatMessageEntity info) {
+    public static ChatMessageModel newInstance(ChatMessageEntity info) {
         return new Builder()
                 .imagePath(info.getImagePath())
                 .voicePath(info.getVoicePath())
@@ -126,6 +125,54 @@ public class ChatMessageModel extends BaseModel{
                 .dataType(info.getDataType())
                 .sendState(info.getSendState())
                 .build();
+    }
+//
+//    @Override
+//    public ChatMessageDbApi initBy(ChatMessageEntity message) {
+//        setImagePath(message.getImagePath());
+//        setVoicePath(message.getVoicePath());
+//        setVoiceTime(message.getVoiceTime());
+//        setContent(message.getContent());
+//        setState(message.isState());
+//        setDate(message.getDate());
+//        setJid(message.getJid());
+//        setToJid(message.getToJid());
+//        setFromJid(message.getFromJid());
+//        setType(message.getType());
+//        setFilePath(message.getFilePath());
+//        setDataType(message.getDataType());
+//        setSendState(message.getSendState());
+//        return this;
+//    }
+
+    @Override
+    public void updateJid(String jid) {
+        setJid(jid);
+    }
+
+    @Override
+    public boolean saveMessage() {
+        return save();
+    }
+
+    @Override
+    public void updateState(boolean state) {
+        setState(state);
+    }
+
+    @Override
+    public String jid() {
+        return getJid();
+    }
+
+    @Override
+    public ChatMessageEntity.Type dataType() {
+        return getDataType();
+    }
+
+    @Override
+    public String textContent() {
+        return getContent();
     }
 
     public int getId() {
@@ -197,10 +244,11 @@ public class ChatMessageModel extends BaseModel{
     }
 
     public void setJid(String jid) {
-        if (jid.contains(Constants.JID_SEPARATOR)) {
-            jid = jid.split(Constants.JID_SEPARATOR)[0];
-        }
-        this.jid = jid + Constants.JID_SEPARATOR +  MyApp.gCurrentUsername;
+//        if (jid.contains(Constants.JID_SEPARATOR)) {
+//            jid = jid.split(Constants.JID_SEPARATOR)[0];
+//        }
+//        this.jid = jid + Constants.JID_SEPARATOR + MyApp.gCurrentUsername;
+        this.jid = jid;
     }
 
     public long getVoiceTime() {
@@ -251,12 +299,13 @@ public class ChatMessageModel extends BaseModel{
         this.content = content;
         this.fromJid = fromJid;
         this.toJid = toJid;
-        if (jid != null) {
-            if (jid.contains(Constants.JID_SEPARATOR)) {
-                jid = jid.split(Constants.JID_SEPARATOR)[0];
-            }
-            this.jid = jid + Constants.JID_SEPARATOR + MyApp.gCurrentUsername;
-        }
+//        if (jid != null) {
+//            if (jid.contains(Constants.JID_SEPARATOR)) {
+//                jid = jid.split(Constants.JID_SEPARATOR)[0];
+//            }
+//            this.jid = jid + Constants.JID_SEPARATOR + MyApp.gCurrentUsername;
+//        }
+        this.jid = jid;
         this.type = type;
         this.voiceTime = voiceTime;
         this.date = date;
@@ -316,13 +365,14 @@ public class ChatMessageModel extends BaseModel{
         }
 
         public Builder jid(String jid) {
-            if (jid == null) {
-                return this;
-            }
-            if (jid.contains(Constants.JID_SEPARATOR)) {
-                jid = jid.split(Constants.JID_SEPARATOR)[0];
-            }
-            this.jid = jid + Constants.JID_SEPARATOR +  MyApp.gCurrentUsername;
+//            if (jid == null) {
+//                return this;
+//            }
+//            if (jid.contains(Constants.JID_SEPARATOR)) {
+//                jid = jid.split(Constants.JID_SEPARATOR)[0];
+//            }
+//            this.jid = jid + Constants.JID_SEPARATOR + MyApp.gCurrentUsername;
+            this.jid = jid;
             return this;
         }
 

@@ -1,13 +1,9 @@
-package cn.dazhou.railway.im.db;
+package cn.dazhou.database;
 
 import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
-
-import java.util.List;
 
 /**
  * Created by hooyee on 2017/6/8.

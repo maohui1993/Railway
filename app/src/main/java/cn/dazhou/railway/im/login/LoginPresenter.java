@@ -1,21 +1,18 @@
 package cn.dazhou.railway.im.login;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
+import cn.dazhou.database.UserModel;
+import cn.dazhou.database.UserModel_Table;
+import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ExtraInfo;
+import cn.dazhou.im.util.Config;
 import cn.dazhou.railway.MyApp;
-import cn.dazhou.railway.im.db.UserModel;
-import cn.dazhou.railway.im.db.UserModel_Table;
 import cn.dazhou.railway.util.IMUtil;
 import cn.dazhou.railway.util.LogUtil;
-import cn.dazhou.railway.util.StringUtil;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -73,6 +70,7 @@ public class LoginPresenter implements LoginContract.Presenter{
 
                     }
                     MyApp.gCurrentUsername = username;
+                    Config.gCurrentUsername = MyApp.gCurrentUsername;
                     if (logined) {
                         UserModel userModel = SQLite.select()
                                 .from(UserModel.class)
@@ -80,7 +78,7 @@ public class LoginPresenter implements LoginContract.Presenter{
                                 .querySingle();
 
                         if (userModel == null) {
-                            ExtraInfo info = IMLauncher.getVCard(StringUtil.getRealJid(username));
+                            ExtraInfo info = IMLauncher.getVCard(StringUtil.getRealJid(username, MyApp.gServerIp));
                             userModel = new UserModel();
                             userModel.setUsername(username);
                             userModel.setPassword(password);

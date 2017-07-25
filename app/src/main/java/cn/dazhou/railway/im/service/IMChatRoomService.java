@@ -16,11 +16,11 @@ import org.jxmpp.jid.impl.JidCreate;
 
 import java.util.Set;
 
+import cn.dazhou.database.ChatMessageModel;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.ImageUtil;
-import cn.dazhou.railway.im.db.ChatMessageModel;
 import cn.dazhou.railway.util.LogUtil;
 
 public class IMChatRoomService extends Service {

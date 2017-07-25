@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.db;
+package cn.dazhou.database;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
@@ -8,8 +8,6 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.List;
-
-import cn.dazhou.im.entity.ExtraInfo;
 
 /**
  * Created by hooyee on 2017/5/18.

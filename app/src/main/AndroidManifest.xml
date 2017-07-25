@@ -49,12 +49,6 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".im.friend.info.FullImageActivity"
-            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <service
             android:name=".im.service.IMChatService"

@@ -26,7 +26,8 @@ public class HomeFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         mHomeWeb = (WebView) root.findViewById(R.id.wv_home);
-        mHomeWeb.loadUrl("http://192.168.1.185:8088/html/index.html");
+//        mHomeWeb.loadUrl("http://192.168.1.185:8088/html/index.html");
+        mHomeWeb.loadUrl("http://192.168.1.39:8080/test/home.html");
         //覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
         mHomeWeb.setWebViewClient(new WebViewClient(){
             @Override

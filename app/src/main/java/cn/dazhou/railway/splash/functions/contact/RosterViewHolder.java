@@ -9,8 +9,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 
+import cn.dazhou.database.FriendModel;
 import cn.dazhou.railway.R;
-import cn.dazhou.railway.im.db.FriendModel;
 
 /**
  * Created by hooyee on 2017/5/11.

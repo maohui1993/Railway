@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.db;
+package cn.dazhou.database;
 
 import android.os.Parcel;
 import android.os.Parcelable;

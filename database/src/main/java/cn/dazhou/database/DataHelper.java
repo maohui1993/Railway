@@ -1,13 +1,11 @@
-package cn.dazhou.railway.im.db;
+package cn.dazhou.database;
 
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.util.List;
 
 import cn.dazhou.im.entity.FriendRequest;
-import cn.dazhou.railway.MyApp;
-
-import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
+import cn.dazhou.im.util.Config;
 
 /**
  * Created by hooyee on 2017/6/23.
@@ -15,7 +13,9 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class DataHelper {
     public static FriendModel getFriend(String jid) {
-        checkNotNull(jid);
+        if(jid == null) {
+            return null;
+        }
         return SQLite.select()
                 .from(FriendModel.class)
                 // 存储的jid形式为  username@possessor
@@ -46,7 +46,7 @@ public class DataHelper {
     public static FriendRequestModel saveFriendRequest(FriendRequest request) {
         FriendRequestModel model = new FriendRequestModel();
         model.setFromJid(request.getJid());
-        model.setToJid(MyApp.gCurrentUsername);
+        model.setToJid(Config.gCurrentUsername);
         model.save();
         return model;
     }
