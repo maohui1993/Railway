@@ -15,8 +15,6 @@ import butterknife.ButterKnife;
 import cn.dazhou.im.core.ChatContentView;
 import cn.dazhou.railway.R;
 
-import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
-
 /**
  * Created by hooyee on 2017/6/23.
  */
@@ -33,7 +31,10 @@ public class ChatFragment extends Fragment implements ChatContract.View {
 
     @Override
     public void setPresenter(@NonNull ChatContract.Presenter presenter) {
-        mPresenter = checkNotNull(presenter);
+        if (presenter == null) {
+            throw new NullPointerException();
+        }
+        mPresenter = presenter;
     }
 
     @Nullable

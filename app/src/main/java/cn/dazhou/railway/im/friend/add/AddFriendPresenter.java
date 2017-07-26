@@ -7,11 +7,9 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import cn.dazhou.database.FriendModel;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.acpect.db.FriendDbApi;
 import cn.dazhou.railway.MyApp;
-import cn.dazhou.railway.config.Constants;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;

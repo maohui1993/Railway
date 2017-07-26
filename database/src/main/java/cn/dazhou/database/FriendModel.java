@@ -222,4 +222,9 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel>, F
     public void jid(String jid) {
         setJid(jid);
     }
+
+    @Override
+    public String name() {
+        return getName();
+    }
 }

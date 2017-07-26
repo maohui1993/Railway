@@ -18,6 +18,10 @@ public class Constants {
     public static final int RESULT_LOAD_IMAGE = 200;
 
     public static final String JID_SEPARATOR = "@";
+    public static final int CROP_VIDEO = 0x101;
+    public static final int CROP_PHOTO = 0x102;
+    public static final int PICK_FILE = 0x103;
+    public static final int PICK_PHOTO = 0x104;
 
     public static final String MEDIA_PATH = Environment.getExternalStorageDirectory() + "/railway/mediafile/";
 }

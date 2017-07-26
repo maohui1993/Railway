@@ -9,4 +9,6 @@ import cn.dazhou.im.util.Constants;
 public interface FriendDbApi {
     String JID_SEPARATOR = Constants.JID_SEPARATOR;
     void jid(String jid);
+
+    String name();
 }

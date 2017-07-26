@@ -9,7 +9,6 @@ import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 import java.util.List;
 
 import cn.dazhou.database.FriendRequestModel;
-import cn.dazhou.im.entity.UserBean;
 
 /**
  * Created by hooyee on 2017/5/26.
