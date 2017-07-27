@@ -17,6 +17,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
@@ -41,6 +43,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
 import cn.dazhou.im.adapter.ChatAdapter1;
@@ -187,6 +190,29 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
             }
         });
 
+        chatList.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                if (e.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    hideInput();
+                }
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+            }
+        });
+    }
+
+    public boolean hideInput() {
+        mDetector.hideSoftInput();
+        mDetector.hideEmotionLayout(false);
+        return true;
     }
 
     /**
@@ -249,7 +275,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
 
     @Override
     public void onHeaderClick(int position) {
-
+        Toast.makeText(getContext(), "header", Toast.LENGTH_SHORT).show();
     }
 
     @Override

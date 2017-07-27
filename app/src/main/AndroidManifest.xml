@@ -41,10 +41,8 @@
             </activity>
         <activity
             android:name=".im.chat.ChatActivity"
-            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -68,17 +66,21 @@
 
         <activity
             android:name=".im.friend.request.FriendRequestActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop" />
-        <activity android:name=".config.SettingActivity" />
+        <activity android:name=".config.SettingActivity"
+            android:screenOrientation="portrait"/>
 
         <service
             android:name=".im.service.IMChatRoomService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".im.chat.room.ChatRoomActivity" />
+        <activity android:name=".im.chat.room.ChatRoomActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".splash.SplashActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -86,9 +88,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".im.friend.info.MyselfInfoActivity" />
-        <activity android:name=".im.friend.info.EditInfoActivity" />
-        <activity android:name=".im.friend.info.FriendInfoActivity" />
+        <activity android:name=".im.friend.info.MyselfInfoActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".im.friend.info.EditInfoActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".im.friend.info.FriendInfoActivity"
+            android:screenOrientation="portrait"/>
 
     </application>
 
