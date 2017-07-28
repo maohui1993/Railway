@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -20,6 +21,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.jude.easyrecyclerview.EasyRecyclerView;
+import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -88,13 +92,27 @@ public class EmotionInputDetector {
                         @Override
                         public void run() {
                             unlockContentHeightDelayed();
+
                         }
                     }, 200L);
                 }
+                v.getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(mContentView instanceof EasyRecyclerView) {
+                            scrollToPosition((EasyRecyclerView) mContentView);
+                        }
+                    }
+                }, 200L);
                 return false;
             }
         });
+        mEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
         mEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -349,6 +367,14 @@ public class EmotionInputDetector {
         hideSoftInput();
         mEmotionLayout.getLayoutParams().height = softInputHeight;
         mEmotionLayout.setVisibility(View.VISIBLE);
+        if(mContentView instanceof EasyRecyclerView) {
+            scrollToPosition((EasyRecyclerView) mContentView);
+        }
+    }
+
+    private void scrollToPosition(EasyRecyclerView view) {
+        RecyclerView.Adapter adapter = view.getAdapter();
+        view.scrollToPosition(adapter.getItemCount() - 1);
     }
 
     public void hideEmotionLayout(boolean showSoftInput) {
@@ -387,6 +413,7 @@ public class EmotionInputDetector {
 
     public void hideSoftInput() {
         mInputManager.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
+
     }
 
     private boolean isSoftInputShown() {

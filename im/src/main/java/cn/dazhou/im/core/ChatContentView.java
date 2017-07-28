@@ -168,27 +168,29 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         chatList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
         chatList.setAdapterWithProgress(mAdapter);
-        chatList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                switch (newState) {
-                    case RecyclerView.SCROLL_STATE_IDLE:
-                        mAdapter.notifyDataSetChanged();
-                        break;
-                    case RecyclerView.SCROLL_STATE_DRAGGING:
-                        mDetector.hideEmotionLayout(false);
-                        mDetector.hideSoftInput();
-                        break;
-                    default:
-                        break;
-                }
-            }
+//        chatList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                switch (newState) {
+//                    case RecyclerView.SCROLL_STATE_IDLE:
+//                        mAdapter.notifyDataSetChanged();
+//                        break;
+//                    case RecyclerView.SCROLL_STATE_DRAGGING:
+//                        mDetector.hideEmotionLayout(false);
+//                        mDetector.hideSoftInput();
+//                        break;
+//                    default:
+//                        break;
+//                }
+//            }
+//
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//            }
+//        });
 
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-            }
-        });
+
 
         chatList.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override

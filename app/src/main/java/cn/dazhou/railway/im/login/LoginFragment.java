@@ -2,7 +2,8 @@ package cn.dazhou.railway.im.login;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.provider.Settings;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -34,8 +35,27 @@ public class LoginFragment extends Fragment implements LoginContract.View {
     ActionProcessButton mLoginPbt;
     @BindView(R.id.edit_username)
     EditText mUsernameEdit;
+    @BindView(R.id.content)
+    android.view.View mContent;
+    @BindView(R.id.password_warp)
+    android.view.View mPasswordWrap;
+    @BindView(R.id.username_wrap)
+    android.view.View mUsernameWrap;
+    InputMethodManager imm;
+
     @BindView(R.id.edit_password)
     EditText mPasswordEdit;
+    private int inputState;
+    private float offset;
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 1) {
+                updateInputState(NOTINPUT);
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     private LoginContract.Presenter mPresenter;
 
@@ -61,14 +81,41 @@ public class LoginFragment extends Fragment implements LoginContract.View {
         SplashActivity.startItself(getContext());
         getActivity().finish();
     }
-
     @Override
     public void fail(String msg) {
         mLoginPbt.setProgress(0);
         changeEditEnable();
         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }
-    InputMethodManager imm;
+
+    @Override
+    public void setOffset(float offset) {
+        this.offset = offset;
+    }
+
+    @Override
+    public android.view.View getReLayoutView() {
+        return mContent;
+    }
+
+    @Override
+    public void updateInputState(int state) {
+        inputState = state;
+        switch (inputState) {
+            case INPUTTING :
+                mContent.setTranslationY(offset);
+                mPresenter.listenerInputState(mHandler);
+                break;
+            case NOTINPUT :
+                mContent.setTranslationY(0);
+                break;
+            default:
+                break;
+        }
+    }
+
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -82,10 +129,15 @@ public class LoginFragment extends Fragment implements LoginContract.View {
         root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "click", Toast.LENGTH_SHORT).show();
                 imm.hideSoftInputFromWindow (v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//                updateInputState(NOTINPUT);
             }
         });
+
+        mPasswordWrap.setOnTouchListener(mPresenter);
+        mUsernameWrap.setOnTouchListener(mPresenter);
+        mUsernameEdit.setOnTouchListener(mPresenter);
+        mPasswordEdit.setOnTouchListener(mPresenter);
         return root;
     }
 

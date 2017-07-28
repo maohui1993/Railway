@@ -1,6 +1,13 @@
 package cn.dazhou.railway.im.login;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
@@ -11,8 +18,11 @@ import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ExtraInfo;
 import cn.dazhou.im.util.Config;
 import cn.dazhou.railway.MyApp;
+import cn.dazhou.railway.R;
+import cn.dazhou.railway.util.ActivityUtils;
 import cn.dazhou.railway.util.IMUtil;
 import cn.dazhou.railway.util.LogUtil;
+import cn.dazhou.railway.util.SharedPreferenceUtil;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -26,6 +36,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class LoginPresenter implements LoginContract.Presenter{
+    private static final String OFFSET_Y = "offset_y";
+
     private boolean connected;
     private boolean logined;
     private Context mContext;
@@ -100,5 +112,84 @@ public class LoginPresenter implements LoginContract.Presenter{
             }
         });
         return logined;
+    }
+
+    @Override
+    public float calculateOffset(Activity activity, View v) {
+        int softInputHeight = ActivityUtils.getSupportSoftInputHeight(activity);
+        int[] position = new int[2];
+        int actionBarH = 0;
+        v.getLocationOnScreen(position);
+        int vBottom = v.getHeight() + position[1];
+        int screenHeight = ActivityUtils.getScreenHeight(activity);
+        if (((AppCompatActivity)activity).getSupportActionBar() != null) {
+            actionBarH = ((AppCompatActivity) activity).getSupportActionBar().getHeight();
+        }
+        float visibleY = screenHeight - actionBarH - softInputHeight - vBottom;
+        if (visibleY < 0) {
+            return visibleY;
+        }
+        return 0;
+    }
+
+    @Override
+    public float getOffset() {
+        return SharedPreferenceUtil.getFloat(mContext, OFFSET_Y, 0f);
+    }
+
+    @Override
+    public boolean onTouch(final View v, MotionEvent event) {
+        switch (v.getId()) {
+            case R.id.password_warp:
+            case R.id.edit_password:
+            case R.id.username_wrap:
+            case R.id.edit_username:
+                if (event.getActionMasked() == MotionEvent.ACTION_UP) {
+                    updateUI(v);
+                    mLoginView.updateInputState(mLoginView.INPUTTING);
+                }
+                break;
+            default:
+                break;
+        }
+        return false;
+    }
+
+    private void updateUI(final View v) {
+        final float offset = SharedPreferenceUtil.getFloat(v.getContext(), OFFSET_Y, 0f);
+        if (offset != 0f) {
+            mLoginView.setOffset(offset);
+        } else {
+            v.getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    float offset = calculateOffset(mLoginView.getActivity(), mLoginView.getReLayoutView());
+                    SharedPreferenceUtil.putFloat(v.getContext(), OFFSET_Y, offset);
+                    mLoginView.setOffset(offset);
+                }
+            }, 500L);
+        }
+    }
+
+    @Override
+    public void listenerInputState(final Handler handler) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if ( ActivityUtils.getSupportSoftInputHeight(mLoginView.getActivity()) == 0) {
+                        Message message = new Message();
+                        message.what = 1;
+                        handler.sendMessage(message);
+                        break;
+                    }
+                }
+            }
+        }).start();
     }
 }

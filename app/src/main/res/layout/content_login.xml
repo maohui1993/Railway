@@ -7,6 +7,7 @@
     android:layout_height="match_parent">
     <LinearLayout
         android:layout_below="@id/my_toolbar"
+        android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="30dp"
@@ -22,6 +23,7 @@
             android:layout_height="75dp" />
 
         <com.github.florent37.materialtextfield.MaterialTextField
+            android:id="@+id/username_wrap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:mtf_animationDuration="500"
@@ -35,7 +37,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="账号"
-                android:digits="@string/login_only_can_input_username"
                 android:maxLength="20"
                 android:singleLine="true"
                 android:textColor="#333"
@@ -48,6 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:id="@+id/password_warp"
             app:mtf_animationDuration="500"
             app:mtf_cardCollapsedHeight="4dp"
             app:mtf_image="@drawable/ic_launcher"
