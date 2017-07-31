@@ -1,6 +1,7 @@
 package cn.dazhou.railway.im.friend.info;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -99,15 +100,26 @@ public class MyselfInfoActivity extends AppCompatActivity {
                 EditInfoActivity.startItself(this, telInfo);
                 break;
             case R.id.mt_logout:
-//                IMLauncher.logout();
-//                MyApp.gCurrentUsername = null;
-//                MyApp.gCurrentUsername = "";
-//                SharedPreferenceUtil.putString(this, Constants.LATEST_LOGIN_JID, MyApp.gCurrentUsername);
-//                IMUtil.stopServiceWhenLogout(this);
-//                IMLauncher.disconnect();
-                IMUtil.logout(this);
-                LoginActivity.startItself(this);
-                finish();
+                new AlertDialog.Builder(this)
+                        .setTitle("退出当前账号")
+                        .setMessage("是否确认要退出当前账号？")
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setPositiveButton("确认退出", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                IMUtil.logout(MyselfInfoActivity.this);
+                                LoginActivity.startItself(MyselfInfoActivity.this);
+                                finish();
+                            }
+                        })
+                        .create()
+                .show();
+
                 break;
             case R.id.qr_code:
                 final ImageView image = new ImageView(this);

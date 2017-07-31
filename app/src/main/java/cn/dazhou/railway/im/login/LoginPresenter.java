@@ -145,7 +145,7 @@ public class LoginPresenter implements LoginContract.Presenter{
             case R.id.username_wrap:
             case R.id.edit_username:
                 if (event.getActionMasked() == MotionEvent.ACTION_UP) {
-                    updateUI(v);
+//                    updateUI(v);
                     mLoginView.updateInputState(mLoginView.INPUTTING);
                 }
                 break;

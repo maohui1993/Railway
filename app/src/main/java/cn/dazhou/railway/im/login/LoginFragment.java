@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.dd.processbutton.iml.ActionProcessButton;
@@ -41,17 +42,19 @@ public class LoginFragment extends Fragment implements LoginContract.View {
     android.view.View mPasswordWrap;
     @BindView(R.id.username_wrap)
     android.view.View mUsernameWrap;
-    InputMethodManager imm;
-
     @BindView(R.id.edit_password)
     EditText mPasswordEdit;
+    @BindView(R.id.loge)
+    ImageView mLogeView;
+
+    InputMethodManager imm;
     private int inputState;
     private float offset;
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == 1) {
-                updateInputState(NOTINPUT);
+                updateInputState(NOT_INPUT);
             }
             super.handleMessage(msg);
         }
@@ -103,18 +106,18 @@ public class LoginFragment extends Fragment implements LoginContract.View {
         inputState = state;
         switch (inputState) {
             case INPUTTING :
-                mContent.setTranslationY(offset);
+//                mContent.setTranslationY(offset);
+                mLogeView.setVisibility(View.GONE);
                 mPresenter.listenerInputState(mHandler);
                 break;
-            case NOTINPUT :
-                mContent.setTranslationY(0);
+            case NOT_INPUT:
+//                mContent.setTranslationY(0);
+                mLogeView.setVisibility(View.VISIBLE);
                 break;
             default:
                 break;
         }
     }
-
-
 
     @Nullable
     @Override
@@ -130,7 +133,7 @@ public class LoginFragment extends Fragment implements LoginContract.View {
             @Override
             public void onClick(View v) {
                 imm.hideSoftInputFromWindow (v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-//                updateInputState(NOTINPUT);
+//                updateInputState(NOT_INPUT);
             }
         });
 

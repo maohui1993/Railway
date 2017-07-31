@@ -13,7 +13,7 @@ import cn.dazhou.railway.BaseView;
 public interface LoginContract {
     interface View extends BaseView<LoginContract.Presenter> {
         int INPUTTING = 0x101;
-        int NOTINPUT = 0x102;
+        int NOT_INPUT = 0x102;
         void success();
 
         void fail(String msg);
