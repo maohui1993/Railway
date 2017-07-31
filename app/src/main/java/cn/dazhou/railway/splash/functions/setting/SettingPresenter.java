@@ -1,15 +1,12 @@
 package cn.dazhou.railway.splash.functions.setting;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Toast;
 
-import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.util.IMUtil;
@@ -34,7 +31,7 @@ public class SettingPresenter implements SettingContract.Presenter {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.bt_submit:
+            case R.id.bt_accept:
                 final String defaultIp = SharedPreferenceUtil.getString(mContext, Constants.SERVER_IP, Constants.SERVER_IP_DEFAULT);
                 final int defaultPort = SharedPreferenceUtil.getInt(mContext, Constants.SERVER_PORT, Constants.SERVER_PORT_DEFAULT);
                 if (mView.getIp().equals(defaultIp)

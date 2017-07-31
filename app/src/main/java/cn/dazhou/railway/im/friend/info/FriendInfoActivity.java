@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.dazhou.database.FriendModel;
 import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.railway.R;
@@ -25,6 +26,7 @@ public class FriendInfoActivity extends AppCompatActivity {
     TextView mTelTx;
     @BindView(R.id.my_toolbar)
     Toolbar mToolbar;
+    FriendModel friendModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +47,15 @@ public class FriendInfoActivity extends AppCompatActivity {
         });
         // 有ARN风险
         String latestUser = SharedPreferenceUtil.getString(this, Constants.LATEST_LOGIN_JID, "");
-        if (!"".equals(latestUser)) {
-            FriendModel friendModel = FriendModel.getMyFriend(StringUtil.getWrapJid(jid, latestUser));
+//        if (!"".equals(latestUser)) {
+            friendModel = FriendModel.getMyFriend(StringUtil.getWrapJid(jid));
             mNickNameTx.setText(friendModel.getNickName());
             mTelTx.setText(friendModel.getTel());
-        }
-//        else {
-//            ExtraInfo info = IMLauncher.getVCard(StringUtil.getRealJid(latestUser));
-//            mNickNameTx.setText(info.getName());
-//            mTelTx.setText(info.getTel());
 //        }
+    }
+
+    @OnClick(R.id.search_record)
+    void searchChatRecord() {
     }
 
     public static void startItself(Context context, String data) {

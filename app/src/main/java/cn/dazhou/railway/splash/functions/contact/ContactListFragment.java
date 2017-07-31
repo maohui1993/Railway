@@ -53,16 +53,15 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
         super.onCreate(savedInstanceState);
         mPresenter = new ContactListPresenter(getContext(), this);
         EventBus.getDefault().register(this);
-        registerLoginReceiver();
+        registerReceiver();
     }
 
-    private void registerLoginReceiver() {
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.LOGIN_SUCCESS_BROADCAST);
+    private void registerReceiver() {
+        IntentFilter intentFilter = new IntentFilter(Constants.LOGIN_SUCCESS_BROADCAST);
         getContext().registerReceiver(loginReceiver, intentFilter);
 
-        IntentFilter intentFilter1 = new IntentFilter();
-        intentFilter.addAction(Constants.UPDATE_FROM_SERVER_BROADCAST);
+        IntentFilter intentFilter1 = new IntentFilter(Constants.UPDATE_FROM_SERVER_BROADCAST);
+//        intentFilter.addAction(Constants.UPDATE_FROM_SERVER_BROADCAST);
         getContext().registerReceiver(updateReceiver, intentFilter1);
     }
 

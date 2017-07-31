@@ -22,6 +22,14 @@ import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.util.IMUtil;
+import cn.dazhou.railway.util.LogUtil;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by hooyee on 2017/5/26.
@@ -30,46 +38,58 @@ import cn.dazhou.railway.util.IMUtil;
 public class FriendRequestViewHolder extends BaseViewHolder<FriendRequestModel> {
     private TextView mUsernameText;
     private ImageView mIconImage;
-    private Button mSubmitBtn;
+    private Button mAcceptBtn;
     private Button mRejectBtn;
 
     public FriendRequestViewHolder(ViewGroup parent) {
         super(parent, R.layout.friend_request_item);
         mUsernameText = $(R.id.tx_item_username);
         mIconImage = $(R.id.iv_item_icon);
-        mSubmitBtn = $(R.id.bt_submit);
+        mAcceptBtn = $(R.id.bt_accept);
         mRejectBtn = $(R.id.bt_reject);
     }
 
     @Override
-    public void setData(FriendRequestModel requestModel){
+    public void setData(FriendRequestModel requestModel) {
         mUsernameText.setText(requestModel.getFromJid());
-        mSubmitBtn.setOnClickListener(onClickListener);
+        mAcceptBtn.setOnClickListener(onClickListener);
         mRejectBtn.setOnClickListener(onClickListener);
     }
 
+    boolean flag;
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.bt_submit :
-                    Roster roster = IMLauncher.acceptFriendRequest(mUsernameText.getText().toString());
-                    try {
-                        RosterEntry entry = roster.getEntry(JidCreate.bareFrom(StringUtil.getRealJid(mUsernameText.getText().toString(), MyApp.gServerIp)));
-                        FriendModel friendModel = IMUtil.toFriendModel(entry, MyApp.gCurrentUsername);
-                        friendModel.save();
-                        MyApp.gCurrentUser.getMyFriends().add(friendModel);
-//                        MyApp.gCurrentUsername.save();
-                    } catch (XmppStringprepException e) {
-                        e.printStackTrace();
-                    }
-                    IMUtil.sendBroadcast(getContext(), Constants.UPDATE_FROM_SERVER_BROADCAST);
-                    FriendRequestModel request = DataHelper.getFriendRequest(mUsernameText.getText().toString(), MyApp.gCurrentUsername);
+                case R.id.bt_accept:
+                    Observable.create(new ObservableOnSubscribe() {
+                        @Override
+                        public void subscribe(@NonNull ObservableEmitter e) throws Exception {
+                            Roster roster = IMLauncher.acceptFriendRequest(mUsernameText.getText().toString());
+                            RosterEntry entry = roster.getEntry(JidCreate.bareFrom(StringUtil.getRealJid(mUsernameText.getText().toString(), MyApp.gServerIp)));
+                            FriendModel friendModel = IMUtil.toFriendModel(entry, MyApp.gCurrentUsername);
+                            flag = friendModel.exists();
+                            if (!flag) {
+                                friendModel.save();
+                                e.onNext(friendModel);
+                            }
+                        }
+                    })
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Consumer() {
+                                @Override
+                                public void accept(@NonNull Object o) throws Exception {
+//                                    MyApp.gCurrentUser.getMyFriends().add((FriendModel) o);
+                                    IMUtil.sendBroadcast(getContext(), Constants.UPDATE_FROM_SERVER_BROADCAST);
+                                    FriendRequestModel request = DataHelper.getFriendRequest(mUsernameText.getText().toString(), MyApp.gCurrentUsername);
 
-                    request.setState(FriendRequestModel.State.ACCEPT);
-                    request.update();
+                                    request.setState(FriendRequestModel.State.ACCEPT);
+                                    request.update();
+                                }
+                            });
                     break;
-                case R.id.bt_reject :
+                case R.id.bt_reject:
                     IMLauncher.rejectFriendRequest(mUsernameText.getText().toString());
                     FriendRequestModel request1 = DataHelper.getFriendRequest(mUsernameText.getText().toString(), MyApp.gCurrentUsername);
 

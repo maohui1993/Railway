@@ -64,6 +64,7 @@
                     style="@style/text_subhead_black"
                     android:layout_marginRight="@dimen/content_horizontal_margin"
                     android:padding="@dimen/content_vertical_margin"
+                    android:textIsSelectable="true"
                     android:textColor="@color/white"
                     android:visibility="gone" />
 

@@ -19,7 +19,7 @@ public class SettingActivity extends AppCompatActivity {
 
     @BindView(R.id.edit_server_ip)
     EditText mServerIpEdit;
-    @BindView(R.id.bt_submit)
+    @BindView(R.id.bt_accept)
     Button mSubmitBtn;
 
     @Override
@@ -30,7 +30,7 @@ public class SettingActivity extends AppCompatActivity {
         mServerIpEdit.setText(SharedPreferenceUtil.getString(this, Constants.SERVER_IP, Constants.SERVER_IP_DEFAULT));
     }
 
-    @OnClick(R.id.bt_submit)
+    @OnClick(R.id.bt_accept)
     void submit() {
         String ip = mServerIpEdit.getText().toString().trim();
         if (!"".equals(ip)) {

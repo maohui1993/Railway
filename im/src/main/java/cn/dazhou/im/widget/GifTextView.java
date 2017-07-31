@@ -59,19 +59,19 @@ public class GifTextView extends android.support.v7.widget.AppCompatTextView {
     @SuppressLint("NewApi")
     public GifTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        GifTextView.this.setFocusableInTouchMode(false);
+//        GifTextView.this.setFocusableInTouchMode(false);
     }
 
     @SuppressLint("NewApi")
     public GifTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        GifTextView.this.setFocusableInTouchMode(false);
+//        GifTextView.this.setFocusableInTouchMode(false);
     }
 
     @SuppressLint("NewApi")
     public GifTextView(Context context) {
         super(context);
-        GifTextView.this.setFocusableInTouchMode(false);
+//        GifTextView.this.setFocusableInTouchMode(false);
     }
 
     /**

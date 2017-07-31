@@ -42,7 +42,7 @@ public class SettingFragment extends BaseFragment implements SettingContract.Vie
         mPortEdit = (EditText) root.findViewById(R.id.edit_server_port);
         mPortEdit.setText(String.valueOf(defaultPort));
 
-        root.findViewById(R.id.bt_submit).setOnClickListener(mPresenter);
+        root.findViewById(R.id.bt_accept).setOnClickListener(mPresenter);
         return root;
     }
 
