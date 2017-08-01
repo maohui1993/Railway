@@ -11,5 +11,7 @@
     <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
+    <style name="AppTheme1" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--<item name="android:windowBackground">@drawable/background_home</item>-->
+    </style>
 </resources>
