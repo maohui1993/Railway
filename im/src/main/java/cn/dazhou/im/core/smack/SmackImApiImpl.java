@@ -222,6 +222,14 @@ public class SmackImApiImpl implements IMApi {
         return info;
     }
 
+    @Override
+    public boolean isConnected() {
+        if (mConnection == null) {
+            return false;
+        }
+        return mConnection.isConnected();
+    }
+
     private void sendFile(String jid, String filePath) throws Exception {
         File file = new File(filePath);
         if (!file.exists()) {

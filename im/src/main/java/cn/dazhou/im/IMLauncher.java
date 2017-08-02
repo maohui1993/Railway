@@ -34,18 +34,19 @@ public final class IMLauncher {
         return login;
     }
 
-    public static boolean connect(Context context, String ip, int port, int timeout) throws Exception {
+    public static boolean connect(Context context, String ip, int port, int timeout) throws IMException {
         boolean result = true;
         try {
             mImApi = ConnectManager.getConnection(context, ConnectManager.CONNECT_PROTOCOL_XMPP, ip, port, timeout);
         } catch (Exception e) {
             Log.d(TAG, e.getMessage());
-            throw e;
+            throw new IMException(e);
         }
         return result;
     }
 
-    public static void disconnect() {
+    public static void disconnect() throws IMException {
+        checkConnected(mImApi);
         mImApi.disconnect();
     }
 
@@ -55,47 +56,59 @@ public final class IMLauncher {
      * @param password
      * @return 登录是否成功
      */
-    public static boolean login(String username, String password) throws Exception {
+    public static boolean login(String username, String password) throws IMException {
         Log.d("TAG", "登录中··");
-        boolean result = true;
         try {
             mImApi.login(username, password);
             login = true;
         } catch (Exception e) {
             Log.w("TAG", "登录失败:" + e.getMessage());
             login = false;
-            throw e;
+            throw new IMException(e);
         }
-        return result;
+        return login;
     }
 
-    public static boolean logout() {
-        if(mImApi == null) {
-            return true;
-        }
+    public static boolean logout() throws IMException {
+        checkConnected(mImApi);
         mImApi.disconnect();
         return true;
     }
 
-    public static boolean chatWith(String id, ChatMessageEntity msg) throws Exception{
+    private static boolean checkNotNull(Object o) throws IMException{
+        if (o == null) {
+            throw new IMException(new NullPointerException());
+        }
+        return true;
+    }
+
+    private static boolean checkConnected(IMApi imApi) throws IMException{
+        if(!checkNotNull(imApi) || !imApi.isConnected()) {
+            throw new IMException("链接断开");
+        }
+        return true;
+    }
+
+    public static boolean chatWith(String id, ChatMessageEntity msg) throws IMException{
         boolean result;
         try {
             mImApi.chatWith(id, msg);
             result = true;
         } catch (Exception e) {
-            result = false;
             e.printStackTrace();
-            throw e;
+            throw new IMException(e);
         }
         return result;
     }
 
-    public static void chatWith(EntityBareJid id) {
+    public static void chatWith(EntityBareJid id) throws IMException{
+        checkConnected(mImApi);
         mImApi.chatWith(id);
     }
 
 
-    public static Roster getRoster() {
+    public static Roster getRoster() throws IMException {
+        checkConnected(mImApi);
         return mImApi.getRoster();
     }
 
@@ -103,40 +116,62 @@ public final class IMLauncher {
         return OfflineMsgManager.getChatMessageEntities();
     }
 
-    public static Roster addFriend(String jid){
+    public static Roster addFriend(String jid) throws IMException {
+        checkConnected(mImApi);
         return mImApi.addFriend(jid);
     }
 
-    public static List<UserBean> searchUserFromServer(String username) {
+    public static List<UserBean> searchUserFromServer(String username) throws IMException {
+        checkNotNull(mImApi);
         return mImApi.searchUserFromServer(username);
     }
 
-    public static Roster acceptFriendRequest(String jid) {
+    public static Roster acceptFriendRequest(String jid) throws IMException {
+        checkConnected(mImApi);
         return mImApi.acceptFriendRequest(jid);
     }
 
-    public static boolean rejectFriendRequest(String jid) {
+    public static boolean rejectFriendRequest(String jid) throws IMException {
+        checkConnected(mImApi);
         return mImApi.rejectFriendRequest(jid);
     }
 
-    public static MultiUserChat createChatRoom(String roomName, String nickName, String password) {
+    public static MultiUserChat createChatRoom(String roomName, String nickName, String password) throws IMException {
+        checkConnected(mImApi);
         return mImApi.createChatRoom(roomName, nickName, password);
     }
 
-    public static MultiUserChat joinChatRoom(String roomName,  String nickName, String password) {
+    public static MultiUserChat joinChatRoom(String roomName,  String nickName, String password) throws IMException {
+        checkConnected(mImApi);
         return mImApi.joinChatRoom(roomName, nickName, password);
     }
 
-    public static void inviteUser(String roomName, String jid) {
+    public static void inviteUser(String roomName, String jid) throws IMException {
+        checkConnected(mImApi);
         mImApi.inviteUser(roomName, jid);
     }
 
-    public static void saveVCard(ExtraInfo info) throws Exception{
-        mImApi.saveVCard(info);
+    public static void saveVCard(ExtraInfo info) throws IMException{
+        checkConnected(mImApi);
+        try {
+            mImApi.saveVCard(info);
+        } catch (Exception e) {
+            throw new IMException(e);
+        }
     }
 
-    public static ExtraInfo getVCard(String jid) {
+    public static ExtraInfo getVCard(String jid) throws IMException {
+        checkConnected(mImApi);
         return mImApi.getVCard(jid);
     }
 
+    public static class IMException extends Exception {
+        public IMException(String message) {
+            super(message);
+        }
+
+        public IMException(Throwable cause) {
+            super(cause);
+        }
+    }
 }

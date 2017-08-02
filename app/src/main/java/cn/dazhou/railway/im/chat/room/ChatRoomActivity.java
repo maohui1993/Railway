@@ -26,12 +26,20 @@ public class ChatRoomActivity extends AppCompatActivity {
 
     @OnClick(R.id.bt_invite)
     void click() {
-        IMLauncher.inviteUser("room2", "1@192.168.1.39");
+        try {
+            IMLauncher.inviteUser("room2", "1@192.168.1.39");
+        } catch (IMLauncher.IMException e) {
+            e.printStackTrace();
+        }
     }
 
     @OnClick(R.id.bt_create_room)
     void create() {
-        IMLauncher.createChatRoom("room1", "room1", null);
+        try {
+            IMLauncher.createChatRoom("room1", "room1", null);
+        } catch (IMLauncher.IMException e) {
+            e.printStackTrace();
+        }
     }
 
     @OnClick(R.id.bt_grant)

@@ -98,13 +98,19 @@ public class ChatActivity extends AppCompatActivity {
 
     private String getNameFromServer() {
         // 从服务器获取好友列表
-        Roster roster = IMLauncher.getRoster();
-        Set<RosterEntry> entries = roster.getEntries();
-        for (RosterEntry entry : entries) {
-            if (entry.getJid().toString().contains(mJid)) {
-                return entry.getName();
+        Roster roster = null;
+        try {
+            roster = IMLauncher.getRoster();
+            Set<RosterEntry> entries = roster.getEntries();
+            for (RosterEntry entry : entries) {
+                if (entry.getJid().toString().contains(mJid)) {
+                    return entry.getName();
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         return null;
     }
 

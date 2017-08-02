@@ -11,16 +11,26 @@
         android:orientation="vertical">
 
         <FrameLayout
+            android:layout_weight="2"
             android:layout_width="match_parent"
-            android:layout_height="250dp">
+            android:layout_height="0dp">
+
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="250dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:scaleType="fitXY"
-                android:alpha="1"
                 android:src="@drawable/background_home" />
 
+            <TextView
+                android:id="@+id/tx_tip"
+                android:text="网络链接异常"
+                android:visibility="gone"
+                android:gravity="center"
+                android:background="#7b2525"
+                android:padding="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -94,6 +104,7 @@
         <LinearLayout
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="0dp"

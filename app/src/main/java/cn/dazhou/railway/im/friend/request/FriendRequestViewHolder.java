@@ -90,11 +90,15 @@ public class FriendRequestViewHolder extends BaseViewHolder<FriendRequestModel> 
                             });
                     break;
                 case R.id.bt_reject:
-                    IMLauncher.rejectFriendRequest(mUsernameText.getText().toString());
-                    FriendRequestModel request1 = DataHelper.getFriendRequest(mUsernameText.getText().toString(), MyApp.gCurrentUsername);
+                    try {
+                        IMLauncher.rejectFriendRequest(mUsernameText.getText().toString());
+                        FriendRequestModel request1 = DataHelper.getFriendRequest(mUsernameText.getText().toString(), MyApp.gCurrentUsername);
 
-                    request1.setState(FriendRequestModel.State.REJECT);
-                    request1.update();
+                        request1.setState(FriendRequestModel.State.REJECT);
+                        request1.update();
+                    } catch (IMLauncher.IMException e) {
+                        e.printStackTrace();
+                    }
                     break;
             }
         }

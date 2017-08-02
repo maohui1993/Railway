@@ -1,15 +1,18 @@
 package cn.dazhou.railway.splash;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.util.ImageUtil;
@@ -24,9 +27,10 @@ import cn.dazhou.railway.util.LogUtil;
 
 public class SplashActivity extends AppCompatActivity {
 
-    NetworkReceiver receiver;
     SplashPresenter mPresenter;
     SplashFragment mSplashFragment;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +62,7 @@ public class SplashActivity extends AppCompatActivity {
         }
         mPresenter = new SplashPresenter(this, mSplashFragment);
 
-        receiver = new NetworkReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(receiver, filter);
+
     }
 
     @Override
@@ -105,7 +106,6 @@ public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        unregisterReceiver(receiver);
         super.onDestroy();
     }
 

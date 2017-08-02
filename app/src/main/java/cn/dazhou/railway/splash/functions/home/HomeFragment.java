@@ -1,10 +1,17 @@
 package cn.dazhou.railway.splash.functions.home;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.jude.easyrecyclerview.EasyRecyclerView;
 
@@ -24,6 +31,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View{
     EasyRecyclerView mNoticeViews;
     @BindView(R.id.law_list)
     EasyRecyclerView mLawViews;
+    @BindView(R.id.tx_tip)
+    TextView mTipText;
 
     List<String> mNotices = new ArrayList<>();
     List<String> mLaws = new ArrayList<>();
@@ -37,6 +46,34 @@ public class HomeFragment extends BaseFragment implements HomeContract.View{
         fragment.setArguments(args);
         return fragment;
     }
+
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            NetworkInfo.State wifiState = null;
+            NetworkInfo.State mobileState = null;
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            wifiState = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+            mobileState = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
+            if (wifiState != null && mobileState != null
+                    && NetworkInfo.State.CONNECTED != wifiState
+                    && NetworkInfo.State.CONNECTED == mobileState) {
+                // 手机网络连接成功
+                //      IMUtil.login(context);
+                mTipText.setVisibility(View.GONE);
+            } else if (wifiState != null && mobileState != null
+                    && NetworkInfo.State.CONNECTED != wifiState
+                    && NetworkInfo.State.CONNECTED != mobileState) {
+                // 手机没有任何的网络
+                mTipText.setVisibility(View.VISIBLE);
+            } else if (wifiState != null && NetworkInfo.State.CONNECTED == wifiState) {
+                // 无线网络连接成功
+                //     IMUtil.login(context);
+                mTipText.setVisibility(View.GONE);
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,8 +108,15 @@ public class HomeFragment extends BaseFragment implements HomeContract.View{
         mLawAdapter = new TextAdapter(getContext(), mLaws);
         mLawViews.setLayoutManager(new LinearLayoutManager(getContext()));
         mLawViews.setAdapter(mLawAdapter);
-
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        getContext().registerReceiver(receiver, filter);
         return root;
+    }
+
+    @Override
+    public void onDestroy() {
+        getContext().unregisterReceiver(receiver);
+        super.onDestroy();
     }
 
     @Override

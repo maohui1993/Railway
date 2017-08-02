@@ -41,17 +41,22 @@ import io.reactivex.schedulers.Schedulers;
 public class IMUtil {
     public static List<FriendModel> updateFriendFromServer(UserModel user) {
         // 从服务器获取好友列表
-        Roster roster = IMLauncher.getRoster();
-
-        Set<RosterEntry> entries = roster.getEntries();
-        for (RosterEntry entry : entries) {
-            String possessor = user.getUsername();
-            FriendModel friend = toFriendModel(entry, possessor);
-            user.getMyFriends().add(friend);
-            user.setFirstLogin(false);
-            user.save();
+        Roster roster = null;
+        try {
+            roster = IMLauncher.getRoster();
+            Set<RosterEntry> entries = roster.getEntries();
+            for (RosterEntry entry : entries) {
+                String possessor = user.getUsername();
+                FriendModel friend = toFriendModel(entry, possessor);
+                user.getMyFriends().add(friend);
+                user.setFirstLogin(false);
+                user.save();
+            }
+            return user.getMyFriends();
+        } catch (IMLauncher.IMException e) {
+            e.printStackTrace();
         }
-        return user.getMyFriends();
+        return null;
     }
 
     public static FriendModel toFriendModel(RosterEntry entry, String possessor) {
@@ -64,9 +69,13 @@ public class IMUtil {
         friend.setRawJid(rawJid);
         friend.setName(entry.getName());
         friend.setPossessor(possessor);
-        ExtraInfo info = IMLauncher.getVCard(rawJid);
-        friend.setNickName(info.getName());
-        friend.setTel(info.getTel());
+        try {
+            ExtraInfo info = IMLauncher.getVCard(rawJid);
+            friend.setNickName(info.getName());
+            friend.setTel(info.getTel());
+        } catch (IMLauncher.IMException e) {
+            e.printStackTrace();
+        }
         return friend;
     }
 
@@ -114,13 +123,17 @@ public class IMUtil {
     }
 
     public static void logout(Context context) {
-        IMLauncher.logout();
-        MyApp.gCurrentUser = null;
-        MyApp.gCurrentUsername = "";
-        Config.gCurrentUsername = MyApp.gCurrentUsername;
-        SharedPreferenceUtil.putString(context, Constants.LATEST_LOGIN_JID, MyApp.gCurrentUsername);
-        IMUtil.stopServiceWhenLogout(context);
-        IMLauncher.disconnect();
+        try {
+            IMLauncher.logout();
+            MyApp.gCurrentUser = null;
+            MyApp.gCurrentUsername = "";
+            Config.gCurrentUsername = MyApp.gCurrentUsername;
+            SharedPreferenceUtil.putString(context, Constants.LATEST_LOGIN_JID, MyApp.gCurrentUsername);
+            IMUtil.stopServiceWhenLogout(context);
+            IMLauncher.disconnect();
+        } catch (IMLauncher.IMException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void login(final Context context) {

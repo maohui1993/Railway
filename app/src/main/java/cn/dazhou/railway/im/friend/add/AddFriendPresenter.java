@@ -65,7 +65,11 @@ public class AddFriendPresenter implements AddFriendContract.Presenter {
         StringBuilder sb = new StringBuilder(mAddFriendView.getData().get(position).getUsername());
         // 拼写jid
         sb.append(FriendDbApi.JID_SEPARATOR).append(MyApp.gServerIp);
-        IMLauncher.addFriend(sb.toString());
+        try {
+            IMLauncher.addFriend(sb.toString());
+        } catch (IMLauncher.IMException e) {
+            e.printStackTrace();
+        }
     }
 
     private void newAlertDialog(Context context, final int position) {

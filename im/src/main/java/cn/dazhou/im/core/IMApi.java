@@ -48,4 +48,6 @@ public interface IMApi extends IChat, IConnection{
     void saveVCard(ExtraInfo info) throws Exception;
 
     ExtraInfo getVCard(String jid);
+
+    boolean isConnected();
 }
