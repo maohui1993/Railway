@@ -1,9 +1,11 @@
 package cn.dazhou.railway.splash.functions.setting;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import cn.dazhou.railway.R;
@@ -34,6 +36,7 @@ public class SettingFragment extends BaseFragment implements SettingContract.Vie
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_setting, container, false);
+        final InputMethodManager imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         mPresenter = new SettingPresenter(this, getContext());
         String defaultIp = SharedPreferenceUtil.getString(getContext(), Constants.SERVER_IP, Constants.SERVER_IP_DEFAULT);
         int defaultPort = SharedPreferenceUtil.getInt(getContext(), Constants.SERVER_PORT, Constants.SERVER_PORT_DEFAULT);
@@ -41,6 +44,12 @@ public class SettingFragment extends BaseFragment implements SettingContract.Vie
         mIpEdit.setText(defaultIp);
         mPortEdit = (EditText) root.findViewById(R.id.edit_server_port);
         mPortEdit.setText(String.valueOf(defaultPort));
+        root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        });
 
         root.findViewById(R.id.bt_accept).setOnClickListener(mPresenter);
         return root;

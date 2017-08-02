@@ -182,6 +182,7 @@ public class LoginPresenter implements LoginContract.Presenter{
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                    // 软键盘高度为0，则表示state=NOT_INPUT
                     if ( ActivityUtils.getSupportSoftInputHeight(mLoginView.getActivity()) == 0) {
                         Message message = new Message();
                         message.what = 1;

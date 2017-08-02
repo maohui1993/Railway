@@ -111,6 +111,7 @@ public class SplashFragment extends Fragment implements SplashContract.View {
             public void onPageScrollStateChanged(int state) {
             }
         });
+
         initNavigationView();
         return root;
     }

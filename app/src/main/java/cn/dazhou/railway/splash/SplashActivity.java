@@ -30,8 +30,6 @@ public class SplashActivity extends AppCompatActivity {
     SplashPresenter mPresenter;
     SplashFragment mSplashFragment;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +59,6 @@ public class SplashActivity extends AppCompatActivity {
                     getSupportFragmentManager(), mSplashFragment, R.id.contentFrame);
         }
         mPresenter = new SplashPresenter(this, mSplashFragment);
-
 
     }
 
@@ -102,11 +99,6 @@ public class SplashActivity extends AppCompatActivity {
                 break;
         }
         return true;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     public static void startItself(Context context) {
