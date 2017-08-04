@@ -1,9 +1,7 @@
 package cn.dazhou.im.core.smack;
 
 import android.content.Context;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smack.AbstractXMPPConnection;
@@ -21,7 +19,6 @@ import org.jivesoftware.smack.filter.StanzaFilter;
 import org.jivesoftware.smack.filter.StanzaTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
-import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.roster.PresenceEventListener;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
@@ -67,8 +64,8 @@ import cn.dazhou.im.entity.FriendRequest;
 import cn.dazhou.im.entity.ProcessEvent;
 import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.im.entity.UserExtensionElement;
-import cn.dazhou.im.util.OfflineMsgManager;
 import cn.dazhou.im.util.ImageUtil;
+import cn.dazhou.im.util.OfflineMsgManager;
 
 /**
  * Created by hooyee on 2017/5/5.
