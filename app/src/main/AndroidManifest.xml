@@ -32,13 +32,13 @@
         <activity
             android:name=".im.login.LoginActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
-            </activity>
+        </activity>
         <activity
             android:name=".im.chat.ChatActivity"
             android:launchMode="singleTop"
@@ -58,7 +58,7 @@
         <service
             android:name=".im.service.IMFriendRequestService"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="action.friend.refresh"></action>
             </intent-filter>
@@ -66,34 +66,39 @@
 
         <activity
             android:name=".im.friend.request.FriendRequestActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop" />
-        <activity android:name=".config.SettingActivity"
-            android:screenOrientation="portrait"/>
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".config.SettingActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".im.service.IMChatRoomService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".im.chat.room.ChatRoomActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".im.chat.room.ChatRoomActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".splash.SplashActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".im.friend.info.MyselfInfoActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".im.friend.info.EditInfoActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".im.friend.info.FriendInfoActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".im.friend.info.MyselfInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".im.friend.info.EditInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".im.friend.info.FriendInfoActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 

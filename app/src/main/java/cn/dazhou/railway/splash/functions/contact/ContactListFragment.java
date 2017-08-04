@@ -54,6 +54,26 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
         mPresenter = new ContactListPresenter(getContext(), this);
         EventBus.getDefault().register(this);
         registerReceiver();
+        initAdapter();
+    }
+
+    private void initAdapter() {
+        mRosterAdapter = new RosterAdapter(getContext());
+        mRosterAdapter.addHeader(new RecyclerArrayAdapter.ItemView() {
+            @Override
+            public View onCreateView(ViewGroup parent) {
+                LayoutInflater inflater = LayoutInflater.from(getContext());
+                View v = inflater.inflate(R.layout.header_item, null);
+                v.findViewById(R.id.new_friend).setOnClickListener(mPresenter);
+                v.findViewById(R.id.chat_group).setOnClickListener(mPresenter);
+                return v;
+            }
+
+            @Override
+            public void onBindView(View headerView) {
+
+            }
+        });
     }
 
     private void registerReceiver() {
@@ -95,26 +115,11 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
         DividerDecoration itemDecoration = new DividerDecoration(Color.GRAY, Util.dip2px(getContext(),0.5f), Util.dip2px(getContext(),72),0);
         itemDecoration.setDrawLastItem(false);
         mRosterView.addItemDecoration(itemDecoration);
-        mRosterAdapter = new RosterAdapter(getContext());
         onUpdateData(MyApp.gCurrentUser.getMyFriends());
         mRosterView.setAdapter(mRosterAdapter);
-        // 添加非重用view部分的组件
-        mRosterAdapter.addHeader(new RecyclerArrayAdapter.ItemView() {
-            @Override
-            public View onCreateView(ViewGroup parent) {
-                LayoutInflater inflater = LayoutInflater.from(getContext());
-                View v = inflater.inflate(R.layout.header_item, null);
-                v.findViewById(R.id.new_friend).setOnClickListener(mPresenter);
-                v.findViewById(R.id.chat_group).setOnClickListener(mPresenter);
-                return v;
-            }
-
-            @Override
-            public void onBindView(View headerView) {
-
-            }
-        });
     }
+
+    StickyHeaderDecoration mDecoration;
 
     /**
      * 当presenter中有friend数据更新时调用
@@ -125,8 +130,11 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
         mRosterAdapter.clear();
         mRosterAdapter.addAll(datas);
         // StickyHeader
-        StickyHeaderDecoration decoration = new StickyHeaderDecoration(new StickyHeaderAdapter(getContext(), mRosterAdapter.getAllData()));
-        mRosterView.addItemDecoration(decoration);
+        if (mDecoration != null) {
+            mRosterView.removeItemDecoration(mDecoration);
+        }
+        mDecoration = new StickyHeaderDecoration(new StickyHeaderAdapter(getContext(), mRosterAdapter.getAllData()));
+        mRosterView.addItemDecoration(mDecoration);
     }
 
     /**

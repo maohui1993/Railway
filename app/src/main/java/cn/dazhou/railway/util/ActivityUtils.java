@@ -33,6 +33,9 @@ public class ActivityUtils {
     }
 
     public static int getSupportSoftInputHeight(Activity activity) {
+        if (activity == null) {
+            return 0;
+        }
         Rect r = new Rect();
         activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
         int screenHeight = activity.getWindow().getDecorView().getRootView().getHeight();

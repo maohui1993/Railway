@@ -1,7 +1,9 @@
 package cn.dazhou.im.core.smack;
 
 import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smack.AbstractXMPPConnection;
@@ -20,7 +22,11 @@ import org.jivesoftware.smack.filter.StanzaTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Stanza;
+import org.jivesoftware.smack.roster.PresenceEventListener;
 import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterEntry;
+import org.jivesoftware.smack.roster.SubscribeListener;
+import org.jivesoftware.smack.roster.packet.RosterPacket;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.filetransfer.FileTransfer;
@@ -35,8 +41,10 @@ import org.jivesoftware.smackx.vcardtemp.VCardManager;
 import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 import org.jivesoftware.smackx.xdata.Form;
 import org.jivesoftware.smackx.xdata.FormField;
+import org.jxmpp.jid.BareJid;
 import org.jxmpp.jid.DomainBareJid;
 import org.jxmpp.jid.EntityBareJid;
+import org.jxmpp.jid.FullJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.jid.parts.Resourcepart;
@@ -78,6 +86,7 @@ public class SmackImApiImpl implements IMApi {
     private boolean connected;
     private byte mState;
     private Chat mChat;
+    private Roster mRoster;
 
     private SmackImApiImpl() {
     }
@@ -116,8 +125,65 @@ public class SmackImApiImpl implements IMApi {
         mConnection.connect();
         ReconnectionManager manager = ReconnectionManager.getInstanceFor(mConnection);
         manager.enableAutomaticReconnection();
-        addPacketSendListener(new MyStanzaListener());
         connected = true;
+
+        mRoster = Roster.getInstanceFor(mConnection);
+
+        mRoster.addPresenceEventListener(new PresenceEventListener() {
+            @Override
+            public void presenceAvailable(FullJid address, Presence availablePresence) {
+
+            }
+
+            @Override
+            public void presenceUnavailable(FullJid address, Presence presence) {
+
+            }
+
+            @Override
+            public void presenceError(Jid address, Presence errorPresence) {
+
+            }
+
+            @Override
+            public void presenceSubscribed(BareJid address, Presence subscribedPresence) {
+                Log.i("TAG", "添加成功");
+                if (mRoster.getEntry(address).getType() != RosterPacket.ItemType.both) {
+                    EventBus.getDefault().post(new FriendRequest.RequestResult(address.toString().split("@")[0], FriendRequest.Result.ACCEPT));
+                }
+            }
+
+            @Override
+            public void presenceUnsubscribed(BareJid address, Presence unsubscribedPresence) {
+                Log.i("TAG", "被拒绝了");
+                try {
+                    EventBus.getDefault().post(new FriendRequest.RequestResult(address.toString().split("@")[0], FriendRequest.Result.REJECT));
+                    mRoster.removeEntry(mRoster.getEntry(address));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mRoster.addSubscribeListener(new SubscribeListener() {
+            @Override
+            public SubscribeAnswer processSubscribe(Jid from, Presence subscribeRequest) {
+                FriendRequest friendRequest = new FriendRequest(subscribeRequest.getFrom().toString(), FriendRequest.Type.subscribe);
+                // 处理好友添加请求
+                /**
+                 * @see 处理方法参见cn.dazhou.railway.im.service.IMFriendRequestService#handleFriendRequest
+                 */
+                if(mRoster.getEntry(from.asBareJid()) == null
+                        || mRoster.getEntry(from.asBareJid()).getType() == RosterPacket.ItemType.none) {
+                    // 满足此条件表示 该好友请求为对方发来，己方为接收方
+                    EventBus.getDefault().post(friendRequest);
+                } else {
+                    // 满足此条件，表明己方为好友关系的首次请求方。
+                    // 对方确认添加己方为好友后，会申请添加己为好友，应当直接予以通过
+                    sendSubscription(from.toString(), Presence.Type.subscribed);
+                }
+                return null;
+            }
+        });
         return this;
     }
 
@@ -236,11 +302,11 @@ public class SmackImApiImpl implements IMApi {
             return;
         }
         FileTransferManager transfer = FileTransferManager.getInstanceFor(getConnection());
-        System.out.println("发送文件给: "+ jid);
+        System.out.println("发送文件给: " + jid);
         OutgoingFileTransfer out = null;
         try {
             Presence p = Roster.getInstanceFor(mConnection).getPresence(JidCreate.bareFrom(jid));
-            if(p == null){
+            if (p == null) {
                 Log.w("TAG", "SmackImApiImpl#sendFile:用户不存在");
                 return;
             }
@@ -262,19 +328,19 @@ public class SmackImApiImpl implements IMApi {
             public void run() {
                 long startTime = -1;
                 ProcessEvent event = new ProcessEvent(filePath);
-                while (!out.isDone()){
-                    if (out.getStatus().equals(FileTransfer.Status.error)){
+                while (!out.isDone()) {
+                    if (out.getStatus().equals(FileTransfer.Status.error)) {
                         Log.w("TAG", "文件传输失败：" + out.getError());
-                    }else{
+                    } else {
                         double progress = out.getProgress();
-                        if(progress > 0 && startTime == -1){
+                        if (progress > 0 && startTime == -1) {
                             startTime = System.currentTimeMillis();
                         }
                         progress *= 100;
-                        event.setProcess((int)progress);
+                        event.setProcess((int) progress);
                         EventBus.getDefault().post(event);
-                        Log.i("TAG", "status = "+ out.getStatus());
-                        Log.i("TAG", "progress = "+ progress +"%");
+                        Log.i("TAG", "status = " + out.getStatus());
+                        Log.i("TAG", "progress = " + progress + "%");
                     }
                     try {
                         Thread.sleep(500);
@@ -296,43 +362,48 @@ public class SmackImApiImpl implements IMApi {
     @Override
     public Roster addFriend(String jid) {
         if (mConnection == null) return null;
-        Roster roster = null;
         try {
-            roster = Roster.getInstanceFor(mConnection);
-            roster.createEntry(JidCreate.entityBareFrom(jid), jid, new String[]{"Friends"});
+//            mRoster.sendSubscriptionRequest(JidCreate.entityBareFrom(jid));
+            mRoster.createEntry(JidCreate.entityBareFrom(jid), jid, null);
         } catch (Exception e) {
             Log.e("TAG", "SmackImApiImpl.class: " + "好友添加失败");
             Log.e("TAG", "SmackImApiImpl.class: " + e.getMessage());
         }
-        return roster;
+        return mRoster;
+    }
+
+    public void removeFriend(String jid) {
+
     }
 
     public Roster acceptFriendRequest(String jid) {
         try {
-            Presence presenceRes = new Presence(Presence.Type.subscribed);
-            presenceRes.setTo(JidCreate.entityBareFrom(jid));
-            mConnection.sendStanza(presenceRes);
-            Roster roster = addFriend(jid);
-            return roster;
-        } catch (XmppStringprepException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (SmackException.NotConnectedException e) {
+            sendSubscription(jid, Presence.Type.subscribed);
+            mRoster.createEntry(JidCreate.entityBareFrom(jid), jid, null);
+            return mRoster;
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public boolean rejectFriendRequest(String jid) {
+    private void sendSubscription(String jid, Presence.Type type) {
         try {
-            Presence presenceRes = new Presence(Presence.Type.unsubscribe);
+            Presence presenceRes = new Presence(type);
             presenceRes.setTo(JidCreate.entityBareFrom(jid));
             mConnection.sendStanza(presenceRes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean rejectFriendRequest(String jid) {
+        try {
+            sendSubscription(jid, Presence.Type.unsubscribed);
+
             // 以下方法会确切删除数据库信息
-//            Roster roster = Roster.getInstanceFor(mConnection);
-//            RosterEntry entry = roster.getEntry(JidCreate.entityBareFrom(jid));
-//            roster.removeEntry(entry);
+            RosterEntry entry = mRoster.getEntry(JidCreate.entityBareFrom(jid));
+            mRoster.removeEntry(entry);
             return true;
         } catch (Exception e) {
             Log.e("TAG", "SmackImApiImpl.class: " + "好友删除失败");
@@ -370,11 +441,12 @@ public class SmackImApiImpl implements IMApi {
                 user.setName(row.getValues("Name").get(0));
                 user.setEmail(row.getValues("Email").get(0));
                 users.add(user);
-            } Log.i("TAG", " mConnect: " + mConnection);
+            }
+            Log.i("TAG", " mConnect: " + mConnection);
             return users;
         } catch (Exception e) {
             StringWriter sw = new StringWriter();
-            PrintWriter pw =  new PrintWriter(sw);
+            PrintWriter pw = new PrintWriter(sw);
             //将出错的栈信息输出到printWriter中
             e.printStackTrace(pw);
             pw.flush();
@@ -455,9 +527,8 @@ public class SmackImApiImpl implements IMApi {
     }
 
     /**
-     *
      * @param roomName 要加入的房间
-     * @param jid 被邀请者的Jid
+     * @param jid      被邀请者的Jid
      */
     @Override
     public void inviteUser(String roomName, String jid) {
@@ -474,7 +545,7 @@ public class SmackImApiImpl implements IMApi {
 //            muc.grantAdmin(JidCreate.entityBareFrom(jid));
 //            muc.grantMembership(JidCreate.entityBareFrom(jid));
 
-            List l  = muc.getMembers();
+            List l = muc.getMembers();
             List m = muc.getOccupants();
             //    List out = muc.getOutcasts();
         } catch (Exception e) {
@@ -540,27 +611,4 @@ public class SmackImApiImpl implements IMApi {
         return roomInfos;
     }
 
-    class MyStanzaListener implements StanzaListener {
-
-        @Override
-        public void processStanza(Stanza packet) throws SmackException.NotConnectedException, InterruptedException {
-            Log.i("TAG", "PresenceService-" + packet.toXML());
-            if (packet instanceof Presence) {
-                Presence presence = (Presence) packet;
-                Jid to = presence.getTo();//接收方
-                FriendRequest friendRequest;
-
-                Log.i("TAG", "Type = " + presence.getType());
-
-                if (presence.getType().equals(Presence.Type.unsubscribed)) {
-                    Log.i("TAG", "Type.UNsubscribe");
-                    friendRequest = new FriendRequest(to.toString(), FriendRequest.Type.unsubscribed);
-                    // 处理好友添加请求
-                    EventBus.getDefault().post(friendRequest);
-                } else if (presence.getType().equals(Presence.Type.subscribed)) {
-                    Log.i("TAG", "Type.subscribed");
-                }
-            }
-        }
-    }
 }

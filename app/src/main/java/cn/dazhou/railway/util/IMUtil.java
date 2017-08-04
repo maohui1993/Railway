@@ -48,10 +48,12 @@ public class IMUtil {
             for (RosterEntry entry : entries) {
                 String possessor = user.getUsername();
                 FriendModel friend = toFriendModel(entry, possessor);
-                user.getMyFriends().add(friend);
-                user.setFirstLogin(false);
-                user.save();
+                if (!friend.exists()) {
+                    user.getMyFriends().add(friend);
+                    user.setFirstLogin(false);
+                }
             }
+            user.save();
             return user.getMyFriends();
         } catch (IMLauncher.IMException e) {
             e.printStackTrace();

@@ -49,6 +49,7 @@ import cn.dazhou.im.R2;
 import cn.dazhou.im.adapter.ChatAdapter1;
 import cn.dazhou.im.adapter.CommonFragmentPagerAdapter;
 import cn.dazhou.im.entity.ChatMessageEntity;
+import cn.dazhou.im.entity.FriendRequest;
 import cn.dazhou.im.entity.FullImageInfo;
 import cn.dazhou.im.entity.ProcessEvent;
 import cn.dazhou.im.fragment.ChatEmotionFragment;
@@ -266,6 +267,8 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
 
         mAdapter.update(message);
     }
+
+
 
     public OnSendListener getOnSendListener() {
         return mOnSendListener;

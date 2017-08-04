@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.dazhou.database.UserModel;
+import cn.dazhou.railway.util.CrashHandler;
 
 /**
  * Created by hooyee on 2017/5/17.
@@ -39,6 +40,9 @@ public class MyApp extends Application {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             builder.detectFileUriExposure();
         }
+
+        CrashHandler crashHandler = CrashHandler.getInstance();
+        crashHandler.init(getApplicationContext());
 
     }
 

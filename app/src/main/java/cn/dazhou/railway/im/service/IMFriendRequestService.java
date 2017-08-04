@@ -1,5 +1,6 @@
 package cn.dazhou.railway.im.service;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -16,8 +17,10 @@ import org.greenrobot.eventbus.ThreadMode;
 import cn.dazhou.database.FriendRequestModel;
 import cn.dazhou.im.entity.FriendRequest;
 import cn.dazhou.railway.MyApp;
+import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.friend.request.FriendRequestActivity;
+import cn.dazhou.railway.splash.SplashActivity;
 
 /**
  * 好友请求服务.
@@ -34,6 +37,7 @@ public class IMFriendRequestService extends Service {
         super.onCreate();
         EventBus.getDefault().register(this);
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
     }
 
     @Override
@@ -45,12 +49,24 @@ public class IMFriendRequestService extends Service {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleFriendRequest(FriendRequest request) {
         Log.i("TAG", "IMFriendRequestService: " + request.getJid());
-        if (request.getType() == FriendRequest.Type.unsubscribed) {
+        if (request.getType() == FriendRequest.Type.subscribe) {
             sendNotification(request.getJid());
         }
     }
 
-    private void sendNotification(String jid) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void requestResult(FriendRequest.RequestResult result) {
+        switch (result.result) {
+            case ACCEPT:
+                sendNotification(result.jid, "已接受您的好友申请");
+                break;
+            case REJECT:
+                sendNotification(result.jid, "已拒绝您的好友申请");
+                break;
+        }
+    }
+
+    private void sendNotification(String jid, String title) {
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 //        Intent broadcast = new Intent(context, FriendRequestReceiver.class);
 //        broadcast.putExtra(Constants.DATA_KEY, jid);
@@ -59,13 +75,29 @@ public class IMFriendRequestService extends Service {
 //        broadcast.setAction("friend.request.accept");
 //        PendingIntent actionIntent = PendingIntent.getBroadcast(context, 0, broadcast, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+                context).setSmallIcon(R.drawable.message)
+                .setContentTitle("好友通知")
+                .setContentText(jid + title)
+                .setOngoing(true)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setTicker("好友添加通知")
+                .setAutoCancel(true);
+        Intent intent = new Intent(context, SplashActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        mBuilder.setContentIntent(pendingIntent);
+
+        notificationManager.notify(Constants.NOTIFICATION_ID_VALUE_ONE, mBuilder.build());
+    }
+
+    private void sendNotification(String jid) {
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                 context).setSmallIcon(cn.dazhou.im.R.drawable.emotion_aini)
                 .setContentTitle("好友请求")
                 .setContentText(jid + "发来好友请求")
-//                .addAction(new NotificationCompat.Action(cn.dazhou.im.R.mipmap.icon_chat_add, "接收", actionIntent))
                 .setOngoing(true)
                 .setDefaults(NotificationCompat.DEFAULT_ALL);
-        mBuilder.setTicker("一个新来的消息");//第一次提示消息的时候显示在通知栏上
+        mBuilder.setTicker("收到好友请求");//第一次提示消息的时候显示在通知栏上
         mBuilder.setAutoCancel(true);//自己维护通知的消失
 
         Intent intent = new Intent(context, FriendRequestActivity.class);

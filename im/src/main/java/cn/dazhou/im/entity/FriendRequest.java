@@ -47,4 +47,18 @@ public class FriendRequest {
 
         probe,
     }
+
+    public static class RequestResult {
+        public Result result;
+        public String jid;
+
+        public RequestResult(String jid, Result result) {
+            this.jid = jid;
+            this.result = result;
+        }
+    }
+    public enum Result {
+        ACCEPT,
+        REJECT
+    }
 }
