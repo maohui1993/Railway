@@ -82,6 +82,13 @@ public class FriendRequestModel extends BaseModel implements Parcelable{
     }
 
     @Override
+    public boolean equals(Object obj) {
+        FriendRequestModel model = (FriendRequestModel)obj;
+        return toJid.equals(model.toJid)
+                && fromJid.equals(model.fromJid);
+    }
+
+    @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
         dest.writeString(toJid);

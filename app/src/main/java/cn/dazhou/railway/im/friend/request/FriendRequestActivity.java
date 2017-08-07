@@ -21,6 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.dazhou.database.DataHelper;
 import cn.dazhou.database.FriendRequestModel;
+import cn.dazhou.im.entity.FriendRequest;
 import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
@@ -55,6 +56,10 @@ public class FriendRequestActivity extends AppCompatActivity {
         List<FriendRequestModel> requests = DataHelper.getFriendRequests(MyApp.gCurrentUsername);
         if (request != null) {
             request.save();
+            int index = requests.indexOf(request);
+            if (index >= 0) {
+                requests.remove(index);
+            }
             requests.add(request);
         }
         mAdapter = new FriendRequestAdapter(this, requests);
@@ -67,6 +72,15 @@ public class FriendRequestActivity extends AppCompatActivity {
         itemDecoration.setDrawLastItem(false);
         mEasyRecyclerView.setAdapter(mAdapter);
         mEasyRecyclerView.addItemDecoration(itemDecoration);
+    }
+
+    public void addItem(FriendRequestModel request) {
+        int index = mAdapter.getAllData().indexOf(request);
+        if (index >= 0) {
+            mAdapter.remove(index);
+        }
+
+        mAdapter.add(request);
     }
 
     @Override

@@ -16,11 +16,13 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import cn.dazhou.database.FriendRequestModel;
 import cn.dazhou.im.entity.FriendRequest;
+import cn.dazhou.railway.MyActivityManager;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.friend.request.FriendRequestActivity;
 import cn.dazhou.railway.splash.SplashActivity;
+import cn.dazhou.railway.util.IMUtil;
 
 /**
  * 好友请求服务.
@@ -58,9 +60,11 @@ public class IMFriendRequestService extends Service {
     public void requestResult(FriendRequest.RequestResult result) {
         switch (result.result) {
             case ACCEPT:
+                IMUtil.sendBroadcast(context, Constants.UPDATE_FROM_SERVER_BROADCAST);
                 sendNotification(result.jid, "已接受您的好友申请");
                 break;
             case REJECT:
+                IMUtil.sendBroadcast(context, Constants.UPDATE_FROM_SERVER_BROADCAST);
                 sendNotification(result.jid, "已拒绝您的好友申请");
                 break;
         }
@@ -110,7 +114,11 @@ public class IMFriendRequestService extends Service {
         PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pIntent);
 //        mBuilder.setFullScreenIntent(pIntent,true);
-        notificationManager.notify(Constants.NOTIFICATION_ID_VALUE_ONE, mBuilder.build());
+        if (MyActivityManager.getInstance().getTopActivity() instanceof FriendRequestActivity) {
+            ((FriendRequestActivity)MyActivityManager.getInstance().getTopActivity()).addItem(request);
+        } else {
+            notificationManager.notify(Constants.NOTIFICATION_ID_VALUE_ONE, mBuilder.build());
+        }
     }
 
     @Override

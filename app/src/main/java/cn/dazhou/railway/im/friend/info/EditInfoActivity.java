@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +38,13 @@ public class EditInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_info);
         ButterKnife.bind(this);
         info = getIntent().getParcelableExtra(Constants.DATA_KEY);
+        if (info.getTitle().equals(TITLE_TEL)) {
+            mEdit.setInputType(InputType.TYPE_CLASS_NUMBER);
+            mEdit.setMaxLines(1);
+            mEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(16)});
+        } else if (info.getTitle().equals(TITLE_NAME)) {
+            mEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(16)});
+        }
         mEdit.setText(info.getName());
         mToolbar.setTitle(info.getTitle());
         setSupportActionBar(mToolbar);
