@@ -2,10 +2,13 @@ package cn.dazhou.im.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.PermissionChecker;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -53,10 +56,15 @@ public class ImageUtil {
     }
 
     public static void checkPermission(Context context, String[] permissions) {
-        if (Build.VERSION.SDK_INT >= 23) {
+        for (String permission : permissions) {
+            if(ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED){
+                if (Build.VERSION.SDK_INT >= 23) {
                     ActivityCompat.requestPermissions((Activity) context,
                             permissions,
                             1);
+                }
+                break;
+            }
         }
     }
 

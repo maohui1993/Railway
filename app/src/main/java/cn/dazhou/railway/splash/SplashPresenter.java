@@ -2,11 +2,13 @@ package cn.dazhou.railway.splash;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -14,13 +16,15 @@ import android.widget.Toast;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
+import cn.dazhou.database.util.StringUtil;
+import cn.dazhou.im.IMLauncher;
 import cn.dazhou.railway.R;
 
 /**
  * Created by hooyee on 2017/6/1.
  */
 
-public class SplashPresenter implements SplashContract.Presenter{
+public class SplashPresenter implements SplashContract.Presenter {
     private static final int REQUEST_CODE = 200;
     private Context mContext;
     private SplashContract.View mView;
@@ -33,7 +37,7 @@ public class SplashPresenter implements SplashContract.Presenter{
 
     public void parseQRcode() {
         Intent intent = new Intent(mContext, CaptureActivity.class);
-        ((AppCompatActivity)mContext).startActivityForResult(intent, REQUEST_CODE);
+        ((AppCompatActivity) mContext).startActivityForResult(intent, REQUEST_CODE);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -45,8 +49,24 @@ public class SplashPresenter implements SplashContract.Presenter{
                     return;
                 }
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                    String result = bundle.getString(CodeUtils.RESULT_STRING);
+                    final String result = bundle.getString(CodeUtils.RESULT_STRING);
                     Toast.makeText(mContext, "解析结果:" + result, Toast.LENGTH_LONG).show();
+                    new AlertDialog.Builder(mContext)
+                            .setTitle("添加好友")
+                            .setMessage("是否确认添加" + result + "为好友？")
+                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    try {
+                                        IMLauncher.addFriend(StringUtil.getRealJid(result));
+                                    } catch (IMLauncher.IMException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("取消", null)
+                            .create()
+                            .show();
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                     Toast.makeText(mContext, "解析二维码失败", Toast.LENGTH_LONG).show();
                 }

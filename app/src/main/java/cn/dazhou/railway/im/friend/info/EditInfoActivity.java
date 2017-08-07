@@ -39,11 +39,12 @@ public class EditInfoActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         info = getIntent().getParcelableExtra(Constants.DATA_KEY);
         if (info.getTitle().equals(TITLE_TEL)) {
-            mEdit.setInputType(InputType.TYPE_CLASS_NUMBER);
+            mEdit.setInputType(InputType.TYPE_CLASS_PHONE);
             mEdit.setMaxLines(1);
             mEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(16)});
         } else if (info.getTitle().equals(TITLE_NAME)) {
             mEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(16)});
+            mEdit.setInputType(InputType.TYPE_CLASS_TEXT);
         }
         mEdit.setText(info.getName());
         mToolbar.setTitle(info.getTitle());
