@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 
@@ -34,6 +35,7 @@ public class WorkFragment extends BaseFragment implements WorkContract.View{
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_work, container, false);
         mGridView = (GridView) root.findViewById(R.id.grid);
+        mGridView.setOnItemClickListener(mPresenter);
         return root;
     }
 

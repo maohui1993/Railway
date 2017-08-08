@@ -1,15 +1,20 @@
 package cn.dazhou.railway.splash.functions.work;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import cn.dazhou.database.FunctionItemModel;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.util.Tool;
 
@@ -20,10 +25,10 @@ import cn.dazhou.railway.util.Tool;
 public class GridAdapter extends BaseAdapter {
     private int resId;
     private LayoutInflater inflater;
-    List<Item> datas;
+    List<FunctionItemModel> datas;
     Context context;
 
-    public GridAdapter(Context context, List<Item> data, int res) {
+    public GridAdapter(Context context, List<FunctionItemModel> data, int res) {
         this.context = context;
         resId = res;
         datas = data;
@@ -52,33 +57,27 @@ public class GridAdapter extends BaseAdapter {
         if(convertView == null) {
             convertView = inflater.inflate(resId, null);
             holder = new ViewHolder();
-            holder.image = (ImageButton) convertView.findViewById(R.id.image);
+            holder.image = (ImageView) convertView.findViewById(R.id.image);
             ViewGroup.LayoutParams params = holder.image.getLayoutParams();
             params.height = Tool.dip2px(context, params.height);
             params.width = Tool.dip2px(context, params.width);
             holder.text = (TextView) convertView.findViewById(R.id.text);
+
             convertView.setTag(holder);
         }else{
             holder=(ViewHolder)convertView.getTag();
         }
 
-        holder.text.setText(datas.get(position).text);
-        holder.image.setImageResource(datas.get(position).imageRes);
+        holder.text.setText(datas.get(position).getName());
+        Glide.with(context)
+                .load(datas.get(position).getIconUrl())
+                .placeholder(R.drawable.ic_launcher)
+                .into(holder.image);
         return convertView;
     }
 
     class ViewHolder {
         TextView text;
-        ImageButton image;
-    }
-
-    public static class Item {
-        int imageRes;
-        String text;
-
-        public Item(int imageRes, String text) {
-            this.imageRes = imageRes;
-            this.text = text;
-        }
+        ImageView image;
     }
 }

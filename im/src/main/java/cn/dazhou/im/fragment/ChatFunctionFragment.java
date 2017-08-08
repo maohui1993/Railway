@@ -1,5 +1,6 @@
 package cn.dazhou.im.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -29,6 +30,7 @@ import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.FileUtil;
 import cn.dazhou.im.util.ImageUtil;
 import cn.dazhou.im.util.JudgeMultiMediaType;
+import cn.dazhou.im.util.PermissionUtil;
 
 /**
  * Created by hooyee on 2017/7/10.
@@ -122,6 +124,10 @@ public class ChatFunctionFragment extends BaseFragment {
     public void onActivityResult(int req, int res, Intent data) {
         switch (req) {
             case Constants.CROP_PHOTO:
+                if(!PermissionUtil.hasPermission(getContext(), Manifest.permission.CAMERA)) {
+                    PermissionUtil.requestPermissions(getContext(), new String[] {Manifest.permission.CAMERA});
+                    break;
+                }
                 if (res == Constants.CROP_PHOTO) {
                     String path = data.getStringExtra("path");
                     try {

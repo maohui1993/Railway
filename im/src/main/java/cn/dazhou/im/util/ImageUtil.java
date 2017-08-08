@@ -27,19 +27,6 @@ import java.io.IOException;
 
 public class ImageUtil {
 
-    public static void checkPermission(Context context, String[] permissions) {
-        for (String permission : permissions) {
-            if(ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED){
-                if (Build.VERSION.SDK_INT >= 23) {
-                    ActivityCompat.requestPermissions((Activity) context,
-                            permissions,
-                            1);
-                }
-                break;
-            }
-        }
-    }
-
     public static Bitmap createBitmapByPath(String path, int maxWidth, int maxHeight) {
         if (path == null || "".equals(path)) {
             return null;

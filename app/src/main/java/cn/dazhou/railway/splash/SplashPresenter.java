@@ -1,5 +1,6 @@
 package cn.dazhou.railway.splash;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,6 +19,7 @@ import com.uuzuche.lib_zxing.activity.CodeUtils;
 
 import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.im.IMLauncher;
+import cn.dazhou.im.util.PermissionUtil;
 import cn.dazhou.railway.R;
 
 /**
@@ -36,6 +38,10 @@ public class SplashPresenter implements SplashContract.Presenter {
     }
 
     public void parseQRcode() {
+        if(!PermissionUtil.hasPermission(mContext, Manifest.permission.CAMERA)) {
+            PermissionUtil.requestPermissions(mContext, new String[] {Manifest.permission.CAMERA});
+            return;
+        }
         Intent intent = new Intent(mContext, CaptureActivity.class);
         ((AppCompatActivity) mContext).startActivityForResult(intent, REQUEST_CODE);
     }

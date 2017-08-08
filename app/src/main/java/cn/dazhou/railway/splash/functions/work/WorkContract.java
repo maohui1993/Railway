@@ -1,5 +1,6 @@
 package cn.dazhou.railway.splash.functions.work;
 
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 
 
@@ -11,7 +12,7 @@ import cn.dazhou.railway.BaseView;
  */
 
 public interface WorkContract {
-    interface Presenter extends BasePresenter {
+    interface Presenter extends BasePresenter, AdapterView.OnItemClickListener {
         void initData();
         void getDataFromServer(String url);
     }

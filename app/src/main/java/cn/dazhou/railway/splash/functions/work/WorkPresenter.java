@@ -2,11 +2,14 @@ package cn.dazhou.railway.splash.functions.work;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.dazhou.database.FunctionItemModel;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.http.RailwayApi;
 import retrofit2.Call;
@@ -21,14 +24,8 @@ import retrofit2.Retrofit;
 public class WorkPresenter implements WorkContract.Presenter {
     private WorkContract.View mView;
     private Context mContext;
-    private List<GridAdapter.Item> datas = new ArrayList<>();
+    private List<FunctionItemModel> datas = new ArrayList<>();
     private GridAdapter mAdapter;
-
-    // 图标
-    private int[] mEffectArray = {
-            R.drawable.record, R.drawable.check,
-            R.drawable.breakdown, R.drawable.date
-    };
 
     public WorkPresenter(Context context, WorkContract.View view) {
         mContext = context;
@@ -38,9 +35,7 @@ public class WorkPresenter implements WorkContract.Presenter {
     @Override
     public void initData() {
         getDataFromServer("http://192.168.1.39:8080/");
-        for (int i = 0; i < mEffectArray.length; i++) {
-            datas.add(new GridAdapter.Item(mEffectArray[i], ""));
-        }
+
         mAdapter = new GridAdapter(mContext, datas, R.layout.grid_item);
     }
 
@@ -56,6 +51,13 @@ public class WorkPresenter implements WorkContract.Presenter {
             public void onResponse(Call call, Response response) {
                 Toast.makeText(mContext, response.toString(), Toast.LENGTH_SHORT).show();
                 Log.i("retrofit", response.toString());
+                for (int i = 0; i < 10; i++) {
+                    FunctionItemModel model = new FunctionItemModel();
+                    model.setJid("1" + i);
+                    model.setShortName("a" + i);
+                    model.setIconUrl("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1502193620557&di=a8207d45ef048f5080ccea293702466e&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F019f9c5542b8fc0000019ae980d080.jpg%40900w_1l_2o_100sh.jpg");
+                    datas.add(model);
+                }
                 mView.setAdapter(mAdapter);
             }
 
@@ -64,5 +66,10 @@ public class WorkPresenter implements WorkContract.Presenter {
                 Log.i("retrofit", t.getMessage());
             }
         });
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Toast.makeText(mContext, datas.get(position).getShortName(), Toast.LENGTH_SHORT).show();
     }
 }

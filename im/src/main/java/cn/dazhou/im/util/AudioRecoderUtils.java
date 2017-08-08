@@ -1,8 +1,8 @@
 package cn.dazhou.im.util;
 
+import android.Manifest;
 import android.content.Context;
 import android.media.MediaRecorder;
-import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 
@@ -54,10 +54,11 @@ public class AudioRecoderUtils {
      * @return
      */
     public void startRecord(Context context) {
-//        if (!CheckPermissionUtils.isHasPermission(context)) {
-//            audioStatusUpdateListener.onError();
-//            return;
-//        }
+        if (!PermissionUtil.hasPermission(context, Manifest.permission.RECORD_AUDIO)) {
+            audioStatusUpdateListener.onError();
+            return;
+        }
+
         // 开始录音
         /* ①Initial：实例化MediaRecorder对象 */
         if (mMediaRecorder == null)
