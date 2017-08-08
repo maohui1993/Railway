@@ -244,10 +244,6 @@ public class ChatMessageModel extends BaseModel implements ChatMessageDbApi {
     }
 
     public void setJid(String jid) {
-//        if (jid.contains(Constants.JID_SEPARATOR)) {
-//            jid = jid.split(Constants.JID_SEPARATOR)[0];
-//        }
-//        this.jid = jid + Constants.JID_SEPARATOR + MyApp.gCurrentUsername;
         this.jid = jid;
     }
 
@@ -299,12 +295,6 @@ public class ChatMessageModel extends BaseModel implements ChatMessageDbApi {
         this.content = content;
         this.fromJid = fromJid;
         this.toJid = toJid;
-//        if (jid != null) {
-//            if (jid.contains(Constants.JID_SEPARATOR)) {
-//                jid = jid.split(Constants.JID_SEPARATOR)[0];
-//            }
-//            this.jid = jid + Constants.JID_SEPARATOR + MyApp.gCurrentUsername;
-//        }
         this.jid = jid;
         this.type = type;
         this.voiceTime = voiceTime;
@@ -365,13 +355,6 @@ public class ChatMessageModel extends BaseModel implements ChatMessageDbApi {
         }
 
         public Builder jid(String jid) {
-//            if (jid == null) {
-//                return this;
-//            }
-//            if (jid.contains(Constants.JID_SEPARATOR)) {
-//                jid = jid.split(Constants.JID_SEPARATOR)[0];
-//            }
-//            this.jid = jid + Constants.JID_SEPARATOR + MyApp.gCurrentUsername;
             this.jid = jid;
             return this;
         }

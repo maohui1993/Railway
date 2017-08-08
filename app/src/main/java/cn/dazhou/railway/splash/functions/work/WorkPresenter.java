@@ -44,7 +44,6 @@ public class WorkPresenter implements WorkContract.Presenter {
         mAdapter = new GridAdapter(mContext, datas, R.layout.grid_item);
     }
 
-
     @Override
     public void getDataFromServer(String url) {
         Retrofit retrofit = new Retrofit.Builder()
