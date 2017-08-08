@@ -19,9 +19,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.dazhou.database.DataHelper;
+import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.database.FriendRequestModel;
-import cn.dazhou.im.entity.FriendRequest;
 import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;

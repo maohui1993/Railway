@@ -16,8 +16,6 @@ import android.provider.MediaStore;
 
 public class FileUtil {
 
-
-
     // 专为Android4.4设计的从Uri获取文件绝对路径，以前的方法已不好使
     @SuppressLint("NewApi")
     public static String getPathByUri4kitkat(final Context context, final Uri uri) {

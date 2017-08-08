@@ -28,7 +28,7 @@ import cn.dazhou.railway.splash.functions.BaseFragment;
 import cn.dazhou.railway.splash.functions.contact.ContactListFragment;
 import cn.dazhou.railway.splash.functions.home.HomeFragment;
 import cn.dazhou.railway.splash.functions.setting.SettingFragment;
-import cn.dazhou.railway.splash.functions.WorkFragment;
+import cn.dazhou.railway.splash.functions.work.WorkFragment;
 import cn.dazhou.railway.im.friend.info.MyselfInfoActivity;
 
 /**

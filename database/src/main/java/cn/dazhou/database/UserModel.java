@@ -1,6 +1,7 @@
 package cn.dazhou.database;
 
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ManyToMany;
 import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -14,6 +15,7 @@ import java.util.List;
  */
 
 @Table(database = RailwayDatabase.class)
+//@ManyToMany(referencedTable = FunctionItemModel.class)
 public class UserModel extends BaseModel{
     @PrimaryKey
     private String username;   //用户jid

@@ -23,7 +23,7 @@ import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.splash.SplashActivity;
 import cn.dazhou.railway.im.friend.info.FriendInfoActivity;
-import cn.dazhou.database.DataHelper;
+import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.railway.util.ActivityUtils;
 
 import static cn.dazhou.railway.config.Constants.DATA_KEY;

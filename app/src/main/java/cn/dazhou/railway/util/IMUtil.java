@@ -39,47 +39,9 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class IMUtil {
-    public static List<FriendModel> updateFriendFromServer(UserModel user) {
-        // 从服务器获取好友列表
-        Roster roster = null;
-        try {
-            roster = IMLauncher.getRoster();
-            Set<RosterEntry> entries = roster.getEntries();
-            for (RosterEntry entry : entries) {
-                String possessor = user.getUsername();
-                FriendModel friend = toFriendModel(entry, possessor);
-                if (!friend.exists()) {
-                    user.getMyFriends().add(friend);
-                    user.setFirstLogin(false);
-                }
-            }
-            user.save();
-            return user.getMyFriends();
-        } catch (IMLauncher.IMException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
-    public static FriendModel toFriendModel(RosterEntry entry, String possessor) {
-        FriendModel friend = new FriendModel();
-        // raw-jid形式为  username@hostname
-        String rawJid = entry.getJid().toString();
-        // 存储的jid形式为  username@possessor
-        friend.setJid(StringUtil.getWrapJid(rawJid, possessor));
-        friend.setRelation(FriendModel.typeToInt(entry.getType().name()));
-        friend.setRawJid(rawJid);
-        friend.setName(entry.getName());
-        friend.setPossessor(possessor);
-        try {
-            ExtraInfo info = IMLauncher.getVCard(rawJid);
-            friend.setNickName(info.getName());
-            friend.setTel(info.getTel());
-        } catch (IMLauncher.IMException e) {
-            e.printStackTrace();
-        }
-        return friend;
-    }
+
+
 
     public static void startServiceWhenLogin(Context context) {
         Log.i("TAG", "start service");

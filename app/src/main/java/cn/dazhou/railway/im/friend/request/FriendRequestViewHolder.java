@@ -14,6 +14,7 @@ import org.jxmpp.jid.impl.JidCreate;
 
 import cn.dazhou.database.FriendModel;
 import cn.dazhou.database.FriendRequestModel;
+import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.railway.MyApp;
@@ -101,7 +102,7 @@ public class FriendRequestViewHolder extends BaseViewHolder<FriendRequestModel> 
                         public void subscribe(@NonNull ObservableEmitter e) throws Exception {
                             Roster roster = IMLauncher.acceptFriendRequest(mUsernameText.getText().toString());
                             RosterEntry entry = roster.getEntry(JidCreate.bareFrom(StringUtil.getRealJid(mUsernameText.getText().toString(), MyApp.gServerIp)));
-                            FriendModel friendModel = IMUtil.toFriendModel(entry, MyApp.gCurrentUsername);
+                            FriendModel friendModel = DataHelper.toFriendModel(entry, MyApp.gCurrentUsername);
                             flag = friendModel.exists();
                             if (!flag) {
                                 friendModel.save();

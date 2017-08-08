@@ -1,4 +1,4 @@
-package cn.dazhou.railway.splash.functions;
+package cn.dazhou.railway.splash.functions.contact;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

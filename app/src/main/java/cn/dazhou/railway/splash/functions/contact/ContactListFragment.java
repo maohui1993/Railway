@@ -25,12 +25,12 @@ import java.util.Collections;
 import java.util.List;
 
 import cn.dazhou.database.FriendModel;
+import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.im.acpect.db.FriendDbApi;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.splash.functions.BaseFragment;
-import cn.dazhou.railway.splash.functions.StickyHeaderAdapter;
 import cn.dazhou.railway.util.IMUtil;
 
 public class ContactListFragment extends BaseFragment implements ContactListContract.View {
@@ -104,7 +104,7 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
     BroadcastReceiver updateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent){
-            IMUtil.updateFriendFromServer(MyApp.gCurrentUser);
+            DataHelper.updateFriendFromServer(MyApp.gCurrentUser);
             onUpdateData(MyApp.gCurrentUser.getMyFriends());
         }
     };

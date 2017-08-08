@@ -13,6 +13,7 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import cn.dazhou.database.UserModel;
 import cn.dazhou.database.UserModel_Table;
+import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ExtraInfo;
@@ -98,7 +99,7 @@ public class LoginPresenter implements LoginContract.Presenter{
                             userModel.setNickName(info.getName());
                             userModel.setTel(info.getTel());
                             userModel.save();
-                            IMUtil.updateFriendFromServer(userModel);
+                            DataHelper.updateFriendFromServer(userModel);
                         }
                         // 先初始化全局user
                         MyApp.gCurrentUser = userModel;

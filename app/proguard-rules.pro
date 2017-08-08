@@ -29,3 +29,6 @@
 -dontwarn com.baidu.**
 
 -keep class * extends com.raizlabs.android.dbflow.config.DatabaseHolder { *; }
+
+-dontwarn okio.**
+-dontwarn javax.annotation.**

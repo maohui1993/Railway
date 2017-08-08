@@ -12,6 +12,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.dazhou.database.FriendModel;
+import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
@@ -48,7 +49,7 @@ public class FriendInfoActivity extends AppCompatActivity {
         // 有ARN风险
         String latestUser = SharedPreferenceUtil.getString(this, Constants.LATEST_LOGIN_JID, "");
 //        if (!"".equals(latestUser)) {
-            friendModel = FriendModel.getMyFriend(StringUtil.getWrapJid(jid));
+            friendModel = DataHelper.getFriend(StringUtil.getWrapJid(jid));
             mNickNameTx.setText(friendModel.getNickName());
             mTelTx.setText(friendModel.getTel());
 //        }

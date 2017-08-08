@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import java.util.List;
 
 import cn.dazhou.database.ChatMessageModel;
-import cn.dazhou.database.DataHelper;
+import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.database.FriendModel;
 import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.im.IMLauncher;

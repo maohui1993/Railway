@@ -21,6 +21,7 @@ import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.ImageUtil;
+import cn.dazhou.im.util.JsonUtil;
 import cn.dazhou.railway.util.LogUtil;
 
 public class IMChatRoomService extends Service {
@@ -54,7 +55,7 @@ public class IMChatRoomService extends Service {
     MessageListener messageListener = new MessageListener() {
         @Override
         public void processMessage(Message message) {
-            ChatMessageEntity chatMessageEntity = (ChatMessageEntity) ImageUtil.parseJSON(message.getBody(), ChatMessageEntity.class);
+            ChatMessageEntity chatMessageEntity = JsonUtil.parseJSON(message.getBody(), ChatMessageEntity.class);
             // 标志为接收到的消息
             chatMessageEntity.setType(Constants.CHAT_ITEM_TYPE_LEFT);
             String fromUser = message.getFrom().getLocalpartOrNull().toString().split("@")[0];

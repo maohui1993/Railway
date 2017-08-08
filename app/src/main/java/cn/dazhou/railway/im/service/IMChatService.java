@@ -46,6 +46,7 @@ import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.entity.ProcessEvent;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.ImageUtil;
+import cn.dazhou.im.util.JsonUtil;
 import cn.dazhou.im.util.JudgeMultiMediaType;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.chat.ChatActivity;
@@ -158,7 +159,7 @@ public class IMChatService extends Service {
         @Override
         public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
             Log.i("TAG", message.getBody());
-            ChatMessageEntity chatMessageEntity = (ChatMessageEntity) ImageUtil.parseJSON(message.getBody(), ChatMessageEntity.class);
+            ChatMessageEntity chatMessageEntity = JsonUtil.parseJSON(message.getBody(), ChatMessageEntity.class);
             if (chatMessageEntity == null) {
                 return;
             }

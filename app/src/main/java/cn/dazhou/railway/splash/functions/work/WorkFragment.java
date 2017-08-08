@@ -1,29 +1,21 @@
-package cn.dazhou.railway.splash.functions;
+package cn.dazhou.railway.splash.functions.work;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.dazhou.railway.R;
+import cn.dazhou.railway.splash.functions.BaseFragment;
 
-public class WorkFragment extends BaseFragment {
+public class WorkFragment extends BaseFragment implements WorkContract.View{
     private GridView mGridView;
-    private GridAdapter adapter;
-
-    // 图标
-    private int[] mEffectArray = {
-            R.drawable.record, R.drawable.check,
-            R.drawable.breakdown, R.drawable.date
-    };
-
-    List<GridAdapter.Item> datas = new ArrayList<>();
-
-    private String[] mNames;
+    private WorkContract.Presenter mPresenter;
 
     public static WorkFragment newInstance(boolean param1) {
         WorkFragment fragment = new WorkFragment();
@@ -36,8 +28,8 @@ public class WorkFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mNames = getResources().getStringArray(R.array.names);
-        initData();
+        mPresenter = new WorkPresenter(getContext(), this);
+        mPresenter.initData();
     }
 
     @Override
@@ -45,14 +37,18 @@ public class WorkFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_work, container, false);
         mGridView = (GridView) root.findViewById(R.id.grid);
-        mGridView.setAdapter(adapter);
         return root;
     }
 
-    private void initData() {
-        for (int i = 0; i < mEffectArray.length; i++) {
-            datas.add(new GridAdapter.Item(mEffectArray[i], mNames[i]));
-        }
-        adapter = new GridAdapter(getContext(), datas, R.layout.grid_item);
+    @Override
+    public void setPresenter(WorkContract.Presenter presenter) {
+
+    }
+
+    @Override
+    public void setAdapter(BaseAdapter adapter) {
+//        if (mGridView != null) {
+            mGridView.setAdapter(adapter);
+//        }
     }
 }

@@ -63,14 +63,7 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel>, F
         return chatMessages;
     }
 
-    public static FriendModel getMyFriend(String jid) {
-        FriendModel friend = null;
-        friend = SQLite.select()
-                .from(FriendModel.class)
-                .where(FriendModel_Table.jid.eq(jid))
-                .querySingle();
-        return friend;
-    }
+
 
     public synchronized List<ChatMessageModel> getMyChatMessages(int page) {
         int count = (int) SQLite.selectCountOf(ChatMessageModel_Table.id)

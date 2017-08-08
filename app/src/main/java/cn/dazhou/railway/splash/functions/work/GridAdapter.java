@@ -1,4 +1,4 @@
-package cn.dazhou.railway.splash.functions;
+package cn.dazhou.railway.splash.functions.work;
 
 import android.content.Context;
 import android.view.LayoutInflater;

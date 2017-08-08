@@ -65,6 +65,7 @@ import cn.dazhou.im.entity.ProcessEvent;
 import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.im.entity.UserExtensionElement;
 import cn.dazhou.im.util.ImageUtil;
+import cn.dazhou.im.util.JsonUtil;
 import cn.dazhou.im.util.OfflineMsgManager;
 
 /**
@@ -236,7 +237,7 @@ public class SmackImApiImpl implements IMApi {
             case voice:
             case picture:
                 mChat = mChatManager.chatWith(id);
-                String msgJson = ImageUtil.toJSON(msg);
+                String msgJson = JsonUtil.toJSON(msg);
                 mChat.send(msgJson);
                 break;
             case video:
@@ -259,7 +260,7 @@ public class SmackImApiImpl implements IMApi {
         if (mChat == null) {
             return;
         }
-        String msgJson = ImageUtil.toJSON(msg);
+        String msgJson = JsonUtil.toJSON(msg);
         mChat.send(msgJson);
     }
 

@@ -26,34 +26,6 @@ import java.io.IOException;
  */
 
 public class ImageUtil {
-    private static Gson gson;
-
-    public static Object parseJSON(String jsonString, Class classType) {
-        if (gson == null) {
-            gson = new Gson();
-        }
-        Object obj = null;
-        try {
-            obj = gson.fromJson(jsonString, classType);
-        } catch (JsonSyntaxException e) {
-            Log.e("TAG", "load json is fail");
-        }
-        return obj;
-    }
-
-    public static String toJSON(Object obj) {
-        if (gson == null) {
-            gson = new Gson();
-        }
-        String json = null;
-        try {
-            json = gson.toJson(obj);
-            Log.i("TAG", "json-info = " + json);
-        } catch (JsonSyntaxException e) {
-            Log.e("TAG", "load json is fail");
-        }
-        return json;
-    }
 
     public static void checkPermission(Context context, String[] permissions) {
         for (String permission : permissions) {
