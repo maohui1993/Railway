@@ -94,15 +94,17 @@ public class ChatPresenter implements ChatContract.Presenter {
         }
         final List<ChatMessageModel> chatMessageModels = mFriendModel.getMyChatMessages(page);
         if (chatMessageModels != null && chatMessageModels.size() > 0) {
-            mChatView.showLoadingTip("加载更多...");
+            mChatView.showLoadTip("加载更多...", false);
+            wholeLoaded = false;
+            page++;
         } else if (!wholeLoaded){
-            mChatView.showLoadingTip("已全部加载...");
+            mChatView.showLoadTip("已全部加载...", true);
             wholeLoaded = true;
         }
+        // 一秒钟后执行数据加载
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                page++;
                 mChatView.refresh(ChatMessageModel.toChatMessageEntity(chatMessageModels));
             }
         }, 1000);

@@ -71,6 +71,7 @@ public class FriendRequestActivity extends AppCompatActivity {
         itemDecoration.setDrawLastItem(false);
         mEasyRecyclerView.setAdapter(mAdapter);
         mEasyRecyclerView.addItemDecoration(itemDecoration);
+        mEasyRecyclerView.setEmptyView(R.layout.view_empty);
     }
 
     public void addItem(FriendRequestModel request) {

@@ -12,4 +12,7 @@ import retrofit2.http.Path;
 public interface RailwayApi {
     @GET("home/{id}")
     Call<ResponseBody> getHome(@Path("id") String id);
+
+    @GET("home/{icon_path}")
+    Call<ResponseBody> downFile(@Path("icon_path") String iconPath);
 }

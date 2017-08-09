@@ -373,7 +373,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         chatList.setRefreshListener(listener);
     }
 
-    public void setLoadingTip(final String tip) {
+    public void showLoadTip(final String tip, boolean isAll) {
         mAdapter.addHeader(new RecyclerArrayAdapter.ItemView() {
             @Override
             public View onCreateView(ViewGroup parent) {
@@ -392,9 +392,9 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         });
     }
 
-
     public void onRefresh(final List<ChatMessageEntity> msgs, final boolean moveCursor) {
         if (msgs == null || msgs.size() == 0) {
+            mAdapter.notifyDataSetChanged();
             return;
         }
         mAdapter.removeAllHeader();

@@ -83,6 +83,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View{
         mNotices.add("3、人员调动计划公告");
         mNotices.add("4、巡检计划公告");
         mNotices.add("5、维护计划公告");
+        mNotices.add("6、人员调动计划公告");        mNotices.add("3、人员调动计划公告");
+        mNotices.add("4、巡检计划公告");
+        mNotices.add("5、维护计划公告");
         mNotices.add("6、人员调动计划公告");
 
         mLaws.add("守则1");

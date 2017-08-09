@@ -17,7 +17,13 @@ public interface ChatContract {
     interface View extends BaseView<ChatContract.Presenter> {
         boolean back();
         void refresh(List data);
-        void showLoadingTip(String tip);
+
+        /**
+         *
+         * @param tip
+         * @param isAll true为全加载完
+         */
+        void showLoadTip(String tip, boolean isAll);
     }
 
     interface Presenter extends BasePresenter, ChatContentView.OnSendListener, ChatContentView.OnImageClickListener, SwipeRefreshLayout.OnRefreshListener, Toolbar.OnMenuItemClickListener{

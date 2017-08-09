@@ -7,6 +7,7 @@ import android.os.Environment;
  */
 
 public final class Constants {
+    public static final String LOG_TAG_HTTP = "http";
     public static final String SERVER_IP = "server_ip";
     public static final String SERVER_PORT = "server_port";
     public static final String SERVER_CONNECT_TIMEOUT = "server_timeout";

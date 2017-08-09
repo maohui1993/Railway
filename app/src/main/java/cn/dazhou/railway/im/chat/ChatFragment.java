@@ -60,14 +60,12 @@ public class ChatFragment extends Fragment implements ChatContract.View {
 
     @Override
     public void refresh(List data) {
-        if (data != null) {
-            mChatContentView.onRefresh(data);
-        }
+        mChatContentView.onRefresh(data);
     }
 
     @Override
-    public void showLoadingTip(String tip) {
-        mChatContentView.setLoadingTip(tip);
+    public void showLoadTip(String tip, boolean isAll) {
+        mChatContentView.showLoadTip(tip, isAll);
     }
 
     @Override
