@@ -1,8 +1,8 @@
 package cn.dazhou.railway.im.friend.request;
 
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -19,8 +19,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.database.FriendRequestModel;
+import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
@@ -71,7 +71,6 @@ public class FriendRequestActivity extends AppCompatActivity {
         itemDecoration.setDrawLastItem(false);
         mEasyRecyclerView.setAdapter(mAdapter);
         mEasyRecyclerView.addItemDecoration(itemDecoration);
-        mEasyRecyclerView.setEmptyView(R.layout.view_empty);
     }
 
     public void addItem(FriendRequestModel request) {

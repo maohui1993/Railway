@@ -18,6 +18,7 @@
 
     <com.jude.easyrecyclerview.EasyRecyclerView
         android:id="@+id/easy_recycler_ver"
+        app:layout_empty="@layout/view_empty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></com.jude.easyrecyclerview.EasyRecyclerView>
 
