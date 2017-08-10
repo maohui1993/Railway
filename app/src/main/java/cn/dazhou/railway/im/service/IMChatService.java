@@ -191,17 +191,18 @@ public class IMChatService extends Service {
                 chatDb.updateState(false);
                 sendNotification(chatMessageEntity, chatDb.jid());
             }
-            String tip = getTipString(chatDb);
-            EventBus.getDefault().post(new ContactListFragment.TipMessage(chatDb.jid(), tip));
-            // 有新消息则在对应的好友上面加上 消息数量
-
-            FriendDbApi friendDb = new FriendModel();
-            friendDb.jid(chatDb.jid());
             /**
              * 有新消息则在对应的好友上面加上 消息数量
              * @see cn.dazhou.railway.splash.functions.contact.ContactListFragment#updateTipMessage
              * @param friendModel
              */
+            String tip = getTipString(chatDb);
+            EventBus.getDefault().post(new ContactListFragment.TipMessage(chatDb.jid(), tip));
+
+            // 有新消息则在对应的好友上面加上 消息数量
+            FriendDbApi friendDb = new FriendModel();
+            friendDb.jid(chatDb.jid());
+
             EventBus.getDefault().post(friendDb);
             chatDb.saveMessage();
         }

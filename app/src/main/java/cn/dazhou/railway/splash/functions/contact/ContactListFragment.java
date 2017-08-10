@@ -21,12 +21,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.Collections;
 import java.util.List;
 
+import cn.dazhou.database.FriendModel;
 import cn.dazhou.im.acpect.db.FriendDbApi;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.splash.functions.BaseFragment;
-
-import static android.view.View.GONE;
 
 public class ContactListFragment extends BaseFragment implements ContactListContract.View {
     private static final String ARG_PARAM1 = "param1";
@@ -39,7 +38,6 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
     private View mRootView;
 
     private StickyHeaderDecoration mDecoration;
-
 
     public static ContactListFragment newInstance(boolean param1) {
         ContactListFragment fragment = new ContactListFragment();
@@ -131,7 +129,7 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
     @Override
     public void hideRequestCountTip() {
         if (mRequestTipTx != null) {
-            mRequestTipTx.setVisibility(GONE);
+            mRequestTipTx.setVisibility(View.GONE);
         }
     }
 
@@ -155,14 +153,23 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
     }
 
     /**
-     * 更新当前好友未读消息量
+     * 1、更新当前好友未读消息量
+     * 2、置顶正在聊天的对象
      *
      * @param friendModel
      * @see cn.dazhou.railway.im.service.IMChatService#incomingChatMessageListener
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateTipMessage(FriendDbApi friendModel) {
-        mRosterAdapter.updateData(friendModel);
+        mRosterAdapter.markNewMsg((FriendModel) friendModel);
+
+        if (mDecoration != null) {
+            mRosterView.removeItemDecoration(mDecoration);
+        }
+        mDecoration = new StickyHeaderDecoration(new StickyHeaderAdapter(getContext(), mRosterAdapter.getAllData()));
+        mRosterView.addItemDecoration(mDecoration);
+
+        mRosterAdapter.showMsgCount((FriendModel) friendModel);
     }
 
     @Override

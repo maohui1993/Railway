@@ -49,7 +49,7 @@ public class RosterViewHolder extends BaseViewHolder<FriendModel> {
 
     int sum = 0;
 
-    public void updateMessageCount(int count) {
+    public void addMessageCount(int count) {
         sum += count;
         mMessageCount.setText("[" + sum + "]");
         mMessageCount.setVisibility(View.VISIBLE);

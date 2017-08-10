@@ -11,6 +11,7 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import java.util.Comparator;
 import java.util.List;
 
 import cn.dazhou.im.acpect.db.FriendDbApi;
@@ -43,6 +44,8 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel>, F
     private String nickName;    // 好友备注
 
     private int onceMaxShown = 5;
+
+    private boolean hasNewMsg;
 
     List<ChatMessageModel> chatMessages;
 
@@ -173,6 +176,14 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel>, F
         this.nickName = nickName;
     }
 
+    public boolean isHasNewMsg() {
+        return hasNewMsg;
+    }
+
+    public void setHasNewMsg(boolean hasNewMsg) {
+        this.hasNewMsg = hasNewMsg;
+    }
+
     public static int typeToInt(String type) {
         switch (type) {
             case "remove":
@@ -192,13 +203,25 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel>, F
 
     @Override
     public int compareTo(FriendModel o) {
-        if (o == null || o.getName() == null) {
-            return 1;
+        if (o == null ) {
+            return 0;
         }
-        if (getName() == null) {
-            return -1;
+//        if(!(isHasNewMsg()^o.isHasNewMsg())) {
+//            return this.getName().toLowerCase().compareTo(o.getName());
+//        } else if (isHasNewMsg()) {
+//            return 1;
+//        }
+//        return -1;
+
+        if(isHasNewMsg()^o.isHasNewMsg()) {
+            if (isHasNewMsg()) {
+                return -1;
+            } else {
+                return 1;
+            }
+        } else {
+            return this.getName().toLowerCase().compareTo(o.getName());
         }
-        return this.getName().toLowerCase().compareTo(o.getName());
     }
 
     @Override

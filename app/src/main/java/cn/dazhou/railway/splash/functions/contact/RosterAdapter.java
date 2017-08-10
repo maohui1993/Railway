@@ -7,6 +7,9 @@ import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import cn.dazhou.database.FriendModel;
@@ -56,13 +59,21 @@ public class RosterAdapter extends RecyclerArrayAdapter<FriendModel> {
         result.updateLatestMsg(tipMessage.info);
     }
 
-    public void updateData(FriendDbApi friendModel) {
-        if (friendModel instanceof FriendModel) {
-            FriendModel model = (FriendModel)friendModel;
-            int index = getPosition(model);
-            RosterViewHolder result = viewHolders.get(index);
-            // 增加一条消息
-            result.updateMessageCount(1);
-        }
+    public void showMsgCount(FriendModel friendModel) {
+        int index = getPosition(friendModel);
+        RosterViewHolder result = viewHolders.get(index);
+        // 增加一条消息
+        result.addMessageCount(1);
+    }
+
+    public void markNewMsg(FriendModel friendModel) {
+        int index = getPosition(friendModel);
+        getItem(index).setHasNewMsg(true);
+        sort(new Comparator<FriendModel>() {
+            @Override
+            public int compare(FriendModel o1, FriendModel o2) {
+                return o1.compareTo(o2);
+            }
+        });
     }
 }
