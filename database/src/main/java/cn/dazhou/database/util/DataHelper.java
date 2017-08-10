@@ -35,6 +35,14 @@ public class DataHelper {
                 .queryList();
     }
 
+    public static long countOfNotHandlerRequest(String jid) {
+        return SQLite.selectCountOf()
+                .from(FriendRequestModel.class)
+                .where(FriendRequestModel_Table.toJid.eq(jid))
+                .and(FriendRequestModel_Table.state.eq(FriendRequestModel.State.NOT_HANDLE))
+        .count();
+    }
+
     public static List<FriendModel> updateFriendFromServer(UserModel user) {
         // 从服务器获取好友列表
         Roster roster = null;
@@ -128,7 +136,7 @@ public class DataHelper {
                 // 存储的jid形式为  username@possessor
                 .where(FriendRequestModel_Table.fromJid.eq(fromJid))
                 .and(FriendRequestModel_Table.toJid.eq(toJid))
-                .orderBy(FriendRequestModel_Table.id.desc())
+                .orderBy(FriendRequestModel_Table.timestamp.desc())
                 .querySingle();
     }
 
@@ -137,7 +145,7 @@ public class DataHelper {
                 .from(FriendRequestModel.class)
                 // 存储的jid形式为  username@possessor
                 .where(FriendRequestModel_Table.toJid.eq(toJid))
-                .orderBy(FriendRequestModel_Table.id.desc())
+                .orderBy(FriendRequestModel_Table.timestamp.desc())
                 .queryList();
     }
 }

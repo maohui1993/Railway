@@ -40,9 +40,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class IMUtil {
 
-
-
-
     public static void startServiceWhenLogin(Context context) {
         Log.i("TAG", "start service");
         IMChatService.startItself(context);
@@ -53,8 +50,6 @@ public class IMUtil {
         IMChatService.stopItself(context);
         IMFriendRequestService.stopItself(context);
     }
-
-    static boolean connected;
 
     public static void checkUser(final Context context) {
         String lastLogin = SharedPreferenceUtil.getString(context, Constants.LATEST_LOGIN_JID, "");

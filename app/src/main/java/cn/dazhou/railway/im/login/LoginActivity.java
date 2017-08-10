@@ -36,7 +36,6 @@ public class LoginActivity extends AppCompatActivity {
         mPresenter = new LoginPresenter(this, mLoginFragment);
     }
 
-
     int clickNum;
 
     @Override

@@ -15,7 +15,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
-
     <uses-permission android:name="android.permission.READ_USER_DICTIONARY" />
 
     <application
@@ -33,11 +32,13 @@
             android:name=".im.login.LoginActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN" />-->
 
-            <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".im.chat.ChatActivity"
@@ -60,7 +61,7 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="action.friend.refresh"></action>
+                <action android:name="action.friend.refresh" />
             </intent-filter>
         </service>
 
@@ -100,6 +101,14 @@
             android:name=".im.friend.info.FriendInfoActivity"
             android:screenOrientation="portrait" />
 
+        <!--<receiver-->
+            <!--android:name=".im.broadcast.LoginReceiver"-->
+            <!--android:enabled="true"-->
+            <!--android:exported="true">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="action.login.success" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
     </application>
 
 </manifest>

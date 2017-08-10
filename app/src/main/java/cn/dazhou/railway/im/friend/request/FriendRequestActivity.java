@@ -33,7 +33,7 @@ public class FriendRequestActivity extends AppCompatActivity {
     @BindView(R.id.my_toolbar)
     Toolbar mToolbar;
     private FriendRequestAdapter mAdapter;
-    private List<UserBean> datas = new ArrayList();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +54,6 @@ public class FriendRequestActivity extends AppCompatActivity {
 
         List<FriendRequestModel> requests = DataHelper.getFriendRequests(MyApp.gCurrentUsername);
         if (request != null) {
-            request.save();
             int index = requests.indexOf(request);
             if (index >= 0) {
                 requests.remove(index);
@@ -63,10 +62,9 @@ public class FriendRequestActivity extends AppCompatActivity {
         }
         mAdapter = new FriendRequestAdapter(this, requests);
 
-        DataHelper.getFriendRequests(MyApp.gCurrentUsername);
+//        DataHelper.getFriendRequests(MyApp.gCurrentUsername);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mEasyRecyclerView.setLayoutManager(layoutManager);
-        mAdapter.setNoMore(R.layout.view_nomore);
         DividerDecoration itemDecoration = new DividerDecoration(Color.GRAY, Util.dip2px(this, 0.5f), Util.dip2px(this, 72), 0);
         itemDecoration.setDrawLastItem(false);
         mEasyRecyclerView.setAdapter(mAdapter);

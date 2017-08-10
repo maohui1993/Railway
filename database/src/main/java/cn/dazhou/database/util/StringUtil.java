@@ -9,6 +9,7 @@ import cn.dazhou.im.util.Config;
 
 public class StringUtil {
     static String JID_SEPARATOR = "@";
+
     public static String getRealJid(String wrapJid) {
         return wrapJid.split(FriendDbApi.JID_SEPARATOR)[0] + FriendDbApi.JID_SEPARATOR + Config.gServerIp;
     }

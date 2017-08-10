@@ -15,6 +15,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import cn.dazhou.database.FriendRequestModel;
+import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.im.entity.FriendRequest;
 import cn.dazhou.railway.MyActivityManager;
 import cn.dazhou.railway.MyApp;
@@ -52,7 +53,7 @@ public class IMFriendRequestService extends Service {
     public void handleFriendRequest(FriendRequest request) {
         Log.i("TAG", "IMFriendRequestService: " + request.getJid());
         if (request.getType() == FriendRequest.Type.subscribe) {
-            sendNotification(request.getJid());
+            sendNotification(StringUtil.getUsername(request.getJid()));
         }
     }
 
@@ -109,7 +110,10 @@ public class IMFriendRequestService extends Service {
         request.setFromJid(jid);
         request.setToJid(MyApp.gCurrentUsername);
         request.setState(FriendRequestModel.State.NOT_HANDLE);
+        request.save();
         intent.putExtra(Constants.DATA_KEY, request);
+
+        IMUtil.sendBroadcast(context, Constants.NEW_REQUEST_BROADCAST);
 
         PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pIntent);

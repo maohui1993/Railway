@@ -14,17 +14,17 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 @Table(database = RailwayDatabase.class)
 public class FriendRequestModel extends BaseModel implements Parcelable{
-    @PrimaryKey(autoincrement = true)
-    int id;
-    @Column
+    @PrimaryKey
     private String toJid;
-    @Column
+    @PrimaryKey
     private String fromJid;
     @Column
     private State state = State.NOT_HANDLE;
+    @Column
+    private long timestamp = System.currentTimeMillis();
 
     protected FriendRequestModel(Parcel in) {
-        id = in.readInt();
+        timestamp = in.readLong();
         toJid = in.readString();
         fromJid = in.readString();
         state = in.readParcelable(State.class.getClassLoader());
@@ -43,14 +43,6 @@ public class FriendRequestModel extends BaseModel implements Parcelable{
             return new FriendRequestModel[size];
         }
     };
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getToJid() {
         return toJid;
@@ -76,6 +68,14 @@ public class FriendRequestModel extends BaseModel implements Parcelable{
         this.state = state;
     }
 
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -90,7 +90,7 @@ public class FriendRequestModel extends BaseModel implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
+        dest.writeLong(timestamp);
         dest.writeString(toJid);
         dest.writeString(fromJid);
         dest.writeParcelable(state, flags);

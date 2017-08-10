@@ -5,7 +5,6 @@ import android.os.Environment;
 /**
  * Created by hooyee on 2017/5/11.
  */
-
 public final class Constants {
     public static final String LOG_TAG_HTTP = "http";
     public static final String SERVER_IP = "server_ip";
@@ -24,6 +23,7 @@ public final class Constants {
 
     public static final String LOGIN_SUCCESS_BROADCAST = "action.login.success";
     public static final String UPDATE_FROM_SERVER_BROADCAST = "action.friend.refresh";
+    public static final String NEW_REQUEST_BROADCAST = "action.friend.new.request";
 
     public static final String LATEST_LOGIN_JID = "latestLoginJid";
 

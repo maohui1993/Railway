@@ -5,26 +5,45 @@
     android:layout_marginBottom="10dp"
     android:orientation="vertical">
 
-    <cn.dazhou.railway.widget.RippleButton
-        android:id="@+id/new_friend"
-        android:drawableLeft="@drawable/friend_request"
-        android:textSize="16sp"
-        android:text="新的朋友"
-        android:gravity="center_vertical"
-        android:padding="10dp"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="wrap_content">
+
+        <cn.dazhou.railway.widget.RippleButton
+            android:id="@+id/new_friend"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:drawableLeft="@drawable/friend_request"
+            android:gravity="center_vertical"
+            android:padding="10dp"
+            android:text="新的朋友"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tx_request_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="#d41c1c"
+            android:text="0"
+            android:textColor="#ffffff"
+            android:visibility="gone" />
+    </RelativeLayout>
+
     <LinearLayout
-        android:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
-        android:layout_height="1dp" />
+        android:layout_height="1dp"
+        android:background="@color/colorPrimaryDark" />
+
     <cn.dazhou.railway.widget.RippleButton
         android:id="@+id/chat_group"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:drawableLeft="@drawable/chat_room"
-        android:textSize="16sp"
-        android:text="群聊"
         android:gravity="center_vertical"
         android:padding="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"/>
+        android:text="群聊"
+        android:textSize="16sp" />
 </LinearLayout>
