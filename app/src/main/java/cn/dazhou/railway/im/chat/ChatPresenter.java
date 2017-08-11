@@ -41,7 +41,9 @@ public class ChatPresenter implements ChatContract.Presenter {
     public void init() {
         mFriendModel = DataHelper.getFriend(mJid);
         if (mFriendModel != null) {
+            mFriendModel.setNotReadCount(0);
             List<ChatMessageModel> chatMessageModels = mFriendModel.getMyChatMessages(page);
+            mFriendModel.update();
             page++;
             mChatView.refresh(ChatMessageModel.toChatMessageEntity(chatMessageModels));
         }

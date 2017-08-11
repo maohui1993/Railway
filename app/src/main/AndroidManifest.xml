@@ -101,14 +101,17 @@
             android:name=".im.friend.info.FriendInfoActivity"
             android:screenOrientation="portrait" />
 
-        <!--<receiver-->
-            <!--android:name=".im.broadcast.LoginReceiver"-->
-            <!--android:enabled="true"-->
-            <!--android:exported="true">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="action.login.success" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
+        <!-- <receiver -->
+        <!-- android:name=".im.broadcast.LoginReceiver" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="true"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="action.login.success" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+        <activity android:name=".im.friend.message.list.MessageListActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"></activity>
     </application>
 
 </manifest>

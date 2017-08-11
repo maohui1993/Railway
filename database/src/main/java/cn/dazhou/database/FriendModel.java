@@ -14,7 +14,6 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import java.util.List;
 
 import cn.dazhou.im.acpect.db.FriendDbApi;
-import cn.dazhou.im.util.Constants;
 
 /**
  * Created by hooyee on 2017/5/17.
@@ -43,6 +42,13 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel>, F
     private String nickName;    // 好友备注
 
     private int onceMaxShown = 5;
+
+    @Column
+    private int notReadCount;
+    @Column
+    private boolean inMessageList;
+    @Column
+    private long lastChatTime;
 
     List<ChatMessageModel> chatMessages;
 
@@ -89,6 +95,10 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel>, F
                 .offset(offset)
                 .queryList();
         return chatMessages;
+    }
+
+    public void notReadCountAutoAddOne() {
+        notReadCount += 1;
     }
 
     public ChatMessageModel getLatestChatMessage() {
@@ -171,6 +181,30 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel>, F
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public int getNotReadCount() {
+        return notReadCount;
+    }
+
+    public void setNotReadCount(int notReadCount) {
+        this.notReadCount = notReadCount;
+    }
+
+    public boolean isInMessageList() {
+        return inMessageList;
+    }
+
+    public void setInMessageList(boolean inMessageList) {
+        this.inMessageList = inMessageList;
+    }
+
+    public long getLastChatTime() {
+        return lastChatTime;
+    }
+
+    public void setLastChatTime(long lastChatTime) {
+        this.lastChatTime = lastChatTime;
     }
 
     public static int typeToInt(String type) {

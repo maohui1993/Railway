@@ -38,6 +38,7 @@ import java.util.TimerTask;
 
 import cn.dazhou.database.ChatMessageModel;
 import cn.dazhou.database.FriendModel;
+import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.acpect.db.ChatMessageDbApi;
@@ -191,18 +192,23 @@ public class IMChatService extends Service {
                 chatDb.updateState(false);
                 sendNotification(chatMessageEntity, chatDb.jid());
             }
-            String tip = getTipString(chatDb);
-            EventBus.getDefault().post(new ContactListFragment.TipMessage(chatDb.jid(), tip));
-            // 有新消息则在对应的好友上面加上 消息数量
 
-            FriendDbApi friendDb = new FriendModel();
-            friendDb.jid(chatDb.jid());
+            FriendModel friend = DataHelper.getFriend(chatDb.jid());
+
+            // 新消息+1
+            friend.notReadCountAutoAddOne();
+            // 加入到消息列表
+            friend.setInMessageList(true);
+            // 更新上次聊天时间为当前时间
+            friend.setLastChatTime(System.currentTimeMillis());
+            friend.save();
+
             /**
-             * 有新消息则在对应的好友上面加上 消息数量
-             * @see cn.dazhou.railway.splash.functions.contact.ContactListFragment#updateTipMessage
+             * 有新消息则在消息列表中置顶
+             * @see cn.dazhou.railway.im.friend.message.list.MessageListFragment#updateTipMessage
              * @param friendModel
              */
-            EventBus.getDefault().post(friendDb);
+            EventBus.getDefault().post(friend);
             chatDb.saveMessage();
         }
     };

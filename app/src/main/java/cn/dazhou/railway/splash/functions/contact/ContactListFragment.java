@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jude.easyrecyclerview.EasyRecyclerView;
@@ -37,6 +38,7 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
 
     private TextView mRequestTipTx;
     private View mRootView;
+    private ImageView mTipImage;
 
     private StickyHeaderDecoration mDecoration;
 
@@ -52,7 +54,6 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
         init();
     }
 
@@ -66,8 +67,9 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
                 View v = inflater.inflate(R.layout.header_item, null);
                 v.findViewById(R.id.new_friend).setOnClickListener(mPresenter);
                 v.findViewById(R.id.chat_group).setOnClickListener(mPresenter);
+                v.findViewById(R.id.message_list).setOnClickListener(mPresenter);
                 mRequestTipTx = (TextView) v.findViewById(R.id.tx_request_count);
-
+                mTipImage = (ImageView) v.findViewById(R.id.iv_tip);
                 return v;
             }
 
@@ -97,6 +99,9 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
     public void onResume() {
         if (mRequestTipTx != null) {
             mPresenter.updateRequestTipSate();
+        }
+        if (mTipImage != null) {
+            mPresenter.updateMessageTip();
         }
         super.onResume();
     }
@@ -143,26 +148,18 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
         }
     }
 
-    /**
-     * 更新当前好友最后一条消息
-     *
-     * @param tipMessage
-     * @see cn.dazhou.railway.im.service.IMChatService#incomingChatMessageListener
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateTipMessage(TipMessage tipMessage) {
-        mRosterAdapter.updateData(tipMessage);
+    @Override
+    public void showMessageTip() {
+        if (mTipImage != null) {
+            mTipImage.setVisibility(View.VISIBLE);
+        }
     }
 
-    /**
-     * 更新当前好友未读消息量
-     *
-     * @param friendModel
-     * @see cn.dazhou.railway.im.service.IMChatService#incomingChatMessageListener
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateTipMessage(FriendDbApi friendModel) {
-        mRosterAdapter.updateData(friendModel);
+    @Override
+    public void hideMessageTip() {
+        if (mTipImage != null) {
+            mTipImage.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -170,20 +167,9 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
         mPresenter = presenter;
     }
 
-    public static class TipMessage {
-        public String jid;
-        public String info;
-
-        public TipMessage(String jid, String info) {
-            this.jid = jid;
-            this.info = info;
-        }
-    }
-
     @Override
     public void onDestroy() {
         mPresenter.destroy();
-        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 }

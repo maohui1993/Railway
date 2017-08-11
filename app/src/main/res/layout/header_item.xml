@@ -4,6 +4,28 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
     android:orientation="vertical">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <cn.dazhou.railway.widget.RippleButton
+        android:id="@+id/message_list"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:drawableLeft="@drawable/message_list"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:text="消息列表"
+        android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/iv_tip"
+            android:visibility="gone"
+            android:layout_gravity="right|center_vertical"
+            android:src="@drawable/tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

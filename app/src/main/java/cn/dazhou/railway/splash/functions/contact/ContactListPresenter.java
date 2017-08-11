@@ -11,6 +11,7 @@ import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
+import cn.dazhou.railway.im.friend.message.list.MessageListActivity;
 import cn.dazhou.railway.im.chat.room.ChatRoomActivity;
 import cn.dazhou.railway.im.friend.request.FriendRequestActivity;
 
@@ -66,7 +67,6 @@ public class ContactListPresenter implements ContactListContract.Presenter{
         switch (v.getId()) {
             case R.id.new_friend:
                 Toast.makeText(mContext, "new Friend", Toast.LENGTH_SHORT).show();
-//                AddFriendActivity.startItself(mContext);
                 Intent intent = new Intent(mContext, FriendRequestActivity.class);
                 mContext.startActivity(intent);
                 break;
@@ -78,6 +78,10 @@ public class ContactListPresenter implements ContactListContract.Presenter{
                         ChatRoomActivity.startItself(mContext);
                     }
                 }).start();
+                break;
+            case R.id.message_list:
+                Toast.makeText(mContext, "message list", Toast.LENGTH_SHORT).show();
+                MessageListActivity.startItself(mContext);
                 break;
         }
     }
@@ -96,6 +100,16 @@ public class ContactListPresenter implements ContactListContract.Presenter{
             mView.hideRequestCountTip();
         } else {
             mView.showRequestCountTip(String.valueOf(count));
+        }
+    }
+
+    @Override
+    public void updateMessageTip() {
+        long count = DataHelper.getNotReadMessage(MyApp.gCurrentUser);
+        if (count == 0) {
+            mView.hideMessageTip();
+        } else {
+            mView.showMessageTip();
         }
     }
 }

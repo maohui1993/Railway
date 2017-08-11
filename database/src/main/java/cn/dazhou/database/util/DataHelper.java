@@ -5,6 +5,7 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -41,6 +42,23 @@ public class DataHelper {
                 .where(FriendRequestModel_Table.toJid.eq(jid))
                 .and(FriendRequestModel_Table.state.eq(FriendRequestModel.State.NOT_HANDLE))
         .count();
+    }
+
+    public static List<FriendModel> getMessageList(UserModel user) {
+        return SQLite.select()
+                .from(FriendModel.class)
+                .where(FriendModel_Table.possessor.eq(user.getUsername()))
+                .and(FriendModel_Table.inMessageList.eq(true))
+                .orderBy(FriendModel_Table.lastChatTime, false)
+                .queryList();
+    }
+
+    public static long getNotReadMessage(UserModel user) {
+        return  SQLite.selectCountOf()
+                .from(FriendModel.class)
+                .where(FriendModel_Table.possessor.eq(user.getUsername()))
+                .and(FriendModel_Table.notReadCount.notEq(0))
+                .count();
     }
 
     public static List<FriendModel> updateFriendFromServer(UserModel user) {

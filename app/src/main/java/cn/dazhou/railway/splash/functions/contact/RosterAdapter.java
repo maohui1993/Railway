@@ -20,7 +20,6 @@ import cn.dazhou.railway.im.chat.ChatActivity;
  */
 
 public class RosterAdapter extends RecyclerArrayAdapter<FriendModel> {
-    List<RosterViewHolder> viewHolders = new ArrayList<>();
 
     public RosterAdapter(Context context) {
         super(context);
@@ -30,7 +29,6 @@ public class RosterAdapter extends RecyclerArrayAdapter<FriendModel> {
     @Override
     public BaseViewHolder OnCreateViewHolder(ViewGroup parent, int viewType) {
         RosterViewHolder viewHolder = new RosterViewHolder(parent);
-        viewHolders.add(viewHolder);
         return viewHolder;
     }
 
@@ -40,29 +38,7 @@ public class RosterAdapter extends RecyclerArrayAdapter<FriendModel> {
         public void onItemClick(int position) {
             String jid = getItem(position).getJid();
             ChatActivity.startItself(getContext(), jid);
-            viewHolders.get(position).restore();
         }
     };
 
-    public void updateData(ContactListFragment.TipMessage tipMessage) {
-        FriendModel model = new FriendModel();
-        // 构造一个friend出来便于从数据中找到正确的friend
-        String jid = StringUtil.getWrapJid(tipMessage.jid);
-        model.setJid(jid);
-        model.setPossessor(MyApp.gCurrentUsername);
-        int index = getPosition(model);
-        getItem(index).getLatestChatMessage().setContent(tipMessage.info);
-        RosterViewHolder result = viewHolders.get(index);
-        result.updateLatestMsg(tipMessage.info);
-    }
-
-    public void updateData(FriendDbApi friendModel) {
-        if (friendModel instanceof FriendModel) {
-            FriendModel model = (FriendModel)friendModel;
-            int index = getPosition(model);
-            RosterViewHolder result = viewHolders.get(index);
-            // 增加一条消息
-            result.updateMessageCount(1);
-        }
-    }
 }
