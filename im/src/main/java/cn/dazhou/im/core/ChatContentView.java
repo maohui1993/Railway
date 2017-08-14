@@ -370,6 +370,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
 
     public void onRefresh(final List<ChatMessageEntity> msgs, final boolean moveCursor) {
         if (msgs == null || msgs.size() == 0) {
+            // 刷新页面，清除加载动画
             mAdapter.notifyDataSetChanged();
             return;
         }

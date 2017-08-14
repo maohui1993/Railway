@@ -41,6 +41,7 @@ public class ChatPresenter implements ChatContract.Presenter {
     public void init() {
         mFriendModel = DataHelper.getFriend(mJid);
         if (mFriendModel != null) {
+            // 进入了聊天界面，便说明该用户所有未读消息为已读
             mFriendModel.setNotReadCount(0);
             List<ChatMessageModel> chatMessageModels = mFriendModel.getMyChatMessages(page);
             mFriendModel.update();
