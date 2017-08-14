@@ -60,7 +60,7 @@ public class ChatFunctionFragment extends BaseFragment {
     @OnClick(R2.id.chat_function_photograph)
     void takePhotoOrVideo() {
         Intent intent = new Intent(getContext(), CameraActivity.class);
-        startActivityForResult(intent, REQUEST_CODE);
+        startActivityForResult(intent, Constants.CROP_PHOTO);
     }
 
     void takePhoto() {

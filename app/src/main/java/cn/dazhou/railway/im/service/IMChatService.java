@@ -311,7 +311,9 @@ public class IMChatService extends Service {
                         .type(Constants.CHAT_ITEM_TYPE_LEFT)
                         .build();
                 ChatMessageModel chatMessageModel = ChatMessageModel.newInstance(chatMessage);
+                chatMessageModel.setJid(StringUtil.getWrapJid(chatMessage.getJid()));
                 chatMessageModel.save();
+                // 目标聊天窗口是否已经打开
                 if (checkJid(jid)) {
                     // 统一交由ChatContentView#showMessage中展示
                     EventBus.getDefault().post(chatMessage);
