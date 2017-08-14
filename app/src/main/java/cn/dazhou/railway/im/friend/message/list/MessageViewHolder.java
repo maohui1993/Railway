@@ -1,5 +1,6 @@
 package cn.dazhou.railway.im.friend.message.list;
 
+import android.view.ContextMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,7 +16,7 @@ import cn.dazhou.railway.R;
  * Created by hooyee on 2017/5/11.
  */
 
-public class MessageViewHolder extends BaseViewHolder<FriendModel> {
+public class MessageViewHolder extends BaseViewHolder<FriendModel> implements View.OnCreateContextMenuListener {
     private TextView mTv_name;
     private ImageView mImg_face;
     private TextView mTv_LatestMsg;
@@ -47,4 +48,8 @@ public class MessageViewHolder extends BaseViewHolder<FriendModel> {
                 .into(mImg_face);
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.setHeaderTitle("处理操作");
+    }
 }

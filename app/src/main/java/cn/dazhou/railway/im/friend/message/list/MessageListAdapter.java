@@ -7,7 +7,6 @@ import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 
 import cn.dazhou.database.FriendModel;
-import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.railway.im.chat.ChatActivity;
 
 /**
@@ -15,10 +14,12 @@ import cn.dazhou.railway.im.chat.ChatActivity;
  */
 
 public class MessageListAdapter extends RecyclerArrayAdapter<FriendModel> {
+    private int lastClickPosition = -1;
 
     public MessageListAdapter(Context context) {
         super(context);
         setOnItemClickListener(onItemClickListener);
+        setOnItemLongClickListener(onItemLongClickListener);
     }
 
     @Override
@@ -40,6 +41,15 @@ public class MessageListAdapter extends RecyclerArrayAdapter<FriendModel> {
         }
     };
 
+    private OnItemLongClickListener onItemLongClickListener = new OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(final int position) {
+//            Toast.makeText(getContext(), "sdf", Toast.LENGTH_SHORT).show();
+            lastClickPosition = position;
+            return false;
+        }
+    };
+
     public void toTop(FriendModel object) {
         FriendModel item = getItemByObj(object);
         if (item != null) {
@@ -54,5 +64,16 @@ public class MessageListAdapter extends RecyclerArrayAdapter<FriendModel> {
             return null;
         }
         return getItem(position);
+    }
+
+    public int getLastClickPosition() {
+        return lastClickPosition;
+    }
+
+    public void delete(int position) {
+        FriendModel item = getItem(position);
+        remove(position);
+        item.setInMessageList(false);
+        item.update();
     }
 }

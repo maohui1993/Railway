@@ -4,9 +4,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.jude.easyrecyclerview.decoration.DividerDecoration;
@@ -56,11 +60,40 @@ public class MessageListFragment extends Fragment implements MessageListContract
             DividerDecoration itemDecoration = new DividerDecoration(Color.GRAY, Util.dip2px(getContext(), 0.5f), Util.dip2px(getContext(), 72), 0);
             itemDecoration.setDrawLastItem(false);
             mRecyclerView.addItemDecoration(itemDecoration);
+
+            mRecyclerView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    return false;
+                }
+            });
+
+
+            registerForContextMenu(mRecyclerView.getRecyclerView());
         } else {
             ViewGroup group = (ViewGroup) mRootView.getParent();
             group.removeView(mRootView);
         }
         return mRootView;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.menu_context, menu);
+    }
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.clear:
+                mAdapter.delete(mAdapter.getLastClickPosition());
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
     /**
