@@ -82,6 +82,7 @@ public class MessageListFragment extends Fragment implements MessageListContract
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getActivity().getMenuInflater();
         inflater.inflate(R.menu.menu_context, menu);
+        menu.setHeaderTitle("操作处理");
     }
 
 

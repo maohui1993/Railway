@@ -25,18 +25,18 @@ public class RosterViewHolder extends BaseViewHolder<FriendModel> {
     public RosterViewHolder(ViewGroup parent) {
         super(parent, R.layout.roster_item);
         mTv_name = $(R.id.person_name);
-        mTv_LatestMsg = $(R.id.person_sign);
+//        mTv_LatestMsg = $(R.id.person_sign);
         mImg_face = $(R.id.person_face);
-        mMessageCount = $(R.id.message_count);
+//        mMessageCount = $(R.id.message_count);
     }
 
     @Override
     public void setData(final FriendModel entry){
         Log.i("ViewHolder","position"+getDataPosition());
         mTv_name.setText(entry.getName());
-        if (entry.getLatestChatMessage() != null) {
-            mTv_LatestMsg.setText(entry.getLatestChatMessage().getContent());
-        }
+//        if (entry.getLatestChatMessage() != null) {
+//            mTv_LatestMsg.setText(entry.getLatestChatMessage().getContent());
+//        }
         Glide.with(getContext())
                 .load(R.drawable.header_01)
                 .asBitmap()
