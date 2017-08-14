@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.io.IOException;
@@ -19,8 +20,11 @@ public class MediaPlayerUtils {
     private MediaPlayer mMediaPlayer;
     private Context mContext;
 
-    private byte state;
+    private byte state = STOPPED;
     private int position;
+
+    private Uri dataUri;
+    private SurfaceHolder surfaceHolder;
 
     public MediaPlayerUtils(Context mContext) {
         this.mContext = mContext;
@@ -33,37 +37,8 @@ public class MediaPlayerUtils {
      * @throws IOException
      */
     public void startPlay(Uri uri) throws IOException {
-        startPlay(uri, null);
     }
 
-    /**
-     * 播放视频
-     *
-     * @param uri
-     * @param surfaceView
-     * @throws IOException
-     */
-    public void startPlay(Uri uri, final SurfaceView surfaceView) throws IOException {
-        if (mMediaPlayer != null) {
-            mMediaPlayer.stop();
-            mMediaPlayer.release();
-            mMediaPlayer = null;
-        }
-        mMediaPlayer = new MediaPlayer();
-        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mMediaPlayer.setDataSource(mContext, uri);
-        mMediaPlayer.setDisplay(surfaceView.getHolder());
-        mMediaPlayer.prepare(); // might take long! (for buffering, etc)
-        mMediaPlayer.start();
-        changeState(PLAYING);
-
-        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                changeState(STOPPED);
-            }
-        });
-    }
 
     public void stopPlay() {
         if (Utils.checkNotNull(mMediaPlayer)) {
@@ -78,34 +53,59 @@ public class MediaPlayerUtils {
         }
     }
 
-    /**
-     *
-     * @return 执行方法后的状态
-     */
-    public byte suspendOrRestart() {
-        if (Utils.checkNotNull(mMediaPlayer)) {
-            switch (state) {
-                case PLAYING :
+    public void changeState(byte state) {
+        this.state = state;
+        executeState();
+    }
+
+    public void executeState() {
+        switch (state) {
+            case PLAYING:
+                if (mMediaPlayer != null) {
+                    mMediaPlayer.stop();
+                    mMediaPlayer.release();
+                    mMediaPlayer = null;
+                }
+                mMediaPlayer = new MediaPlayer();
+                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                try {
+                    mMediaPlayer.setDataSource(mContext, dataUri);
+                    mMediaPlayer.setDisplay(surfaceHolder);
+                    mMediaPlayer.prepare(); // might take long! (for buffering, etc)
+                    mMediaPlayer.start();
+                    mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            changeState(STOPPED);
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case PAUSED:
+                if (!Utils.checkNotNull(mMediaPlayer)) {
                     mMediaPlayer.pause();
-                    position = mMediaPlayer.getCurrentPosition();
-                    changeState(PAUSED);
-                    break;
-                case PAUSED :
-//                    mMediaPlayer.seekTo(position);
-                    mMediaPlayer.start();
-                    changeState(PLAYING);
-                    break;
-                case STOPPED :
+                }
+                break;
+            case STOPPED:
+                if (Utils.checkNotNull(mMediaPlayer)) {
                     mMediaPlayer.seekTo(0);
-                    mMediaPlayer.start();
-                    changeState(PLAYING);
-                    break;
-            }
+                    mMediaPlayer.stop();
+                }
+                break;
         }
+    }
+
+    public byte getState() {
         return state;
     }
 
-    private void changeState(byte state) {
-        this.state = state;
+    public void setDataUri(Uri dataUri) {
+        this.dataUri = dataUri;
+    }
+
+    public void setSurfaceHolder(SurfaceHolder surfaceHolder) {
+        this.surfaceHolder = surfaceHolder;
     }
 }

@@ -186,49 +186,54 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
             videoContent.setVisibility(VISIBLE);
             video.setVisibility(View.VISIBLE);
             videoProgress.setVisibility(VISIBLE);
-            if (data.getFileProcess() == videoProgress.getMax()) {
-//                videoProgress.setVisibility(GONE);
-            } else {
-                videoProgress.setProgress(data.getFileProcess());
-            }
-            video.setOnClickListener(new View.OnClickListener() {
+            videoProgress.setProgress(data.getFileProcess());
+
+//            surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
+//                @Override
+//                public void surfaceCreated(final SurfaceHolder holder) {
+//                    surfaceView.setVisibility(View.VISIBLE);
+//                }
+//
+//                @Override
+//                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+//
+//                }
+//
+//                @Override
+//                public void surfaceDestroyed(SurfaceHolder holder) {
+//
+//                }
+//            });
+
+            // 点击之后改变状态并处理
+            surfaceView.setOnClickListener(new View.OnClickListener() {
+
                 @Override
                 public void onClick(View v) {
                     if(videoProgress.getProgress() != videoProgress.getMax()) {
                         Toast.makeText(getContext(), "接受中···", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    surfaceView.setVisibility(View.VISIBLE);
-                    video.setVisibility(GONE);
-                    surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
-                        @Override
-                        public void surfaceCreated(final SurfaceHolder holder) {
+                    byte state = onItemClickListener.mediaState();
+                    switch (state) {
+                        case MediaPlayerUtils.PLAYING:
+                            video.setVisibility(GONE);
+                            suspend.setVisibility(VISIBLE);
+                            onItemClickListener.changeState(MediaPlayerUtils.PAUSED);
+                            break;
+                        case MediaPlayerUtils.PAUSED:
                             onItemClickListener.onVideoClick(data.getFilePath(), surfaceView);
-                            surfaceView.setVisibility(View.VISIBLE);
-                        }
 
-                        @Override
-                        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-                        }
-
-                        @Override
-                        public void surfaceDestroyed(SurfaceHolder holder) {
-
-                        }
-                    });
-
-                }
-            });
-
-            surfaceView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    byte state = onItemClickListener.onSuspendOrRestart();
-                    if (state == MediaPlayerUtils.PLAYING) {
-                        suspend.setVisibility(GONE);
-                    } else {
-                        suspend.setVisibility(VISIBLE);
+                            video.setVisibility(GONE);
+                            suspend.setVisibility(GONE);
+                            onItemClickListener.changeState(MediaPlayerUtils.PLAYING);
+                            break;
+                        case MediaPlayerUtils.STOPPED:
+                            onItemClickListener.onVideoClick(data.getFilePath(), surfaceView);
+                            video.setVisibility(GONE);
+                            suspend.setVisibility(GONE);
+                            onItemClickListener.changeState(MediaPlayerUtils.PLAYING);
+                            break;
                     }
                 }
             });

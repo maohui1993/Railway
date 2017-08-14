@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
@@ -173,42 +174,48 @@ public class ChatAcceptViewHolder extends BaseViewHolder<ChatMessageEntity> {
             chatItemLayoutContent.setVisibility(View.VISIBLE);
             fileContainer.setVisibility(GONE);
             video.setVisibility(View.VISIBLE);
-            video.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    surfaceView.setVisibility(View.VISIBLE);
-                    video.setVisibility(GONE);
-//                    video.setEnabled(false);
-//                    video.setFocusable(false);
-                    surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
-                        @Override
-                        public void surfaceCreated(final SurfaceHolder holder) {
-                            onItemClickListener.onVideoClick(data.getFilePath(), surfaceView);
-                            surfaceView.setVisibility(View.VISIBLE);
-                        }
 
-                        @Override
-                        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+//            surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
+//                @Override
+//                public void surfaceCreated(final SurfaceHolder holder) {
+//                    surfaceView.setVisibility(View.VISIBLE);
+//                }
+//
+//                @Override
+//                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+//
+//                }
+//
+//                @Override
+//                public void surfaceDestroyed(SurfaceHolder holder) {
+//
+//                }
+//            });
 
-                        }
-
-                        @Override
-                        public void surfaceDestroyed(SurfaceHolder holder) {
-
-                        }
-                    });
-
-                }
-            });
-
+            // 点击之后改变状态并处理
             surfaceView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    byte state = onItemClickListener.onSuspendOrRestart();
-                    if (state == MediaPlayerUtils.PLAYING) {
-                        suspend.setVisibility(GONE);
-                    } else {
-                        suspend.setVisibility(VISIBLE);
+                    byte state = onItemClickListener.mediaState();
+                    switch (state) {
+                        case MediaPlayerUtils.PLAYING:
+                            video.setVisibility(GONE);
+                            suspend.setVisibility(VISIBLE);
+                            onItemClickListener.changeState(MediaPlayerUtils.PAUSED);
+                            break;
+                        case MediaPlayerUtils.PAUSED:
+                            onItemClickListener.onVideoClick(data.getFilePath(), surfaceView);
+
+                            video.setVisibility(GONE);
+                            suspend.setVisibility(GONE);
+                            onItemClickListener.changeState(MediaPlayerUtils.PLAYING);
+                            break;
+                        case MediaPlayerUtils.STOPPED:
+                            onItemClickListener.onVideoClick(data.getFilePath(), surfaceView);
+                            video.setVisibility(GONE);
+                            suspend.setVisibility(GONE);
+                            onItemClickListener.changeState(MediaPlayerUtils.PLAYING);
+                            break;
                     }
                 }
             });

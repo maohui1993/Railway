@@ -245,7 +245,6 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     }
 
 
-
     public OnSendListener getOnSendListener() {
         return mOnSendListener;
     }
@@ -306,11 +305,9 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     @Override
     public void onVideoClick(String fileUri, SurfaceView surfaceView) {
         Uri uri = Uri.fromFile(new File(fileUri));
-        try {
-            mMediaPlayer.startPlay(uri, surfaceView);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        mMediaPlayer.setDataUri(uri);
+        mMediaPlayer.setSurfaceHolder(surfaceView.getHolder());
+        mMediaPlayer.changeState(MediaPlayerUtils.PLAYING);
     }
 
     @Override
@@ -337,8 +334,13 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     }
 
     @Override
-    public byte onSuspendOrRestart() {
-        return mMediaPlayer.suspendOrRestart();
+    public byte mediaState() {
+        return mMediaPlayer.getState();
+    }
+
+    @Override
+    public void changeState(byte state) {
+        mMediaPlayer.changeState(state);
     }
 
     public boolean interceptBackPress() {

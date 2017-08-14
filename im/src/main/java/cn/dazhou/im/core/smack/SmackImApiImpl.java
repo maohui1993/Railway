@@ -64,6 +64,7 @@ import cn.dazhou.im.entity.FriendRequest;
 import cn.dazhou.im.entity.ProcessEvent;
 import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.im.entity.UserExtensionElement;
+import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.ImageUtil;
 import cn.dazhou.im.util.JsonUtil;
 import cn.dazhou.im.util.OfflineMsgManager;
@@ -326,6 +327,7 @@ public class SmackImApiImpl implements IMApi {
             public void run() {
                 long startTime = -1;
                 ProcessEvent event = new ProcessEvent(filePath);
+                event.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
                 while (!out.isDone()) {
                     if (out.getStatus().equals(FileTransfer.Status.error)) {
                         Log.w("TAG", "文件传输失败：" + out.getError());

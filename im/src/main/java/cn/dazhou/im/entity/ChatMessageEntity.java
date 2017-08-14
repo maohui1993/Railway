@@ -231,10 +231,8 @@ public class ChatMessageEntity implements Parcelable{
     public boolean equals(Object obj) {
         if (obj instanceof ChatMessageEntity) {
             ChatMessageEntity e = (ChatMessageEntity) obj;
-//            return filePath.equals(e.getFilePath());
-            return date == e.getDate()
-                    && type == e.getType()
-                    && dataType == e.getDataType();
+            return filePath.equals(e.getFilePath())
+                    && type == e.getType();
         }
         return false;
     }
