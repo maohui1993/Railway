@@ -16,14 +16,14 @@ import org.jivesoftware.smack.roster.RosterEntry;
 
 import java.util.Set;
 
+import cn.dazhou.database.FriendModel;
+import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.im.IMLauncher;
-import cn.dazhou.im.acpect.db.FriendDbApi;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
-import cn.dazhou.railway.splash.SplashActivity;
 import cn.dazhou.railway.im.friend.info.FriendInfoActivity;
-import cn.dazhou.database.util.DataHelper;
+import cn.dazhou.railway.splash.SplashActivity;
 import cn.dazhou.railway.util.ActivityUtils;
 
 import static cn.dazhou.railway.config.Constants.DATA_KEY;
@@ -83,10 +83,10 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void setTitle() {
-        FriendDbApi friend = DataHelper.getFriend(mJid);
+        FriendModel friend = DataHelper.getFriend(mJid);
         String title = mJid;
         if (friend != null) {
-            title = friend.name();
+            title = friend.getName();
         } else {
             String name = getNameFromServer();
             if (title != null) {

@@ -6,13 +6,7 @@ import android.view.ViewGroup;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cn.dazhou.database.FriendModel;
-import cn.dazhou.database.util.StringUtil;
-import cn.dazhou.im.acpect.db.FriendDbApi;
-import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.im.chat.ChatActivity;
 
 /**

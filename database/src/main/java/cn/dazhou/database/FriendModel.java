@@ -13,14 +13,12 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.List;
 
-import cn.dazhou.im.acpect.db.FriendDbApi;
-
 /**
  * Created by hooyee on 2017/5/17.
  */
 
 @Table(database = RailwayDatabase.class)
-public class FriendModel extends BaseModel implements Comparable<FriendModel>, FriendDbApi {
+public class FriendModel extends BaseModel implements Comparable<FriendModel> {
     @PrimaryKey
     @Column
     private String jid;         // 好友账号@所属人账号<好友username@所属人username>
@@ -243,15 +241,5 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel>, F
         } else {
             return false;
         }
-    }
-
-    @Override
-    public void jid(String jid) {
-        setJid(jid);
-    }
-
-    @Override
-    public String name() {
-        return getName();
     }
 }

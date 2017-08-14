@@ -12,7 +12,6 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.dazhou.im.acpect.db.ChatMessageDbApi;
 import cn.dazhou.im.entity.ChatMessageEntity;
 
 /**
@@ -20,7 +19,7 @@ import cn.dazhou.im.entity.ChatMessageEntity;
  */
 
 @Table(database = RailwayDatabase.class)
-public class ChatMessageModel extends BaseModel implements ChatMessageDbApi {
+public class ChatMessageModel extends BaseModel {
     @PrimaryKey(autoincrement = true)
     int id;
 
@@ -144,36 +143,6 @@ public class ChatMessageModel extends BaseModel implements ChatMessageDbApi {
 //        setSendState(message.getSendState());
 //        return this;
 //    }
-
-    @Override
-    public void updateJid(String jid) {
-        setJid(jid);
-    }
-
-    @Override
-    public boolean saveMessage() {
-        return save();
-    }
-
-    @Override
-    public void updateState(boolean state) {
-        setState(state);
-    }
-
-    @Override
-    public String jid() {
-        return getJid();
-    }
-
-    @Override
-    public ChatMessageEntity.Type dataType() {
-        return getDataType();
-    }
-
-    @Override
-    public String textContent() {
-        return getContent();
-    }
 
     public int getId() {
         return id;

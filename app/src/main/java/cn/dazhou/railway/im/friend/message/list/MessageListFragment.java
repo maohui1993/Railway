@@ -10,7 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.jude.easyrecyclerview.decoration.DividerDecoration;
@@ -22,7 +21,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import cn.dazhou.database.FriendModel;
 import cn.dazhou.database.util.DataHelper;
-import cn.dazhou.im.acpect.db.FriendDbApi;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 
@@ -104,8 +102,8 @@ public class MessageListFragment extends Fragment implements MessageListContract
      * @see cn.dazhou.railway.im.service.IMChatService#incomingChatMessageListener
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateTipMessage(FriendDbApi friendModel) {
-        mAdapter.toTop((FriendModel) friendModel);
+    public void updateTipMessage(FriendModel friendModel) {
+        mAdapter.toTop(friendModel);
     }
 
     @Override

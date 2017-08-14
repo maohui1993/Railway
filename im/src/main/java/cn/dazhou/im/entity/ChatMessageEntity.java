@@ -1,11 +1,14 @@
 package cn.dazhou.im.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by hooyee on 2017/5/8.
  * 聊天的数据
  */
 
-public class ChatMessageEntity {
+public class ChatMessageEntity implements Parcelable{
     private int id;
     private String imagePath;      // 图片消息，记录图片的位置
     private String voicePath;      // 语音消息，记录语音的位置
@@ -47,6 +50,38 @@ public class ChatMessageEntity {
         this.sendState = sendState;
         this.dataType = dataType;
     }
+
+    protected ChatMessageEntity(Parcel in) {
+        id = in.readInt();
+        imagePath = in.readString();
+        voicePath = in.readString();
+        content = in.readString();
+        fromJid = in.readString();
+        toJid = in.readString();
+        state = in.readByte() != 0;
+        type = in.readInt();
+        date = in.readLong();
+        imageBytes = in.createByteArray();
+        voiceBytes = in.createByteArray();
+        voiceTime = in.readLong();
+        jid = in.readString();
+        roomJid = in.readString();
+        filePath = in.readString();
+        sendState = in.readInt();
+        fileProcess = in.readInt();
+    }
+
+    public static final Creator<ChatMessageEntity> CREATOR = new Creator<ChatMessageEntity>() {
+        @Override
+        public ChatMessageEntity createFromParcel(Parcel in) {
+            return new ChatMessageEntity(in);
+        }
+
+        @Override
+        public ChatMessageEntity[] newArray(int size) {
+            return new ChatMessageEntity[size];
+        }
+    };
 
     public String getImagePath() {
         return imagePath;
@@ -204,6 +239,33 @@ public class ChatMessageEntity {
         return false;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(imagePath);
+        dest.writeString(voicePath);
+        dest.writeString(content);
+        dest.writeString(fromJid);
+        dest.writeString(toJid);
+        dest.writeByte((byte) (state ? 1 : 0));
+        dest.writeInt(type);
+        dest.writeLong(date);
+        dest.writeByteArray(imageBytes);
+        dest.writeByteArray(voiceBytes);
+        dest.writeLong(voiceTime);
+        dest.writeString(jid);
+        dest.writeString(roomJid);
+        dest.writeString(filePath);
+        dest.writeInt(sendState);
+        dest.writeInt(fileProcess);
+        dest.writeParcelable(dataType, flags);
+    }
+
     public static class Builder {
         private String imagePath;      // 图片消息，记录图片的位置
         private String voicePath;      // 语音消息，记录语音的位置
@@ -308,11 +370,39 @@ public class ChatMessageEntity {
         }
     }
 
-    public enum Type {
-        file,
-        text,
-        voice,
-        picture,
-        video
+    public enum Type implements Parcelable{
+        file(0),
+        text(1),
+        voice(2),
+        picture(3),
+        video(4);
+
+        private int value;
+
+        Type(int v) {
+            value = v;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(value);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<Type> CREATOR = new Creator<Type>() {
+            @Override
+            public Type createFromParcel(Parcel in) {
+                return Type.values()[in.readInt()];
+            }
+
+            @Override
+            public Type[] newArray(int size) {
+                return new Type[size];
+            }
+        };
     }
 }

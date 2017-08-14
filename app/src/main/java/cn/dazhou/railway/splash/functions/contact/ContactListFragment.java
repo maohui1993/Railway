@@ -15,14 +15,9 @@ import com.jude.easyrecyclerview.decoration.DividerDecoration;
 import com.jude.easyrecyclerview.decoration.StickyHeaderDecoration;
 import com.jude.rollviewpager.Util;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.Collections;
 import java.util.List;
 
-import cn.dazhou.im.acpect.db.FriendDbApi;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.splash.functions.BaseFragment;
