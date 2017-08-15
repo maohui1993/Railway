@@ -45,7 +45,6 @@ public class ChatFragment extends Fragment implements ChatContract.View {
         mPresenter.init();
         // 点击发送按钮时
         mChatContentView.setOnSendListener(mPresenter);
-        mChatContentView.setOnImageClickListener(mPresenter);
         mChatContentView.setRefreshListener(mPresenter);
         return root;
     }

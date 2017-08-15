@@ -3,6 +3,7 @@ package cn.dazhou.im.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -46,6 +47,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
+import cn.dazhou.im.activity.FullImageActivity;
 import cn.dazhou.im.adapter.ChatAdapter1;
 import cn.dazhou.im.adapter.CommonFragmentPagerAdapter;
 import cn.dazhou.im.entity.ChatMessageEntity;
@@ -98,7 +100,6 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     private CommonFragmentPagerAdapter fragmentAdapter;
 
     private OnSendListener mOnSendListener;
-    private OnImageClickListener mOnImageClickListener;
     private ChatAdapter1 mAdapter;
 
     //录音相关
@@ -121,10 +122,6 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     public ChatContentView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
-    }
-
-    public void setOnImageClickListener(OnImageClickListener onImageClickListener) {
-        this.mOnImageClickListener = onImageClickListener;
     }
 
     public void destroy() {
@@ -269,9 +266,9 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         fullImageInfo.setHeight(view.getHeight());
         fullImageInfo.setImageUrl(message.getImagePath());
         EventBus.getDefault().postSticky(fullImageInfo);
-        if (mOnImageClickListener != null) {
-            mOnImageClickListener.onImageClick();
-        }
+
+        getContext().startActivity(new Intent(getContext(), FullImageActivity.class));
+        ((Activity) getContext()).overridePendingTransition(0, 0);
     }
 
     @Override
@@ -390,11 +387,6 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     // 当发送时，回调到ChatActivity，由其确认目前正在跟谁聊天
     public interface OnSendListener {
         void onSend(ChatMessageEntity msg, boolean saveMessage);
-    }
-
-    // 当发送时，回调到ChatActivity，由其确认目前正在跟谁聊天
-    public interface OnImageClickListener {
-        void onImageClick();
     }
 
 }

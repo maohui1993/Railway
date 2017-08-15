@@ -1,23 +1,20 @@
 package cn.dazhou.railway.im.chat;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Handler;
 import android.view.MenuItem;
 
 import java.util.List;
 
 import cn.dazhou.database.ChatMessageModel;
-import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.database.FriendModel;
+import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.friend.info.FriendInfoActivity;
-import cn.dazhou.im.activity.FullImageActivity;
 
 /**
  * Created by hooyee on 2017/6/23.
@@ -78,12 +75,6 @@ public class ChatPresenter implements ChatContract.Presenter {
                 model.update();
             }
         }
-    }
-
-    @Override
-    public void onImageClick() {
-        mContext.startActivity(new Intent(mContext, FullImageActivity.class));
-        ((Activity) mContext).overridePendingTransition(0, 0);
     }
 
     Handler handler = new Handler();

@@ -1,5 +1,6 @@
 package cn.dazhou.im.adapter.holder;
 
+import android.animation.ObjectAnimator;
 import android.os.Handler;
 import android.text.TextPaint;
 import android.view.MotionEvent;
@@ -7,6 +8,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -210,6 +213,7 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
 
                 @Override
                 public void onClick(View v) {
+
                     if(videoProgress.getProgress() != videoProgress.getMax()) {
                         Toast.makeText(getContext(), "接受中···", Toast.LENGTH_SHORT).show();
                         return;
@@ -237,9 +241,9 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
                     }
                 }
             });
-            layoutParams.width = Utils.dp2px(getContext(), 200);
-            layoutParams.height = Utils.dp2px(getContext(), 150);
-            chatItemLayoutContent.setLayoutParams(layoutParams);
+//            layoutParams.width = Utils.dp2px(getContext(), 200);
+//            layoutParams.height = Utils.dp2px(getContext(), 150);
+//            chatItemLayoutContent.setLayoutParams(layoutParams);
         }
 
         switch (data.getSendState()) {
