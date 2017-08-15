@@ -21,7 +21,6 @@ public class MediaPlayerUtils {
     private Context mContext;
 
     private byte state = STOPPED;
-    private int position;
 
     private Uri dataUri;
     private SurfaceHolder surfaceHolder;
@@ -51,6 +50,7 @@ public class MediaPlayerUtils {
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
+        state = STOPPED;
     }
 
     public void changeState(byte state) {
@@ -84,7 +84,7 @@ public class MediaPlayerUtils {
                 }
                 break;
             case PAUSED:
-                if (!Utils.checkNotNull(mMediaPlayer)) {
+                if (Utils.checkNotNull(mMediaPlayer)) {
                     mMediaPlayer.pause();
                 }
                 break;

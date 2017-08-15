@@ -307,7 +307,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         Uri uri = Uri.fromFile(new File(fileUri));
         mMediaPlayer.setDataUri(uri);
         mMediaPlayer.setSurfaceHolder(surfaceView.getHolder());
-        mMediaPlayer.changeState(MediaPlayerUtils.PLAYING);
+//        mMediaPlayer.changeState(MediaPlayerUtils.PLAYING);
     }
 
     @Override
