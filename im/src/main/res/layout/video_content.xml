@@ -18,6 +18,7 @@
             <!--android:visibility="gone" />-->
 
         <ImageView
+            android:background="#000000"
             android:id="@+id/thumbnail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

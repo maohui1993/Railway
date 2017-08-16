@@ -39,7 +39,7 @@ public class Utils {
     public static String convertSpaceUnit(long size) {
         float kb = size / 1024.0f;
         float mb = kb / 1024.0f;
-        DecimalFormat decimalFormat= new DecimalFormat(".00");
+        DecimalFormat decimalFormat = new DecimalFormat(".00");
         if (mb < 1) {
             return decimalFormat.format(kb) + " KB";
         } else {

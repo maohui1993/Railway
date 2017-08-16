@@ -1,15 +1,12 @@
 package cn.dazhou.im.util;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 
 import java.io.IOException;
 
@@ -115,7 +112,7 @@ public class MediaPlayerUtils {
 
     // 获取视频缩略图
     public static Bitmap getVideoThumbnail(String filePath) {
-        Bitmap b=null;
+        Bitmap b = null;
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         try {
             retriever.setDataSource(filePath);

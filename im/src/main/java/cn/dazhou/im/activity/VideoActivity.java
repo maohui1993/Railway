@@ -29,6 +29,10 @@ import cn.dazhou.im.R;
 import cn.dazhou.im.entity.VideoInfo;
 import cn.dazhou.im.util.MediaPlayerUtils;
 
+/**
+ * @author hooyee
+ * 视频播放
+ */
 public class VideoActivity extends Activity implements MediaPlayer.OnCompletionListener {
     private static final String EXTRA_DATA = "data";
     private int mLeft;
@@ -50,7 +54,6 @@ public class VideoActivity extends Activity implements MediaPlayer.OnCompletionL
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_video);
-
 
         imageView = (ImageView) findViewById(R.id.iv_thumbnail);
         mSurfaceView = (SurfaceView) findViewById(R.id.sv_video);
@@ -95,29 +98,43 @@ public class VideoActivity extends Activity implements MediaPlayer.OnCompletionL
         Uri uri = Uri.fromFile(new File(videoInfo.getVideoUrl()));
         mMediaPlayer.setDataUri(uri);
         mMediaPlayer.setSurfaceHolder(mSurfaceView.getHolder());
+
         final int left = videoInfo.getLocationX();
         final int top = videoInfo.getLocationY();
         final int width = videoInfo.getWidth();
         final int height = videoInfo.getHeight();
+
+        // 用于做淡入淡出动画
         mBackground = new ColorDrawable(Color.BLACK);
         content.setBackground(mBackground);
+
+        // 获取video的第一帧
+        final Bitmap bmp = MediaPlayerUtils.getVideoThumbnail(videoInfo.getVideoUrl());
+        imageView.setImageBitmap(bmp);
+        // 通过video的第一帧获取video文件的宽度和高度值，并得出surfaceView的尺寸
+        setVideoSize(bmp);
+
         imageView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
                 imageView.getViewTreeObserver().removeOnPreDrawListener(this);
+
                 int location[] = new int[2];
                 imageView.getLocationOnScreen(location);
+                // 计算退出视频时，动画平移的位置
                 mLeft = left - location[0];
                 mTop = top - location[1];
+                // 计算动画缩放到什么大小是视屏的大小
                 mScaleX = width * 1.0f / imageView.getWidth();
                 mScaleY = height * 1.0f / imageView.getHeight();
                 activityEnterAnim();
                 return true;
             }
         });
-        Bitmap b = MediaPlayerUtils.getVideoThumbnail(videoInfo.getVideoUrl());
-        imageView.setImageBitmap(b);
     }
+
+    private int translationX;
+    private int translationY;
 
     private void activityEnterAnim() {
         imageView.setPivotX(0);
@@ -126,7 +143,7 @@ public class VideoActivity extends Activity implements MediaPlayer.OnCompletionL
         imageView.setScaleY(mScaleY);
         imageView.setTranslationX(mLeft);
         imageView.setTranslationY(mTop);
-        imageView.animate().scaleX(1).scaleY(1).translationX(0).translationY(0).
+        imageView.animate().scaleX(1).scaleY(1).translationX(translationX).translationY(translationY).
                 setDuration(500).setInterpolator(new DecelerateInterpolator()).start();
         ObjectAnimator objectAnimator = ObjectAnimator.ofInt(mBackground, "alpha", 0, 255);
         objectAnimator.setInterpolator(new DecelerateInterpolator());
@@ -183,5 +200,39 @@ public class VideoActivity extends Activity implements MediaPlayer.OnCompletionL
         Intent intent = new Intent(context, VideoActivity.class);
         intent.putExtra(EXTRA_DATA, data);
         context.startActivity(intent);
+    }
+
+    private void setVideoSize(Bitmap videoThumbnail) {
+
+        // // Get the dimensions of the video
+        int videoWidth = videoThumbnail.getWidth();
+        int videoHeight = videoThumbnail.getHeight();
+        float videoProportion = (float) videoWidth / (float) videoHeight;
+
+        // Get the width of the screen
+        int screenWidth = getWindowManager().getDefaultDisplay().getWidth();
+        int screenHeight = getWindowManager().getDefaultDisplay().getHeight();
+        float screenProportion = (float) screenWidth / (float) screenHeight;
+
+        // Get the SurfaceView layout parameters
+        android.view.ViewGroup.LayoutParams lp = mSurfaceView.getLayoutParams();
+        android.view.ViewGroup.LayoutParams image = imageView.getLayoutParams();
+        if (videoProportion > screenProportion) {
+            lp.width = screenWidth;
+            lp.height = (int) ((float) screenWidth / videoProportion);
+            image.width=lp.width;
+            image.height=lp.height;
+        } else {
+            lp.width = (int) (videoProportion * (float) screenHeight);
+            lp.height = screenHeight;
+            image.width=lp.width;
+            image.height=lp.height;
+        }
+
+        translationX = (screenWidth - image.width)/2;
+        translationY = (screenHeight - image.height)/2;
+        // Commit the layout parameters
+        mSurfaceView.setLayoutParams(lp);
+        imageView.setLayoutParams(image);
     }
 }
