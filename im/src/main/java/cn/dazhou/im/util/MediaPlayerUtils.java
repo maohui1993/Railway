@@ -1,9 +1,13 @@
 package cn.dazhou.im.util;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -25,6 +29,8 @@ public class MediaPlayerUtils {
     private Uri dataUri;
     private SurfaceHolder surfaceHolder;
 
+    private MediaPlayer.OnCompletionListener mListener;
+
     public MediaPlayerUtils(Context mContext) {
         this.mContext = mContext;
     }
@@ -38,6 +44,9 @@ public class MediaPlayerUtils {
     public void startPlay(Uri uri) throws IOException {
     }
 
+    public void setOnCompletionListener(MediaPlayer.OnCompletionListener listener) {
+        mListener = listener;
+    }
 
     public void stopPlay() {
         if (Utils.checkNotNull(mMediaPlayer)) {
@@ -67,18 +76,13 @@ public class MediaPlayerUtils {
                     mMediaPlayer = null;
                 }
                 mMediaPlayer = new MediaPlayer();
+                mMediaPlayer.setOnCompletionListener(mListener);
                 mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 try {
                     mMediaPlayer.setDataSource(mContext, dataUri);
                     mMediaPlayer.setDisplay(surfaceHolder);
                     mMediaPlayer.prepare(); // might take long! (for buffering, etc)
                     mMediaPlayer.start();
-                    mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                        @Override
-                        public void onCompletion(MediaPlayer mp) {
-                            changeState(STOPPED);
-                        }
-                    });
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -107,5 +111,27 @@ public class MediaPlayerUtils {
 
     public void setSurfaceHolder(SurfaceHolder surfaceHolder) {
         this.surfaceHolder = surfaceHolder;
+    }
+
+    // 获取视频缩略图
+    public static Bitmap getVideoThumbnail(String filePath) {
+        Bitmap b=null;
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(filePath);
+            b = retriever.getFrameAtTime();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+
+        } finally {
+            try {
+                retriever.release();
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
+        }
+        return b;
     }
 }

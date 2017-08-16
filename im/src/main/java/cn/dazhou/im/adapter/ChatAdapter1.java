@@ -96,11 +96,7 @@ public class ChatAdapter1 extends RecyclerArrayAdapter<ChatMessageEntity> {
 
         void onVoiceClick(SoundView soundView);
 
-        void onVideoClick(String fileUri, SurfaceView surfaceView);
-
-        byte mediaState();
-
-        void changeState(byte state);
+        void onVideoClick(View v, ChatMessageEntity entity);
 
         void onFailTipClick(ChatMessageEntity data);
     }

@@ -48,12 +48,14 @@ import butterknife.OnClick;
 import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
 import cn.dazhou.im.activity.FullImageActivity;
+import cn.dazhou.im.activity.VideoActivity;
 import cn.dazhou.im.adapter.ChatAdapter1;
 import cn.dazhou.im.adapter.CommonFragmentPagerAdapter;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.entity.FriendRequest;
 import cn.dazhou.im.entity.FullImageInfo;
 import cn.dazhou.im.entity.ProcessEvent;
+import cn.dazhou.im.entity.VideoInfo;
 import cn.dazhou.im.fragment.ChatEmotionFragment;
 import cn.dazhou.im.fragment.ChatFunctionFragment;
 import cn.dazhou.im.util.Constants;
@@ -265,9 +267,10 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         fullImageInfo.setWidth(view.getWidth());
         fullImageInfo.setHeight(view.getHeight());
         fullImageInfo.setImageUrl(message.getImagePath());
-        EventBus.getDefault().postSticky(fullImageInfo);
 
-        getContext().startActivity(new Intent(getContext(), FullImageActivity.class));
+        Intent intent = new Intent(getContext(), FullImageActivity.class);
+        intent.putExtra("image", fullImageInfo);
+        getContext().startActivity(intent);
         ((Activity) getContext()).overridePendingTransition(0, 0);
     }
 
@@ -300,11 +303,19 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     }
 
     @Override
-    public void onVideoClick(String fileUri, SurfaceView surfaceView) {
-        Uri uri = Uri.fromFile(new File(fileUri));
-        mMediaPlayer.setDataUri(uri);
-        mMediaPlayer.setSurfaceHolder(surfaceView.getHolder());
-//        mMediaPlayer.changeState(MediaPlayerUtils.PLAYING);
+    public void onVideoClick(View v, ChatMessageEntity entity) {
+
+        int location[] = new int[2];
+        v.getLocationOnScreen(location);
+        VideoInfo videoInfo = new VideoInfo();
+        videoInfo.setLocationX(location[0]);
+        videoInfo.setLocationY(location[1]);
+        videoInfo.setWidth(v.getWidth());
+        videoInfo.setHeight(v.getHeight());
+        videoInfo.setVideoUrl(entity.getFilePath());
+
+        VideoActivity.startItself(getContext(), videoInfo);
+        ((Activity) getContext()).overridePendingTransition(0, 0);
     }
 
     @Override
@@ -328,16 +339,6 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
                 .create()
                 .show();
 
-    }
-
-    @Override
-    public byte mediaState() {
-        return mMediaPlayer.getState();
-    }
-
-    @Override
-    public void changeState(byte state) {
-        mMediaPlayer.changeState(state);
     }
 
     public boolean interceptBackPress() {

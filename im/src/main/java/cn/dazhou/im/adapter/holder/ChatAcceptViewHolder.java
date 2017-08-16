@@ -1,5 +1,6 @@
 package cn.dazhou.im.adapter.holder;
 
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.text.TextPaint;
 import android.view.MotionEvent;
@@ -61,10 +62,11 @@ public class ChatAcceptViewHolder extends BaseViewHolder<ChatMessageEntity> {
     View videoContent;
     @BindView(R2.id.file_video)
     ImageView video;
-    @BindView(R2.id.video_content)
-    SurfaceView surfaceView;
-    @BindView(R2.id.video_suspend)
-    ImageView suspend;
+//    @BindView(R2.id.video_suspend)
+//    ImageView suspend;
+    @BindView(R2.id.thumbnail)
+    ImageView thumbnail;
+
     private RelativeLayout.LayoutParams layoutParams;
 
     private ChatAdapter1.OnItemClickListener onItemClickListener;
@@ -175,50 +177,17 @@ public class ChatAcceptViewHolder extends BaseViewHolder<ChatMessageEntity> {
             fileContainer.setVisibility(GONE);
             video.setVisibility(View.VISIBLE);
 
-//            surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
-//                @Override
-//                public void surfaceCreated(final SurfaceHolder holder) {
-//                    surfaceView.setVisibility(View.VISIBLE);
-//                }
-//
-//                @Override
-//                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-//
-//                }
-//
-//                @Override
-//                public void surfaceDestroyed(SurfaceHolder holder) {
-//
-//                }
-//            });
+            Bitmap bmp = MediaPlayerUtils.getVideoThumbnail(data.getFilePath());
+            thumbnail.setImageBitmap(bmp);
 
             // 点击之后改变状态并处理
-            surfaceView.setOnClickListener(new View.OnClickListener() {
+            thumbnail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    byte state = onItemClickListener.mediaState();
-                    switch (state) {
-                        case MediaPlayerUtils.PLAYING:
-                            video.setVisibility(GONE);
-                            suspend.setVisibility(VISIBLE);
-                            onItemClickListener.changeState(MediaPlayerUtils.PAUSED);
-                            break;
-                        case MediaPlayerUtils.PAUSED:
-                            onItemClickListener.onVideoClick(data.getFilePath(), surfaceView);
-
-                            video.setVisibility(GONE);
-                            suspend.setVisibility(GONE);
-                            onItemClickListener.changeState(MediaPlayerUtils.PLAYING);
-                            break;
-                        case MediaPlayerUtils.STOPPED:
-                            onItemClickListener.onVideoClick(data.getFilePath(), surfaceView);
-                            video.setVisibility(GONE);
-                            suspend.setVisibility(GONE);
-                            onItemClickListener.changeState(MediaPlayerUtils.PLAYING);
-                            break;
-                    }
+                    onItemClickListener.onVideoClick(v, data);
                 }
             });
+
             layoutParams.width = Utils.dp2px(getContext(), 200);
             layoutParams.height = Utils.dp2px(getContext(), 150);
             chatItemLayoutContent.setLayoutParams(layoutParams);

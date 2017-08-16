@@ -1,6 +1,10 @@
 package cn.dazhou.im.adapter.holder;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.text.TextPaint;
 import android.view.MotionEvent;
@@ -26,8 +30,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
+import cn.dazhou.im.activity.FullImageActivity;
+import cn.dazhou.im.activity.VideoActivity;
 import cn.dazhou.im.adapter.ChatAdapter1;
 import cn.dazhou.im.entity.ChatMessageEntity;
+import cn.dazhou.im.entity.FullImageInfo;
+import cn.dazhou.im.entity.VideoInfo;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.MediaPlayerUtils;
 import cn.dazhou.im.util.Utils;
@@ -66,14 +74,14 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
     View fileContainer;
     @BindView(R2.id.file_video)
     ImageView video;
-    @BindView(R2.id.video_content)
-    SurfaceView surfaceView;
-    @BindView(R2.id.video_suspend)
-    ImageView suspend;
+//    @BindView(R2.id.video_suspend)
+//    ImageView suspend;
     @BindView(R2.id.progress_video)
     ProgressBar videoProgress;
     @BindView(R2.id.video)
     View videoContent;
+    @BindView(R2.id.thumbnail)
+    ImageView thumbnail;
     private RelativeLayout.LayoutParams layoutParams;
 
     private ChatAdapter1.OnItemClickListener onItemClickListener;
@@ -191,53 +199,17 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
             videoProgress.setVisibility(VISIBLE);
             videoProgress.setProgress(data.getFileProcess());
 
-//            surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
-//                @Override
-//                public void surfaceCreated(final SurfaceHolder holder) {
-//                    surfaceView.setVisibility(View.VISIBLE);
-//                }
-//
-//                @Override
-//                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-//
-//                }
-//
-//                @Override
-//                public void surfaceDestroyed(SurfaceHolder holder) {
-//
-//                }
-//            });
+            Bitmap b = MediaPlayerUtils.getVideoThumbnail(data.getFilePath());
+            thumbnail.setImageBitmap(b);
 
             // 点击之后改变状态并处理
-            surfaceView.setOnClickListener(new View.OnClickListener() {
-
+            thumbnail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    onItemClickListener.onVideoClick(v, data);
                     if(videoProgress.getProgress() != videoProgress.getMax()) {
                         Toast.makeText(getContext(), "接受中···", Toast.LENGTH_SHORT).show();
                         return;
-                    }
-                    byte state = onItemClickListener.mediaState();
-                    switch (state) {
-                        case MediaPlayerUtils.PLAYING:
-                            video.setVisibility(GONE);
-                            suspend.setVisibility(VISIBLE);
-                            onItemClickListener.changeState(MediaPlayerUtils.PAUSED);
-                            break;
-                        case MediaPlayerUtils.PAUSED:
-                            onItemClickListener.onVideoClick(data.getFilePath(), surfaceView);
-
-                            video.setVisibility(GONE);
-                            suspend.setVisibility(GONE);
-                            onItemClickListener.changeState(MediaPlayerUtils.PLAYING);
-                            break;
-                        case MediaPlayerUtils.STOPPED:
-                            onItemClickListener.onVideoClick(data.getFilePath(), surfaceView);
-                            video.setVisibility(GONE);
-                            suspend.setVisibility(GONE);
-                            onItemClickListener.changeState(MediaPlayerUtils.PLAYING);
-                            break;
                     }
                 }
             });

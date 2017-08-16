@@ -4,35 +4,35 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * 作者：Rance on 2016/12/21 16:22
- * 邮箱：rance935@163.com
+ * Created by hooyee on 2017/8/15.
  */
-public class FullImageInfo implements Parcelable{
+
+public class VideoInfo implements Parcelable{
     private int locationX;
     private int locationY;
     private int width;
     private int height;
-    private String imageUrl;
+    private String videoUrl;
 
-    public FullImageInfo() {}
+    public VideoInfo() {}
 
-    protected FullImageInfo(Parcel in) {
+    protected VideoInfo(Parcel in) {
         locationX = in.readInt();
         locationY = in.readInt();
         width = in.readInt();
         height = in.readInt();
-        imageUrl = in.readString();
+        videoUrl = in.readString();
     }
 
-    public static final Creator<FullImageInfo> CREATOR = new Creator<FullImageInfo>() {
+    public static final Creator<VideoInfo> CREATOR = new Creator<VideoInfo>() {
         @Override
-        public FullImageInfo createFromParcel(Parcel in) {
-            return new FullImageInfo(in);
+        public VideoInfo createFromParcel(Parcel in) {
+            return new VideoInfo(in);
         }
 
         @Override
-        public FullImageInfo[] newArray(int size) {
-            return new FullImageInfo[size];
+        public VideoInfo[] newArray(int size) {
+            return new VideoInfo[size];
         }
     };
 
@@ -68,12 +68,12 @@ public class FullImageInfo implements Parcelable{
         this.height = height;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getVideoUrl() {
+        return videoUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
     }
 
     @Override
@@ -87,6 +87,6 @@ public class FullImageInfo implements Parcelable{
         dest.writeInt(locationY);
         dest.writeInt(width);
         dest.writeInt(height);
-        dest.writeString(imageUrl);
+        dest.writeString(videoUrl);
     }
 }
