@@ -43,21 +43,4 @@ public class RosterViewHolder extends BaseViewHolder<FriendModel> {
                 .into(mImg_face);
     }
 
-    public void updateLatestMsg(String msg) {
-        mTv_LatestMsg.setText(msg);
-    }
-
-    int sum = 0;
-
-    public void updateMessageCount(int count) {
-        sum += count;
-        mMessageCount.setText("[" + sum + "]");
-        mMessageCount.setVisibility(View.VISIBLE);
-    }
-
-    public void restore() {
-        sum = 0;
-        mMessageCount.setVisibility(View.GONE);
-    }
-
 }
