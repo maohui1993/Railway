@@ -111,10 +111,12 @@
                 <action android:name="action.friend.new.request" />
             </intent-filter>
         </receiver>
+
         <activity
             android:name=".im.friend.message.list.MessageListActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+        <activity android:name=".splash.functions.work.http.FunctionActivity"></activity>
     </application>
 
 </manifest>

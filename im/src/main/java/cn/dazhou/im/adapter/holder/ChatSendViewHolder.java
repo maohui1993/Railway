@@ -1,19 +1,11 @@
 package cn.dazhou.im.adapter.holder;
 
-import android.animation.ObjectAnimator;
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.text.TextPaint;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -30,12 +22,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
-import cn.dazhou.im.activity.FullImageActivity;
-import cn.dazhou.im.activity.VideoActivity;
 import cn.dazhou.im.adapter.ChatAdapter1;
 import cn.dazhou.im.entity.ChatMessageEntity;
-import cn.dazhou.im.entity.FullImageInfo;
-import cn.dazhou.im.entity.VideoInfo;
 import cn.dazhou.im.util.Constants;
 import cn.dazhou.im.util.MediaPlayerUtils;
 import cn.dazhou.im.util.Utils;
@@ -213,9 +201,9 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
                     }
                 }
             });
-//            layoutParams.width = Utils.dp2px(getContext(), 200);
-//            layoutParams.height = Utils.dp2px(getContext(), 150);
-//            chatItemLayoutContent.setLayoutParams(layoutParams);
+            layoutParams.width = Utils.dp2px(getContext(), 200);
+            layoutParams.height = Utils.dp2px(getContext(), 150);
+            chatItemLayoutContent.setLayoutParams(layoutParams);
         }
 
         switch (data.getSendState()) {

@@ -32,7 +32,7 @@ public class DataHelper {
         return SQLite.select()
                 .from(FunctionItemModel.class)
                 .where(FunctionItemModel_Table.jid.eq(user.getUsername()))
-                .orderBy(FunctionItemModel_Table.position, true)
+                .orderBy(FunctionItemModel_Table.sort, true)
                 .queryList();
     }
 

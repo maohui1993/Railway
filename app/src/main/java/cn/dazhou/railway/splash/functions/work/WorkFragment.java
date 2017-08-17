@@ -13,6 +13,7 @@ import cn.dazhou.railway.splash.functions.BaseFragment;
 public class WorkFragment extends BaseFragment implements WorkContract.View{
     private GridView mGridView;
     private WorkContract.Presenter mPresenter;
+    private View mRootView;
 
     public static WorkFragment newInstance(boolean param1) {
         WorkFragment fragment = new WorkFragment();
@@ -32,10 +33,16 @@ public class WorkFragment extends BaseFragment implements WorkContract.View{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_work, container, false);
-        mGridView = (GridView) root.findViewById(R.id.grid);
-        mGridView.setOnItemClickListener(mPresenter);
-        return root;
+        if (mRootView == null) {
+            mRootView = inflater.inflate(R.layout.fragment_work, container, false);
+            mGridView = (GridView) mRootView.findViewById(R.id.grid);
+            mGridView.setOnItemClickListener(mPresenter);
+        } else {
+            // 同一个parent不能添加相同的view，因此要先移除
+            ViewGroup parent = (ViewGroup) mGridView.getParent();
+            parent.removeView(mRootView);
+        }
+        return mRootView;
     }
 
     @Override

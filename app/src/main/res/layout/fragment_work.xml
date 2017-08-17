@@ -1,19 +1,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="#ffffff"
+    android:padding="10dp"
     tools:context=".splash.functions.work.WorkFragment">
 
     <GridView
         android:id="@+id/grid"
-        android:layout_marginLeft="@dimen/content_horizontal_margin"
-        android:layout_marginRight="@dimen/content_horizontal_margin"
         android:background="#ffffff"
         android:padding="2dp"
-        android:horizontalSpacing="2dp"
+        android:horizontalSpacing="1dp"
         android:verticalSpacing="2dp"
         android:numColumns="3"
+        android:scrollbars="none"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"></GridView>
 

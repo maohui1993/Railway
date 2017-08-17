@@ -1,12 +1,10 @@
 package cn.dazhou.railway.splash.functions.work;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -68,7 +66,7 @@ public class GridAdapter extends BaseAdapter {
             holder=(ViewHolder)convertView.getTag();
         }
 
-        holder.text.setText(datas.get(position).getName());
+        holder.text.setText(datas.get(position).getFunctionname());
         Glide.with(context)
                 .load(datas.get(position).getIconUrl())
                 .placeholder(R.drawable.ic_launcher)

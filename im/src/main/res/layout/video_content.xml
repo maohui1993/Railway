@@ -5,7 +5,6 @@
     android:orientation="vertical">
 
     <FrameLayout
-        android:padding="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -21,7 +20,7 @@
             android:background="#000000"
             android:id="@+id/thumbnail"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="145dp" />
         <ImageView
             android:id="@+id/file_video"
             android:layout_width="wrap_content"
