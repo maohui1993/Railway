@@ -117,7 +117,8 @@
             android:name=".im.friend.message.list.MessageListActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity android:name=".splash.functions.work.http.FunctionActivity"></activity>
+        <activity android:name=".splash.functions.work.http.FunctionActivity" />
+        <activity android:name=".splash.functions.setting.function.MessageTipActivity"></activity>
     </application>
 
 </manifest>

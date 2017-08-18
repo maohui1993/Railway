@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
+import cn.dazhou.railway.splash.functions.setting.function.MessageTipActivity;
 import cn.dazhou.railway.util.IMUtil;
 import cn.dazhou.railway.util.SharedPreferenceUtil;
 
@@ -55,6 +56,9 @@ public class SettingPresenter implements SettingContract.Presenter {
                         }
                     }, 1000);
                 }
+                break;
+            case R.id.tip:
+                MessageTipActivity.startItself(mContext);
                 break;
         }
     }

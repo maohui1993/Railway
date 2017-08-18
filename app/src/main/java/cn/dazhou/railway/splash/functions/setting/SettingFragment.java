@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
@@ -57,6 +58,7 @@ public class SettingFragment extends BaseFragment implements SettingContract.Vie
         });
 
         root.findViewById(R.id.bt_accept).setOnClickListener(mPresenter);
+        root.findViewById(R.id.tip).setOnClickListener(mPresenter);
         return root;
     }
 

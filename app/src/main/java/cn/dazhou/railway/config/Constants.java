@@ -32,4 +32,7 @@ public final class Constants {
 
     public static final String FILE_PATH = Environment.getExternalStorageDirectory() + "/railway/file/";
     public static final String FILE_NAME = "railway.log";
+
+    public static final String CAN_RINGTONE = "can_ringtone";
+    public static final String CAN_SHAKE = "can_shake";
 }

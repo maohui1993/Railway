@@ -51,6 +51,7 @@ import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.chat.ChatActivity;
 import cn.dazhou.railway.util.IMUtil;
 import cn.dazhou.railway.util.LogUtil;
+import cn.dazhou.railway.util.SharedPreferenceUtil;
 
 /**
  * 聊天服务.
@@ -276,7 +277,24 @@ public class IMChatService extends Service {
 //        PendingIntent pIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pIntent);
-        notificationManager.notify(1, mBuilder.build());
+        Notification notification = mBuilder.build();
+        boolean canRingtone = SharedPreferenceUtil.getBoolean(context, cn.dazhou.railway.config.Constants.CAN_RINGTONE, true);
+        boolean canShake = SharedPreferenceUtil.getBoolean(context, cn.dazhou.railway.config.Constants.CAN_SHAKE, true);
+        // 同为true
+        if (canRingtone && canShake) {
+            notification.defaults = Notification.DEFAULT_ALL;
+            // 同为false
+        } else if (!canRingtone && !canShake) {
+            notification.defaults = Notification.DEFAULT_LIGHTS;
+            // ringtone为true
+        } else if (canRingtone) {
+            notification.defaults = Notification.DEFAULT_SOUND;
+            // shake为false
+        } else {
+            notification.defaults = Notification.DEFAULT_VIBRATE;
+        }
+
+        notificationManager.notify(1, notification);
     }
 
     /**
