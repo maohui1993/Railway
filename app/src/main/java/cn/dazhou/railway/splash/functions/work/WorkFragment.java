@@ -7,10 +7,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 
+import java.util.Collections;
+
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.splash.functions.BaseFragment;
 
-public class WorkFragment extends BaseFragment implements WorkContract.View{
+public class WorkFragment extends BaseFragment implements WorkContract.View {
     private GridView mGridView;
     private WorkContract.Presenter mPresenter;
     private View mRootView;
@@ -52,8 +54,10 @@ public class WorkFragment extends BaseFragment implements WorkContract.View{
 
     @Override
     public void setAdapter(BaseAdapter adapter) {
-//        if (mGridView != null) {
-            mGridView.setAdapter(adapter);
-//        }
+        GridAdapter gridAdapter = (GridAdapter) adapter;
+        if (gridAdapter.getAllData() != null && gridAdapter.getAllData().size() > 0) {
+            Collections.sort(((GridAdapter) adapter).getAllData());
+        }
+        mGridView.setAdapter(adapter);
     }
 }

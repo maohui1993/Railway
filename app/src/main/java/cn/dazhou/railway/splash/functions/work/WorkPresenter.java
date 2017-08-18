@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import cn.dazhou.database.FunctionItemModel;
@@ -64,8 +63,10 @@ public class WorkPresenter implements WorkContract.Presenter {
             @Override
             public void onResponse(Call<Function> call, Response<Function> response) {
                 Log.i("retrofit", response.toString());
-                datas.addAll(response.body().getData());
-                Collections.sort(datas);
+                List<FunctionItemModel> data = response.body().getData();
+                if (data != null) {
+                    datas.addAll(data);
+                }
                 for (int i = 0; i < datas.size(); i++) {
                     String localUrl = Constants.FILE_PATH + "icon_" + System.currentTimeMillis() + i + ".png";
                     String iconUrl = datas.get(i).getIconUrl();

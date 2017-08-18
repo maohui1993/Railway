@@ -74,6 +74,10 @@ public class GridAdapter extends BaseAdapter {
         return convertView;
     }
 
+    public List<FunctionItemModel> getAllData() {
+        return datas;
+    }
+
     class ViewHolder {
         TextView text;
         ImageView image;
