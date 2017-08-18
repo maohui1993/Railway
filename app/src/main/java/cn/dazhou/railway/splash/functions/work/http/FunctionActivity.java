@@ -57,8 +57,6 @@ public class FunctionActivity extends AppCompatActivity {
             }
         });
 
-
-
         mHomeWeb.loadUrl("http://192.168.1.252:8089/railway_test/" + model.getUrl());
         //覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
         mHomeWeb.setWebViewClient(new WebViewClient() {
