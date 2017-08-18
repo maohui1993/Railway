@@ -24,6 +24,7 @@ import java.io.File;
 
 import cn.dazhou.database.FunctionItemModel;
 import cn.dazhou.railway.R;
+import cn.dazhou.railway.util.ActivityUtils;
 
 public class FunctionActivity extends AppCompatActivity {
     private static final String EXTRA_DATA = "function";
@@ -66,18 +67,7 @@ public class FunctionActivity extends AppCompatActivity {
                 //返回值是true的时候控制去WebView打开，为false调用系统浏览器或第三方浏览器
                 Log.i("TAG", url);
                 if (url.startsWith("tel")) {
-                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(url));
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                    if (ActivityCompat.checkSelfPermission(FunctionActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-
-                        ActivityCompat.requestPermissions(FunctionActivity.this,
-                                new String[]{
-                                        Manifest.permission.CALL_PHONE,},
-                                1);
-                    } else {
-                        startActivity(intent);
-                    }
+                    ActivityUtils.callPhone(FunctionActivity.this, url);
                 } else {
                     view.loadUrl(url);
                 }

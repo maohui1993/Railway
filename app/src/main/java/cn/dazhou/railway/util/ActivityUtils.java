@@ -1,17 +1,25 @@
 package cn.dazhou.railway.util;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.widget.Toast;
+
+import cn.dazhou.railway.splash.functions.work.http.FunctionActivity;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -69,6 +77,28 @@ public class ActivityUtils {
             return realHeight - usableHeight;
         } else {
             return 0;
+        }
+    }
+
+    public static void callPhone(Activity context, String phone) {
+        if (phone == null) {
+            Toast.makeText(context, "该联系人没有手机信息", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!phone.startsWith("tel")) {
+            phone = "tel:" + phone;
+        }
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(phone));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(context,
+                    new String[]{
+                            Manifest.permission.CALL_PHONE,},
+                    1);
+        } else {
+            context.startActivity(intent);
         }
     }
 }
