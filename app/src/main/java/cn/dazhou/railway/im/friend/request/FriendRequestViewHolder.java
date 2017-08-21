@@ -100,7 +100,8 @@ public class FriendRequestViewHolder extends BaseViewHolder<FriendRequestModel> 
                     Observable.create(new ObservableOnSubscribe() {
                         @Override
                         public void subscribe(@NonNull ObservableEmitter e) throws Exception {
-                            Roster roster = IMLauncher.acceptFriendRequest(mUsernameText.getText().toString());
+                            String jid = StringUtil.getRealJid(mUsernameText.getText().toString());
+                            Roster roster = IMLauncher.acceptFriendRequest(jid);
                             RosterEntry entry = roster.getEntry(JidCreate.bareFrom(StringUtil.getRealJid(mUsernameText.getText().toString(), MyApp.gServerIp)));
                             FriendModel friendModel = DataHelper.toFriendModel(entry, MyApp.gCurrentUsername);
                             flag = friendModel.exists();
