@@ -101,6 +101,7 @@ public final class IMLauncher {
         return result;
     }
 
+    @Deprecated
     public static void chatWith(EntityBareJid id) throws IMException{
         checkConnected(mImApi);
         mImApi.chatWith(id);

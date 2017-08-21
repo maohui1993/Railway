@@ -382,7 +382,6 @@ public class IMChatService extends Service {
         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE , data));
     }
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void messageEventBus(final String jid) {
         currentChattingUser = jid.split("@")[0];

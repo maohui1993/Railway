@@ -119,6 +119,7 @@ public class SmackImApiImpl implements IMApi {
                 .setConnectTimeout(timeout)
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                 .setSendPresence(false)   // 处理离线消息
+                .setResource("smack")
                 .build();
         mConnection = new XMPPTCPConnection(config);
         mConnection.connect();
@@ -193,16 +194,6 @@ public class SmackImApiImpl implements IMApi {
         mState = NOT_LOGIN_STATE;
     }
 
-    public void addPacketSendListener(StanzaListener stanzaListener) {
-        //条件过滤器
-        StanzaFilter filter = new AndFilter(new StanzaTypeFilter(Presence.class));
-        addPacketSendListener(stanzaListener, filter);
-    }
-
-    public void addPacketSendListener(StanzaListener packetListener, StanzaFilter packetFilter) {
-        mConnection.addPacketSendingListener(packetListener, packetFilter);
-    }
-
     public void login(String username, String password) throws Exception {
         if (mState == LOGINED_STATE) {
             return;
@@ -240,6 +231,10 @@ public class SmackImApiImpl implements IMApi {
                 mChat = mChatManager.chatWith(id);
                 String msgJson = JsonUtil.toJSON(msg);
                 mChat.send(msgJson);
+//                Message stanza = new Message();
+//                stanza.setBody(msgJson);
+//                stanza.setType(Message.Type.normal);
+//                mChat.send(stanza);
                 break;
             case video:
             case file:
