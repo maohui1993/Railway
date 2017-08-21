@@ -66,6 +66,17 @@ public class ActivityUtils {
         return screenHeight;
     }
 
+    public static int getScreenWidth(Activity activity) {
+        int screenHeight = activity.getWindow().getDecorView().getRootView().getWidth();
+        return screenHeight;
+    }
+
+    public static int getDpi(Activity activity) {
+        DisplayMetrics metric = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(metric);
+        return metric.densityDpi;
+    }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private static int getSoftButtonsBarHeight(Activity activity) {
         DisplayMetrics metrics = new DisplayMetrics();

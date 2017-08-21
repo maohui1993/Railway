@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.dazhou.database.FunctionItemModel;
+import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.http.RailwayApi;
@@ -68,7 +69,7 @@ public class WorkPresenter implements WorkContract.Presenter {
                     datas.addAll(data);
                 }
                 for (int i = 0; i < datas.size(); i++) {
-                    String localUrl = Constants.FILE_PATH + "icon_" + System.currentTimeMillis() + i + ".png";
+                    String localUrl = Constants.FILE_PATH + "icon_" + MyApp.gCurrentUsername + i + ".png";
                     String iconUrl = datas.get(i).getIconUrl();
                     downFile(iconUrl, localUrl);
                     datas.get(i).setIconUrl(localUrl);
