@@ -3,8 +3,6 @@ package cn.dazhou.railway.util;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
@@ -18,8 +16,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Toast;
-
-import cn.dazhou.railway.splash.functions.work.http.FunctionActivity;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -64,17 +60,6 @@ public class ActivityUtils {
     public static int getScreenHeight(Activity activity) {
         int screenHeight = activity.getWindow().getDecorView().getRootView().getHeight();
         return screenHeight;
-    }
-
-    public static int getScreenWidth(Activity activity) {
-        int screenHeight = activity.getWindow().getDecorView().getRootView().getWidth();
-        return screenHeight;
-    }
-
-    public static int getDpi(Activity activity) {
-        DisplayMetrics metric = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(metric);
-        return metric.densityDpi;
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)

@@ -20,6 +20,7 @@ import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.chat2.IncomingChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.util.FileUtils;
 import org.jivesoftware.smackx.filetransfer.FileTransfer;
 import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
@@ -178,6 +179,10 @@ public class IMChatService extends Service {
                 String voicePath = ImageUtil.saveByteToLocalFile(chatMessageEntity.getVoiceBytes(), System.currentTimeMillis() + ".aar");
                 chatMessageEntity.setVoicePath(voicePath);
                 chatMessageEntity.setVoiceBytes(null);
+            } else if (chatMessageEntity.getFileContent() != null) {
+                chatMessageEntity.setFilePath(Constants.MEDIA_PATH + System.currentTimeMillis() + ".mp4");
+                FileUtils.writeFile(new File(chatMessageEntity.getFilePath()), chatMessageEntity.getFileContent());
+                chatMessageEntity.setFileContent(null);
             }
 
             ChatMessageModel chatDb = ChatMessageModel.newInstance(chatMessageEntity);

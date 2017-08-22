@@ -27,12 +27,13 @@ public class ChatMessageEntity implements Parcelable{
     private int sendState;
     private Type dataType;         // 数据类型
     private int fileProcess = 100;       // 文件传输进度
+    private String fileContent;    // 文件内容
 
     public ChatMessageEntity() {
     }
 
     public ChatMessageEntity(String imagePath, String voicePath, String content, String fromJid, String toJid, boolean state, int type, long date,
-                             byte[] imageBytes, byte[] voiceBytes, long voiceTime, String jid, String roomJid, String fileUri, int sendState, Type dataType) {
+                             byte[] imageBytes, byte[] voiceBytes, long voiceTime, String jid, String roomJid, String fileUri, int sendState, Type dataType, String fileContent) {
         this.imagePath = imagePath;
         this.voicePath = voicePath;
         this.content = content;
@@ -49,6 +50,7 @@ public class ChatMessageEntity implements Parcelable{
         this.filePath = fileUri;
         this.sendState = sendState;
         this.dataType = dataType;
+        this.fileContent = fileContent;
     }
 
     protected ChatMessageEntity(Parcel in) {
@@ -69,6 +71,7 @@ public class ChatMessageEntity implements Parcelable{
         filePath = in.readString();
         sendState = in.readInt();
         fileProcess = in.readInt();
+        fileContent = in.readString();
     }
 
     public static final Creator<ChatMessageEntity> CREATOR = new Creator<ChatMessageEntity>() {
@@ -227,6 +230,14 @@ public class ChatMessageEntity implements Parcelable{
         this.id = id;
     }
 
+    public String getFileContent() {
+        return fileContent;
+    }
+
+    public void setFileContent(String fileContent) {
+        this.fileContent = fileContent;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof ChatMessageEntity) {
@@ -281,10 +292,11 @@ public class ChatMessageEntity implements Parcelable{
         private String filePath;           // 传送的文件的Uri
         private int sendState;
         private Type dataType = Type.text;         // 数据类型
+        private String fileContent;
 
         public ChatMessageEntity build() {
             return new ChatMessageEntity(imagePath, voicePath, content, fromJid, toJid, state, type, date
-                    , imageBytes, voiceBytes, voiceTime, jid, roomJid, filePath, sendState, dataType);
+                    , imageBytes, voiceBytes, voiceTime, jid, roomJid, filePath, sendState, dataType, fileContent);
         }
 
         public Builder imagePath(String imagePath) {
@@ -364,6 +376,11 @@ public class ChatMessageEntity implements Parcelable{
 
         public Builder dataType(Type dataType) {
             this.dataType = dataType;
+            return this;
+        }
+
+        public Builder fileContent(String fileContent) {
+            this.fileContent = fileContent;
             return this;
         }
     }

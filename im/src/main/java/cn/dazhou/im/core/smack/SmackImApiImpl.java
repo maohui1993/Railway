@@ -9,14 +9,10 @@ import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.ReconnectionManager;
 import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.StanzaListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
-import org.jivesoftware.smack.filter.AndFilter;
-import org.jivesoftware.smack.filter.StanzaFilter;
-import org.jivesoftware.smack.filter.StanzaTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.PresenceEventListener;
@@ -26,6 +22,7 @@ import org.jivesoftware.smack.roster.SubscribeListener;
 import org.jivesoftware.smack.roster.packet.RosterPacket;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smack.util.FileUtils;
 import org.jivesoftware.smackx.filetransfer.FileTransfer;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
 import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
@@ -65,7 +62,6 @@ import cn.dazhou.im.entity.ProcessEvent;
 import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.im.entity.UserExtensionElement;
 import cn.dazhou.im.util.Constants;
-import cn.dazhou.im.util.ImageUtil;
 import cn.dazhou.im.util.JsonUtil;
 import cn.dazhou.im.util.OfflineMsgManager;
 
@@ -237,6 +233,16 @@ public class SmackImApiImpl implements IMApi {
 //                mChat.send(stanza);
                 break;
             case video:
+                mChat = mChatManager.chatWith(id);
+                Presence presence = mRoster.getPresence(JidCreate.bareFrom(jid));
+                if (presence.isAvailable()) {
+                    sendFile(jid, msg.getFilePath());
+                } else {
+                    String path = msg.getFilePath();
+                    msg.setFileContent(FileUtils.readFile(new File(path)));
+                    mChat.send(JsonUtil.toJSON(msg));
+                }
+                break;
             case file:
                 sendFile(jid, msg.getFilePath());
                 break;
@@ -313,7 +319,6 @@ public class SmackImApiImpl implements IMApi {
             Log.i("TAG", "SmackImApiImpl#sendFile: 文件发送失败");
             throw e;
         }
-
     }
 
     private void transferFileTask(final OutgoingFileTransfer out, final String filePath) {
