@@ -45,6 +45,7 @@ import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.entity.ProcessEvent;
 import cn.dazhou.im.util.Constants;
+import cn.dazhou.im.util.FileUtil;
 import cn.dazhou.im.util.ImageUtil;
 import cn.dazhou.im.util.JsonUtil;
 import cn.dazhou.im.util.JudgeMultiMediaType;
@@ -172,16 +173,16 @@ public class IMChatService extends Service {
             chatMessageEntity.setJid(fromUser);
             // 语音与图片不能同时发送
             if (chatMessageEntity.getImageBytes() != null) {
-                String imagePath = ImageUtil.saveByteToLocalFile(chatMessageEntity.getImageBytes(), System.currentTimeMillis() + ".png");
+                String imagePath = FileUtil.saveByteToLocalFile(chatMessageEntity.getImageBytes(), System.currentTimeMillis() + ".png");
                 chatMessageEntity.setImagePath(imagePath);
                 chatMessageEntity.setImageBytes(null);
             } else if (chatMessageEntity.getVoiceBytes() != null) {
-                String voicePath = ImageUtil.saveByteToLocalFile(chatMessageEntity.getVoiceBytes(), System.currentTimeMillis() + ".aar");
+                String voicePath = FileUtil.saveByteToLocalFile(chatMessageEntity.getVoiceBytes(), System.currentTimeMillis() + ".aar");
                 chatMessageEntity.setVoicePath(voicePath);
                 chatMessageEntity.setVoiceBytes(null);
             } else if (chatMessageEntity.getFileContent() != null) {
                 chatMessageEntity.setFilePath(Constants.MEDIA_PATH + System.currentTimeMillis() + ".mp4");
-                FileUtils.writeFile(new File(chatMessageEntity.getFilePath()), chatMessageEntity.getFileContent());
+                FileUtil.saveByteToLocalFile(chatMessageEntity.getFileContent(), chatMessageEntity.getFilePath());
                 chatMessageEntity.setFileContent(null);
             }
 

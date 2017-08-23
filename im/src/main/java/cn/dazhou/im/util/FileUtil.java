@@ -10,6 +10,14 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 /**
  * Created by hooyee on 2017/6/27.
  */
@@ -116,5 +124,49 @@ public class FileUtil {
      */
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    public static byte[] getBytes(String path) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        FileInputStream in = new FileInputStream(new File(path));
+        byte[] bytes = new byte[1024 * 8];
+        int length;
+        while (true) {
+            length = in.read(bytes);
+            if (length == -1) {
+                break;
+            }
+            out.write(bytes, 0, length);
+        }
+        return out.toByteArray();
+    }
+
+    public static String saveByteToLocalFile(byte[] bytes, String fileName) {
+        File file = new File(Constants.MEDIA_PATH, fileName);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        FileOutputStream fout = null;
+        try {
+            fout = new FileOutputStream(file);
+            fout.write(bytes);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fout != null) {
+                    fout.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return file.getAbsolutePath();
     }
 }

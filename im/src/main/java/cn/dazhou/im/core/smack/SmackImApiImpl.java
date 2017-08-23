@@ -62,6 +62,7 @@ import cn.dazhou.im.entity.ProcessEvent;
 import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.im.entity.UserExtensionElement;
 import cn.dazhou.im.util.Constants;
+import cn.dazhou.im.util.FileUtil;
 import cn.dazhou.im.util.JsonUtil;
 import cn.dazhou.im.util.OfflineMsgManager;
 
@@ -115,7 +116,7 @@ public class SmackImApiImpl implements IMApi {
                 .setConnectTimeout(timeout)
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                 .setSendPresence(false)   // 处理离线消息
-                .setResource("smack")
+//                .setResource("smack")
                 .build();
         mConnection = new XMPPTCPConnection(config);
         mConnection.connect();
@@ -234,12 +235,12 @@ public class SmackImApiImpl implements IMApi {
                 break;
             case video:
                 mChat = mChatManager.chatWith(id);
-                Presence presence = mRoster.getPresence(JidCreate.bareFrom(jid));
+                Presence presence = mRoster.getPresence(id);
                 if (presence.isAvailable()) {
                     sendFile(jid, msg.getFilePath());
                 } else {
                     String path = msg.getFilePath();
-                    msg.setFileContent(FileUtils.readFile(new File(path)));
+                    msg.setFileContent(FileUtil.getBytes(path));
                     mChat.send(JsonUtil.toJSON(msg));
                 }
                 break;
