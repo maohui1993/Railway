@@ -107,6 +107,7 @@ public class FriendRequestViewHolder extends BaseViewHolder<FriendRequestModel> 
                             flag = friendModel.exists();
                             if (!flag) {
                                 friendModel.save();
+                                MyApp.gCurrentUser.getMyFriends().add(friendModel);
                                 e.onNext(friendModel);
                             }
                         }

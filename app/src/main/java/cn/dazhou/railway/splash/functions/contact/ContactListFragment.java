@@ -61,7 +61,8 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
                 LayoutInflater inflater = LayoutInflater.from(getContext());
                 View v = inflater.inflate(R.layout.header_item, null);
                 v.findViewById(R.id.new_friend).setOnClickListener(mPresenter);
-                v.findViewById(R.id.chat_group).setOnClickListener(mPresenter);
+//                v.findViewById(R.id.chat_group).setOnClickListener(mPresenter);
+                v.findViewById(R.id.chat_group).setVisibility(GONE);
                 v.findViewById(R.id.message_list).setOnClickListener(mPresenter);
                 mRequestTipTx = (TextView) v.findViewById(R.id.tx_request_count);
                 mTipImage = (ImageView) v.findViewById(R.id.iv_tip);
