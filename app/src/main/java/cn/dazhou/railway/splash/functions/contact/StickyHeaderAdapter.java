@@ -45,7 +45,7 @@ public class StickyHeaderAdapter implements StickyHeaderDecoration.IStickyHeader
     @Override
     public long getHeaderId(int position) {
         if (position < datas.size()) {
-            char firstChar = datas.get(position).getName().toLowerCase().charAt(0);
+            char firstChar = datas.get(position).getPingyin().toLowerCase().charAt(0);
 
             int i = 0;
             for (; i < referenceHeaderId.size(); i++) {

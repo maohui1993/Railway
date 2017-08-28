@@ -362,11 +362,11 @@ public class SmackImApiImpl implements IMApi {
     }
 
     @Override
-    public Roster addFriend(String jid) {
+    public Roster addFriend(String jid, String name) {
         if (mConnection == null) return null;
         try {
 //            mRoster.sendSubscriptionRequest(JidCreate.entityBareFrom(jid));
-            mRoster.createEntry(JidCreate.entityBareFrom(jid), jid, null);
+            mRoster.createEntry(JidCreate.entityBareFrom(jid), name, null);
         } catch (Exception e) {
             Log.e("TAG", "SmackImApiImpl.class: " + "好友添加失败");
             Log.e("TAG", "SmackImApiImpl.class: " + e.getMessage());

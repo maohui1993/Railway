@@ -117,9 +117,9 @@ public final class IMLauncher {
         return OfflineMsgManager.getChatMessageEntities();
     }
 
-    public static Roster addFriend(String jid) throws IMException {
+    public static Roster addFriend(String jid, String name) throws IMException {
         checkConnected(mImApi);
-        return mImApi.addFriend(jid);
+        return mImApi.addFriend(jid, name);
     }
 
     public static List<UserBean> searchUserFromServer(String username) throws IMException {
