@@ -25,7 +25,7 @@
 #-renamesourcefileattribute SourceFile
 
 -keep class cn.dazhou.im.entity.** {*;}
--keep class cn.dazhou.im.IMLauncher {*;}
+#-keep class cn.dazhou.im.IMLauncher {*;}
 -keep class cn.dazhou.im.util.** {*;}
 
 -keep class cn.dazhou.im.core.ChatContentView {*;}

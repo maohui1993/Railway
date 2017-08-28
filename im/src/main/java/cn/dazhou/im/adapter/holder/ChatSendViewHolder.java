@@ -2,6 +2,7 @@ package cn.dazhou.im.adapter.holder;
 
 import android.graphics.Bitmap;
 import android.os.Handler;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
 import android.view.MotionEvent;
 import android.view.View;
@@ -187,15 +188,29 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
             videoProgress.setVisibility(VISIBLE);
             videoProgress.setProgress(data.getFileProcess());
 
-            Bitmap b = MediaPlayerUtils.getVideoThumbnail(data.getFilePath());
-            thumbnail.setImageBitmap(b);
+//            if (getOwnerRecyclerView().getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
+//                LoadThreadManager.getThreadPool().execute(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        final Bitmap b = MediaPlayerUtils.getVideoThumbnail(data.getFilePath());
+//                        handler.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                thumbnail.setImageBitmap(b);
+//                            }
+//                        });
+//                    }
+//                });
+//            }
+
+            Glide.with(getContext()).load(data.getFilePath()).into(thumbnail);
 
             // 点击之后改变状态并处理
             thumbnail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onItemClickListener.onVideoClick(v, data);
-                    if(videoProgress.getProgress() != videoProgress.getMax()) {
+                    if (videoProgress.getProgress() != videoProgress.getMax()) {
                         Toast.makeText(getContext(), "接受中···", Toast.LENGTH_SHORT).show();
                         return;
                     }

@@ -23,3 +23,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keep class cn.dazhou.database.** {*;}
+
+-keep class * extends com.raizlabs.android.dbflow.config.DatabaseHolder { *; }
+
+-keep class com.raizlabs.android.dbflow.** {*;}

@@ -10,7 +10,6 @@ import android.view.MenuItem;
 
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.util.PermissionUtil;
-import cn.dazhou.maputil.MapLauncher;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.util.ActivityUtils;
@@ -27,7 +26,6 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         IMUtil.checkUser(this);
         setContentView(R.layout.activity_splash1);
-        MapLauncher.init(getApplicationContext());
         PermissionUtil.requestPermissions(this,
                 new String[]{
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,

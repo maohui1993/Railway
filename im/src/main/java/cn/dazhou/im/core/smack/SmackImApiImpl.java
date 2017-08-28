@@ -240,7 +240,8 @@ public class SmackImApiImpl implements IMApi {
                     sendFile(jid, msg.getFilePath());
                 } else {
                     String path = msg.getFilePath();
-                    msg.setFileContent(FileUtil.getBytes(path));
+                    byte[] bytes = FileUtil.getBytes(path);
+                    msg.setFileContent(bytes);
                     mChat.send(JsonUtil.toJSON(msg));
                 }
                 break;

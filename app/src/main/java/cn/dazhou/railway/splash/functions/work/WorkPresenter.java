@@ -21,6 +21,7 @@ import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.http.RailwayApi;
 import cn.dazhou.railway.splash.functions.work.bean.Function;
 import cn.dazhou.railway.splash.functions.work.http.FunctionActivity;
+import cn.dazhou.railway.util.SharedPreferenceUtil;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,7 +47,8 @@ public class WorkPresenter implements WorkContract.Presenter {
 
     @Override
     public void initData() {
-        getDataFromServer("http://192.168.1.252:8089/");
+        String url = "http://" + MyApp.gServerIp + ":" + SharedPreferenceUtil.getInt(mContext, "work_port", 8080) + "/";
+        getDataFromServer(url);
 
         mAdapter = new GridAdapter(mContext, datas, R.layout.grid_item);
     }
@@ -64,7 +66,10 @@ public class WorkPresenter implements WorkContract.Presenter {
             @Override
             public void onResponse(Call<Function> call, Response<Function> response) {
                 Log.i("retrofit", response.toString());
-                List<FunctionItemModel> data = response.body().getData();
+                List<FunctionItemModel> data = null;
+                if (response.body() != null) {
+                    data = response.body().getData();
+                }
                 if (data != null) {
                     datas.addAll(data);
                 }

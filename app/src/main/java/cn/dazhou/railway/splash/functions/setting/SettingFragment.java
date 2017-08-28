@@ -21,6 +21,7 @@ import cn.dazhou.railway.util.SharedPreferenceUtil;
 public class SettingFragment extends BaseFragment implements SettingContract.View{
     private EditText mIpEdit;
     private EditText mPortEdit;
+    private EditText mWorkPortEdit;
 
     private SettingContract.Presenter mPresenter;
     public SettingFragment(){}
@@ -46,10 +47,13 @@ public class SettingFragment extends BaseFragment implements SettingContract.Vie
         final InputMethodManager imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         String defaultIp = SharedPreferenceUtil.getString(getContext(), Constants.SERVER_IP, Constants.SERVER_IP_DEFAULT);
         int defaultPort = SharedPreferenceUtil.getInt(getContext(), Constants.SERVER_PORT, Constants.SERVER_PORT_DEFAULT);
+        int workPort = SharedPreferenceUtil.getInt(getContext(), "work_port", 8080);
         mIpEdit = (EditText) root.findViewById(R.id.edit_server_ip);
         mIpEdit.setText(defaultIp);
         mPortEdit = (EditText) root.findViewById(R.id.edit_server_port);
         mPortEdit.setText(String.valueOf(defaultPort));
+        mWorkPortEdit = (EditText) root.findViewById(R.id.edit_work_port);
+        mWorkPortEdit.setText(String.valueOf(workPort));
         root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,5 +85,10 @@ public class SettingFragment extends BaseFragment implements SettingContract.Vie
     @Override
     public String getIp() {
         return mIpEdit.getText().toString().trim();
+    }
+
+    @Override
+    public String getWorkPort() {
+        return mWorkPortEdit.getText().toString().trim();
     }
 }

@@ -23,7 +23,7 @@ public class ChatMessageEntity implements Parcelable{
     private long voiceTime;
     private String jid;            // 当前用户为发送方，则记录接收方jid，为接收方则记录发送方jid
     private String roomJid;        // 如果为群聊，记录群的Jid
-    private String filePath;       // 传送的文件的path
+    private String filePath = "";       // 传送的文件的path
     private int sendState;
     private Type dataType;         // 数据类型
     private int fileProcess = 100;       // 文件传输进度
@@ -290,7 +290,7 @@ public class ChatMessageEntity implements Parcelable{
         private long voiceTime;
         private String jid;            // 当前用户为发送方，则记录接收方jid，为接收方则记录发送方jid
         private String roomJid;        // 如果为群聊，记录群的Jid
-        private String filePath;           // 传送的文件的Uri
+        private String filePath = "";           // 传送的文件的Uri
         private int sendState;
         private Type dataType = Type.text;         // 数据类型
         private byte[] fileContent;

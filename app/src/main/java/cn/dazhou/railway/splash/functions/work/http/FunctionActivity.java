@@ -72,7 +72,7 @@ public class FunctionActivity extends AppCompatActivity {
 
         //支持js
         mHomeWeb.getSettings().setJavaScriptEnabled(true);
-        mHomeWeb.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+        mHomeWeb.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 
         mHomeWeb.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -91,6 +91,7 @@ public class FunctionActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode != 200 || data == null) {
+            value.onReceiveValue(null);
             return;
         }
         Cursor cursor = getContentResolver().query(data.getData(), null, null, null, null);

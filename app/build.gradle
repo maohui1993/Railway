@@ -28,7 +28,7 @@ dependencies {
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
-    compile project(':maputil')
+//    compile project(':maputil')
     compile project(':im')
     compile project(':database')
     compile project(':pagerslidingtabstrip')

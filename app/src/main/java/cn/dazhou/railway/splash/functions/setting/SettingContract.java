@@ -15,5 +15,6 @@ public interface SettingContract {
     interface View extends BaseView<Presenter> {
         String getPort();
         String getIp();
+        String getWorkPort();
     }
 }
