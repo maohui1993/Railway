@@ -14,6 +14,8 @@ public interface ContactListContract {
     interface Presenter extends BasePresenter, android.view.View.OnClickListener{
         void destroy();
         void updateRequestTipSate();
+
+        void updateMessageTip();
     }
 
     interface View extends BaseView<Presenter> {
@@ -22,5 +24,9 @@ public interface ContactListContract {
         void hideRequestCountTip();
 
         void showRequestCountTip(String s);
+
+        void showMessageTip();
+
+        void hideMessageTip();
     }
 }

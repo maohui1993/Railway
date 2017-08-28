@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jude.easyrecyclerview.EasyRecyclerView;
@@ -14,18 +15,14 @@ import com.jude.easyrecyclerview.decoration.DividerDecoration;
 import com.jude.easyrecyclerview.decoration.StickyHeaderDecoration;
 import com.jude.rollviewpager.Util;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.Collections;
 import java.util.List;
 
-import cn.dazhou.database.FriendModel;
-import cn.dazhou.im.acpect.db.FriendDbApi;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.splash.functions.BaseFragment;
+
+import static android.view.View.GONE;
 
 public class ContactListFragment extends BaseFragment implements ContactListContract.View {
     private static final String ARG_PARAM1 = "param1";
@@ -36,8 +33,10 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
 
     private TextView mRequestTipTx;
     private View mRootView;
+    private ImageView mTipImage;
 
     private StickyHeaderDecoration mDecoration;
+
 
     public static ContactListFragment newInstance(boolean param1) {
         ContactListFragment fragment = new ContactListFragment();
@@ -50,7 +49,6 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
         init();
     }
 
@@ -64,8 +62,9 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
                 View v = inflater.inflate(R.layout.header_item, null);
                 v.findViewById(R.id.new_friend).setOnClickListener(mPresenter);
                 v.findViewById(R.id.chat_group).setOnClickListener(mPresenter);
+                v.findViewById(R.id.message_list).setOnClickListener(mPresenter);
                 mRequestTipTx = (TextView) v.findViewById(R.id.tx_request_count);
-
+                mTipImage = (ImageView) v.findViewById(R.id.iv_tip);
                 return v;
             }
 
@@ -95,6 +94,9 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
     public void onResume() {
         if (mRequestTipTx != null) {
             mPresenter.updateRequestTipSate();
+        }
+        if (mTipImage != null) {
+            mPresenter.updateMessageTip();
         }
         super.onResume();
     }
@@ -129,7 +131,7 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
     @Override
     public void hideRequestCountTip() {
         if (mRequestTipTx != null) {
-            mRequestTipTx.setVisibility(View.GONE);
+            mRequestTipTx.setVisibility(GONE);
         }
     }
 
@@ -141,35 +143,18 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
         }
     }
 
-    /**
-     * 更新当前好友最后一条消息
-     *
-     * @param tipMessage
-     * @see cn.dazhou.railway.im.service.IMChatService#incomingChatMessageListener
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateTipMessage(TipMessage tipMessage) {
-        mRosterAdapter.updateData(tipMessage);
+    @Override
+    public void showMessageTip() {
+        if (mTipImage != null) {
+            mTipImage.setVisibility(View.VISIBLE);
+        }
     }
 
-    /**
-     * 1、更新当前好友未读消息量
-     * 2、置顶正在聊天的对象
-     *
-     * @param friendModel
-     * @see cn.dazhou.railway.im.service.IMChatService#incomingChatMessageListener
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateTipMessage(FriendDbApi friendModel) {
-        mRosterAdapter.markNewMsg((FriendModel) friendModel);
-
-        if (mDecoration != null) {
-            mRosterView.removeItemDecoration(mDecoration);
+    @Override
+    public void hideMessageTip() {
+        if (mTipImage != null) {
+            mTipImage.setVisibility(View.GONE);
         }
-        mDecoration = new StickyHeaderDecoration(new StickyHeaderAdapter(getContext(), mRosterAdapter.getAllData()));
-        mRosterView.addItemDecoration(mDecoration);
-
-        mRosterAdapter.showMsgCount((FriendModel) friendModel);
     }
 
     @Override
@@ -177,20 +162,9 @@ public class ContactListFragment extends BaseFragment implements ContactListCont
         mPresenter = presenter;
     }
 
-    public static class TipMessage {
-        public String jid;
-        public String info;
-
-        public TipMessage(String jid, String info) {
-            this.jid = jid;
-            this.info = info;
-        }
-    }
-
     @Override
     public void onDestroy() {
         mPresenter.destroy();
-        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 }

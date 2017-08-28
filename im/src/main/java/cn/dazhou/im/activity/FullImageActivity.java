@@ -49,15 +49,15 @@ public class FullImageActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_full_image);
         ButterKnife.bind(this);
-        EventBus.getDefault().register(this);
+
+        FullImageInfo info = getIntent().getParcelableExtra("image");
+        onDataSynEvent(info);
     }
 
-    /**
-     * 当发送的图片被点击时会执行该方法
-     * @param fullImageInfo
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onDataSynEvent(final FullImageInfo fullImageInfo) {
+        if (fullImageInfo == null) {
+            return;
+        }
         final int left = fullImageInfo.getLocationX();
         final int top = fullImageInfo.getLocationY();
         final int width = fullImageInfo.getWidth();
@@ -130,11 +130,4 @@ public class FullImageActivity extends Activity {
             }
         });
     }
-
-    @Override
-    protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
-    }
-
 }

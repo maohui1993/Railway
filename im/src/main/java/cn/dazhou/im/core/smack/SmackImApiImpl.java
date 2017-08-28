@@ -9,14 +9,10 @@ import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.ReconnectionManager;
 import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.StanzaListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
-import org.jivesoftware.smack.filter.AndFilter;
-import org.jivesoftware.smack.filter.StanzaFilter;
-import org.jivesoftware.smack.filter.StanzaTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.PresenceEventListener;
@@ -26,6 +22,7 @@ import org.jivesoftware.smack.roster.SubscribeListener;
 import org.jivesoftware.smack.roster.packet.RosterPacket;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smack.util.FileUtils;
 import org.jivesoftware.smackx.filetransfer.FileTransfer;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
 import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
@@ -64,7 +61,8 @@ import cn.dazhou.im.entity.FriendRequest;
 import cn.dazhou.im.entity.ProcessEvent;
 import cn.dazhou.im.entity.UserBean;
 import cn.dazhou.im.entity.UserExtensionElement;
-import cn.dazhou.im.util.ImageUtil;
+import cn.dazhou.im.util.Constants;
+import cn.dazhou.im.util.FileUtil;
 import cn.dazhou.im.util.JsonUtil;
 import cn.dazhou.im.util.OfflineMsgManager;
 
@@ -118,6 +116,7 @@ public class SmackImApiImpl implements IMApi {
                 .setConnectTimeout(timeout)
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                 .setSendPresence(false)   // 处理离线消息
+//                .setResource("smack")
                 .build();
         mConnection = new XMPPTCPConnection(config);
         mConnection.connect();
@@ -192,16 +191,6 @@ public class SmackImApiImpl implements IMApi {
         mState = NOT_LOGIN_STATE;
     }
 
-    public void addPacketSendListener(StanzaListener stanzaListener) {
-        //条件过滤器
-        StanzaFilter filter = new AndFilter(new StanzaTypeFilter(Presence.class));
-        addPacketSendListener(stanzaListener, filter);
-    }
-
-    public void addPacketSendListener(StanzaListener packetListener, StanzaFilter packetFilter) {
-        mConnection.addPacketSendingListener(packetListener, packetFilter);
-    }
-
     public void login(String username, String password) throws Exception {
         if (mState == LOGINED_STATE) {
             return;
@@ -239,8 +228,23 @@ public class SmackImApiImpl implements IMApi {
                 mChat = mChatManager.chatWith(id);
                 String msgJson = JsonUtil.toJSON(msg);
                 mChat.send(msgJson);
+//                Message stanza = new Message();
+//                stanza.setBody(msgJson);
+//                stanza.setType(Message.Type.normal);
+//                mChat.send(stanza);
                 break;
             case video:
+                mChat = mChatManager.chatWith(id);
+                Presence presence = mRoster.getPresence(id);
+                if (presence.isAvailable()) {
+                    sendFile(jid, msg.getFilePath());
+                } else {
+                    String path = msg.getFilePath();
+                    byte[] bytes = FileUtil.getBytes(path);
+                    msg.setFileContent(bytes);
+                    mChat.send(JsonUtil.toJSON(msg));
+                }
+                break;
             case file:
                 sendFile(jid, msg.getFilePath());
                 break;
@@ -317,7 +321,6 @@ public class SmackImApiImpl implements IMApi {
             Log.i("TAG", "SmackImApiImpl#sendFile: 文件发送失败");
             throw e;
         }
-
     }
 
     private void transferFileTask(final OutgoingFileTransfer out, final String filePath) {
@@ -326,6 +329,7 @@ public class SmackImApiImpl implements IMApi {
             public void run() {
                 long startTime = -1;
                 ProcessEvent event = new ProcessEvent(filePath);
+                event.setType(Constants.CHAT_ITEM_TYPE_RIGHT);
                 while (!out.isDone()) {
                     if (out.getStatus().equals(FileTransfer.Status.error)) {
                         Log.w("TAG", "文件传输失败：" + out.getError());

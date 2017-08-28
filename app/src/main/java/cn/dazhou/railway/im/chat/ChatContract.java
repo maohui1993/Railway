@@ -26,7 +26,7 @@ public interface ChatContract {
         void showLoadTip(String tip, boolean isAll);
     }
 
-    interface Presenter extends BasePresenter, ChatContentView.OnSendListener, ChatContentView.OnImageClickListener, SwipeRefreshLayout.OnRefreshListener, Toolbar.OnMenuItemClickListener{
+    interface Presenter extends BasePresenter, ChatContentView.OnSendListener, SwipeRefreshLayout.OnRefreshListener, Toolbar.OnMenuItemClickListener{
         void init();
     }
 }

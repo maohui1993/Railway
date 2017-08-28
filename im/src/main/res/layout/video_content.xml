@@ -2,19 +2,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
+        <!--<ImageView-->
+            <!--android:id="@+id/video_suspend"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:src="@drawable/suspend"-->
+            <!--android:visibility="gone" />-->
+
+        <ImageView
+            android:background="#000000"
+            android:id="@+id/thumbnail"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="145dp" />
         <ImageView
             android:id="@+id/file_video"
-            android:layout_width="200dp"
-            android:layout_height="150dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/start"
             android:visibility="gone" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <ProgressBar
             android:id="@+id/progress_video"
@@ -24,27 +45,8 @@
             android:layout_width="200dp"
             android:layout_height="5dp"
             android:max="100"
+            android:layout_marginRight="10dp"
             android:progress="0" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <SurfaceView
-            android:id="@+id/video_content"
-            android:layout_width="200dp"
-            android:layout_height="150dp"
-            android:visibility="gone" />
-
-        <ImageView
-            android:id="@+id/video_suspend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/suspend"
-            android:visibility="gone" />
-
     </FrameLayout>
 
 </LinearLayout>

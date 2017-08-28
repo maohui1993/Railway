@@ -1,12 +1,10 @@
 package cn.dazhou.railway.splash.functions.work;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,7 +14,6 @@ import java.util.List;
 
 import cn.dazhou.database.FunctionItemModel;
 import cn.dazhou.railway.R;
-import cn.dazhou.railway.util.Tool;
 
 /**
  * Created by hooyee on 2017/6/20.
@@ -58,9 +55,6 @@ public class GridAdapter extends BaseAdapter {
             convertView = inflater.inflate(resId, null);
             holder = new ViewHolder();
             holder.image = (ImageView) convertView.findViewById(R.id.image);
-            ViewGroup.LayoutParams params = holder.image.getLayoutParams();
-            params.height = Tool.dip2px(context, params.height);
-            params.width = Tool.dip2px(context, params.width);
             holder.text = (TextView) convertView.findViewById(R.id.text);
 
             convertView.setTag(holder);
@@ -68,12 +62,16 @@ public class GridAdapter extends BaseAdapter {
             holder=(ViewHolder)convertView.getTag();
         }
 
-        holder.text.setText(datas.get(position).getName());
+        holder.text.setText(datas.get(position).getFunctionname());
         Glide.with(context)
                 .load(datas.get(position).getIconUrl())
                 .placeholder(R.drawable.ic_launcher)
                 .into(holder.image);
         return convertView;
+    }
+
+    public List<FunctionItemModel> getAllData() {
+        return datas;
     }
 
     class ViewHolder {

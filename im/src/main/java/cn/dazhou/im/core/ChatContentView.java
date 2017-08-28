@@ -3,6 +3,7 @@ package cn.dazhou.im.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -46,12 +47,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.dazhou.im.R;
 import cn.dazhou.im.R2;
+import cn.dazhou.im.activity.FullImageActivity;
+import cn.dazhou.im.activity.VideoActivity;
 import cn.dazhou.im.adapter.ChatAdapter1;
 import cn.dazhou.im.adapter.CommonFragmentPagerAdapter;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.entity.FriendRequest;
 import cn.dazhou.im.entity.FullImageInfo;
 import cn.dazhou.im.entity.ProcessEvent;
+import cn.dazhou.im.entity.VideoInfo;
 import cn.dazhou.im.fragment.ChatEmotionFragment;
 import cn.dazhou.im.fragment.ChatFunctionFragment;
 import cn.dazhou.im.util.Constants;
@@ -98,7 +102,6 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     private CommonFragmentPagerAdapter fragmentAdapter;
 
     private OnSendListener mOnSendListener;
-    private OnImageClickListener mOnImageClickListener;
     private ChatAdapter1 mAdapter;
 
     //录音相关
@@ -121,10 +124,6 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     public ChatContentView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
-    }
-
-    public void setOnImageClickListener(OnImageClickListener onImageClickListener) {
-        this.mOnImageClickListener = onImageClickListener;
     }
 
     public void destroy() {
@@ -245,7 +244,6 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     }
 
 
-
     public OnSendListener getOnSendListener() {
         return mOnSendListener;
     }
@@ -269,10 +267,11 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         fullImageInfo.setWidth(view.getWidth());
         fullImageInfo.setHeight(view.getHeight());
         fullImageInfo.setImageUrl(message.getImagePath());
-        EventBus.getDefault().postSticky(fullImageInfo);
-        if (mOnImageClickListener != null) {
-            mOnImageClickListener.onImageClick();
-        }
+
+        Intent intent = new Intent(getContext(), FullImageActivity.class);
+        intent.putExtra("image", fullImageInfo);
+        getContext().startActivity(intent);
+        ((Activity) getContext()).overridePendingTransition(0, 0);
     }
 
     @Override
@@ -304,13 +303,19 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     }
 
     @Override
-    public void onVideoClick(String fileUri, SurfaceView surfaceView) {
-        Uri uri = Uri.fromFile(new File(fileUri));
-        try {
-            mMediaPlayer.startPlay(uri, surfaceView);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void onVideoClick(View v, ChatMessageEntity entity) {
+
+        int location[] = new int[2];
+        v.getLocationOnScreen(location);
+        VideoInfo videoInfo = new VideoInfo();
+        videoInfo.setLocationX(location[0]);
+        videoInfo.setLocationY(location[1]);
+        videoInfo.setWidth(v.getWidth());
+        videoInfo.setHeight(v.getHeight());
+        videoInfo.setVideoUrl(entity.getFilePath());
+
+        VideoActivity.startItself(getContext(), videoInfo);
+        ((Activity) getContext()).overridePendingTransition(0, 0);
     }
 
     @Override
@@ -334,11 +339,6 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
                 .create()
                 .show();
 
-    }
-
-    @Override
-    public byte onSuspendOrRestart() {
-        return mMediaPlayer.suspendOrRestart();
     }
 
     public boolean interceptBackPress() {
@@ -370,6 +370,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
 
     public void onRefresh(final List<ChatMessageEntity> msgs, final boolean moveCursor) {
         if (msgs == null || msgs.size() == 0) {
+            // 刷新页面，清除加载动画
             mAdapter.notifyDataSetChanged();
             return;
         }
@@ -387,11 +388,6 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
     // 当发送时，回调到ChatActivity，由其确认目前正在跟谁聊天
     public interface OnSendListener {
         void onSend(ChatMessageEntity msg, boolean saveMessage);
-    }
-
-    // 当发送时，回调到ChatActivity，由其确认目前正在跟谁聊天
-    public interface OnImageClickListener {
-        void onImageClick();
     }
 
 }

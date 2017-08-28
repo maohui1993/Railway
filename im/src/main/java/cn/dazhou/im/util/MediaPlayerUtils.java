@@ -1,10 +1,12 @@
 package cn.dazhou.im.util;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.view.SurfaceView;
+import android.view.SurfaceHolder;
 
 import java.io.IOException;
 
@@ -19,8 +21,12 @@ public class MediaPlayerUtils {
     private MediaPlayer mMediaPlayer;
     private Context mContext;
 
-    private byte state;
-    private int position;
+    private byte state = STOPPED;
+
+    private Uri dataUri;
+    private SurfaceHolder surfaceHolder;
+
+    private MediaPlayer.OnCompletionListener mListener;
 
     public MediaPlayerUtils(Context mContext) {
         this.mContext = mContext;
@@ -33,36 +39,10 @@ public class MediaPlayerUtils {
      * @throws IOException
      */
     public void startPlay(Uri uri) throws IOException {
-        startPlay(uri, null);
     }
 
-    /**
-     * 播放视频
-     *
-     * @param uri
-     * @param surfaceView
-     * @throws IOException
-     */
-    public void startPlay(Uri uri, final SurfaceView surfaceView) throws IOException {
-        if (mMediaPlayer != null) {
-            mMediaPlayer.stop();
-            mMediaPlayer.release();
-            mMediaPlayer = null;
-        }
-        mMediaPlayer = new MediaPlayer();
-        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mMediaPlayer.setDataSource(mContext, uri);
-        mMediaPlayer.setDisplay(surfaceView.getHolder());
-        mMediaPlayer.prepare(); // might take long! (for buffering, etc)
-        mMediaPlayer.start();
-        changeState(PLAYING);
-
-        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                changeState(STOPPED);
-            }
-        });
+    public void setOnCompletionListener(MediaPlayer.OnCompletionListener listener) {
+        mListener = listener;
     }
 
     public void stopPlay() {
@@ -76,36 +56,79 @@ public class MediaPlayerUtils {
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
+        state = STOPPED;
     }
 
-    /**
-     *
-     * @return 执行方法后的状态
-     */
-    public byte suspendOrRestart() {
-        if (Utils.checkNotNull(mMediaPlayer)) {
-            switch (state) {
-                case PLAYING :
+    public void changeState(byte state) {
+        this.state = state;
+        executeState();
+    }
+
+    public void executeState() {
+        switch (state) {
+            case PLAYING:
+                if (mMediaPlayer != null) {
+                    mMediaPlayer.stop();
+                    mMediaPlayer.release();
+                    mMediaPlayer = null;
+                }
+                mMediaPlayer = new MediaPlayer();
+                mMediaPlayer.setOnCompletionListener(mListener);
+                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                try {
+                    mMediaPlayer.setDataSource(mContext, dataUri);
+                    mMediaPlayer.setDisplay(surfaceHolder);
+                    mMediaPlayer.prepare(); // might take long! (for buffering, etc)
+                    mMediaPlayer.start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case PAUSED:
+                if (Utils.checkNotNull(mMediaPlayer)) {
                     mMediaPlayer.pause();
-                    position = mMediaPlayer.getCurrentPosition();
-                    changeState(PAUSED);
-                    break;
-                case PAUSED :
-//                    mMediaPlayer.seekTo(position);
-                    mMediaPlayer.start();
-                    changeState(PLAYING);
-                    break;
-                case STOPPED :
+                }
+                break;
+            case STOPPED:
+                if (Utils.checkNotNull(mMediaPlayer)) {
                     mMediaPlayer.seekTo(0);
-                    mMediaPlayer.start();
-                    changeState(PLAYING);
-                    break;
-            }
+                    mMediaPlayer.stop();
+                }
+                break;
         }
+    }
+
+    public byte getState() {
         return state;
     }
 
-    private void changeState(byte state) {
-        this.state = state;
+    public void setDataUri(Uri dataUri) {
+        this.dataUri = dataUri;
+    }
+
+    public void setSurfaceHolder(SurfaceHolder surfaceHolder) {
+        this.surfaceHolder = surfaceHolder;
+    }
+
+    // 获取视频缩略图
+    public static Bitmap getVideoThumbnail(String filePath) {
+        Bitmap b = null;
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(filePath);
+            b = retriever.getFrameAtTime();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+
+        } finally {
+            try {
+                retriever.release();
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
+        }
+        return b;
     }
 }

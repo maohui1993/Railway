@@ -1,5 +1,6 @@
 package cn.dazhou.im.adapter.holder;
 
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.text.TextPaint;
 import android.view.MotionEvent;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
@@ -60,10 +62,11 @@ public class ChatAcceptViewHolder extends BaseViewHolder<ChatMessageEntity> {
     View videoContent;
     @BindView(R2.id.file_video)
     ImageView video;
-    @BindView(R2.id.video_content)
-    SurfaceView surfaceView;
-    @BindView(R2.id.video_suspend)
-    ImageView suspend;
+//    @BindView(R2.id.video_suspend)
+//    ImageView suspend;
+    @BindView(R2.id.thumbnail)
+    ImageView thumbnail;
+
     private RelativeLayout.LayoutParams layoutParams;
 
     private ChatAdapter1.OnItemClickListener onItemClickListener;
@@ -173,45 +176,18 @@ public class ChatAcceptViewHolder extends BaseViewHolder<ChatMessageEntity> {
             chatItemLayoutContent.setVisibility(View.VISIBLE);
             fileContainer.setVisibility(GONE);
             video.setVisibility(View.VISIBLE);
-            video.setOnClickListener(new View.OnClickListener() {
+
+            Bitmap bmp = MediaPlayerUtils.getVideoThumbnail(data.getFilePath());
+            thumbnail.setImageBitmap(bmp);
+
+            // 点击之后改变状态并处理
+            thumbnail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    surfaceView.setVisibility(View.VISIBLE);
-                    video.setVisibility(GONE);
-//                    video.setEnabled(false);
-//                    video.setFocusable(false);
-                    surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
-                        @Override
-                        public void surfaceCreated(final SurfaceHolder holder) {
-                            onItemClickListener.onVideoClick(data.getFilePath(), surfaceView);
-                            surfaceView.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-                        }
-
-                        @Override
-                        public void surfaceDestroyed(SurfaceHolder holder) {
-
-                        }
-                    });
-
+                    onItemClickListener.onVideoClick(v, data);
                 }
             });
 
-            surfaceView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    byte state = onItemClickListener.onSuspendOrRestart();
-                    if (state == MediaPlayerUtils.PLAYING) {
-                        suspend.setVisibility(GONE);
-                    } else {
-                        suspend.setVisibility(VISIBLE);
-                    }
-                }
-            });
             layoutParams.width = Utils.dp2px(getContext(), 200);
             layoutParams.height = Utils.dp2px(getContext(), 150);
             chatItemLayoutContent.setLayoutParams(layoutParams);

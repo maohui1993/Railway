@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.permission.READ_USER_DICTIONARY" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:name=".MyApp"
@@ -24,9 +25,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme1">
-        <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="tKiTYcTGAZB0NrpWK19f57Rrp3PzrGOo" />
+        <!--<meta-data-->
+            <!--android:name="com.baidu.lbsapi.API_KEY"-->
+            <!--android:value="tKiTYcTGAZB0NrpWK19f57Rrp3PzrGOo" />-->
 
         <activity
             android:name=".im.login.LoginActivity"
@@ -101,14 +102,23 @@
             android:name=".im.friend.info.FriendInfoActivity"
             android:screenOrientation="portrait" />
 
-        <!--<receiver-->
-            <!--android:name=".im.broadcast.LoginReceiver"-->
-            <!--android:enabled="true"-->
-            <!--android:exported="true">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="action.login.success" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
+        <receiver
+            android:name=".im.broadcast.IMReceiverManager"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="action.login.success" />
+                <action android:name="action.friend.refresh" />
+                <action android:name="action.friend.new.request" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".im.friend.message.list.MessageListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity android:name=".splash.functions.work.http.FunctionActivity" />
+        <activity android:name=".splash.functions.setting.function.MessageTipActivity"></activity>
     </application>
 
 </manifest>

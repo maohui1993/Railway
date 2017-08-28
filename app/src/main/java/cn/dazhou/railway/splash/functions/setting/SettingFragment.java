@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
@@ -20,6 +21,7 @@ import cn.dazhou.railway.util.SharedPreferenceUtil;
 public class SettingFragment extends BaseFragment implements SettingContract.View{
     private EditText mIpEdit;
     private EditText mPortEdit;
+    private EditText mWorkPortEdit;
 
     private SettingContract.Presenter mPresenter;
     public SettingFragment(){}
@@ -33,17 +35,25 @@ public class SettingFragment extends BaseFragment implements SettingContract.Vie
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mPresenter = new SettingPresenter(this, getContext());
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_setting, container, false);
         final InputMethodManager imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        mPresenter = new SettingPresenter(this, getContext());
         String defaultIp = SharedPreferenceUtil.getString(getContext(), Constants.SERVER_IP, Constants.SERVER_IP_DEFAULT);
         int defaultPort = SharedPreferenceUtil.getInt(getContext(), Constants.SERVER_PORT, Constants.SERVER_PORT_DEFAULT);
+        int workPort = SharedPreferenceUtil.getInt(getContext(), "work_port", 8080);
         mIpEdit = (EditText) root.findViewById(R.id.edit_server_ip);
         mIpEdit.setText(defaultIp);
         mPortEdit = (EditText) root.findViewById(R.id.edit_server_port);
         mPortEdit.setText(String.valueOf(defaultPort));
+        mWorkPortEdit = (EditText) root.findViewById(R.id.edit_work_port);
+        mWorkPortEdit.setText(String.valueOf(workPort));
         root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,6 +62,7 @@ public class SettingFragment extends BaseFragment implements SettingContract.Vie
         });
 
         root.findViewById(R.id.bt_accept).setOnClickListener(mPresenter);
+        root.findViewById(R.id.tip).setOnClickListener(mPresenter);
         return root;
     }
 
@@ -74,5 +85,10 @@ public class SettingFragment extends BaseFragment implements SettingContract.Vie
     @Override
     public String getIp() {
         return mIpEdit.getText().toString().trim();
+    }
+
+    @Override
+    public String getWorkPort() {
+        return mWorkPortEdit.getText().toString().trim();
     }
 }

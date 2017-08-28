@@ -20,6 +20,7 @@ import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.chat2.IncomingChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.util.FileUtils;
 import org.jivesoftware.smackx.filetransfer.FileTransfer;
 import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
@@ -38,21 +39,21 @@ import java.util.TimerTask;
 
 import cn.dazhou.database.ChatMessageModel;
 import cn.dazhou.database.FriendModel;
+import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.im.IMLauncher;
-import cn.dazhou.im.acpect.db.ChatMessageDbApi;
-import cn.dazhou.im.acpect.db.FriendDbApi;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.entity.ProcessEvent;
 import cn.dazhou.im.util.Constants;
+import cn.dazhou.im.util.FileUtil;
 import cn.dazhou.im.util.ImageUtil;
 import cn.dazhou.im.util.JsonUtil;
 import cn.dazhou.im.util.JudgeMultiMediaType;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.chat.ChatActivity;
-import cn.dazhou.railway.splash.functions.contact.ContactListFragment;
 import cn.dazhou.railway.util.IMUtil;
 import cn.dazhou.railway.util.LogUtil;
+import cn.dazhou.railway.util.SharedPreferenceUtil;
 
 /**
  * 聊天服务.
@@ -96,10 +97,10 @@ public class IMChatService extends Service {
                 message.setType(Constants.CHAT_ITEM_TYPE_LEFT);
                 String fromUser = message.getFromJid().split("@")[0];
                 message.setJid(fromUser);
-                ChatMessageDbApi chatMessageModel = ChatMessageModel.newInstance(message);
-                chatMessageModel.updateJid(StringUtil.getWrapJid(fromUser));
-                chatMessageModel.saveMessage();
-                sendNotification(message, chatMessageModel.jid());
+                ChatMessageModel chatMessageModel = ChatMessageModel.newInstance(message);
+                chatMessageModel.setJid(StringUtil.getWrapJid(fromUser));
+                chatMessageModel.save();
+                sendNotification(message, chatMessageModel.getJid());
             }
             chatMessageEntities.clear();
             Log.i("TAG", "clear!!!!!!!!");
@@ -172,46 +173,56 @@ public class IMChatService extends Service {
             chatMessageEntity.setJid(fromUser);
             // 语音与图片不能同时发送
             if (chatMessageEntity.getImageBytes() != null) {
-                String imagePath = ImageUtil.saveByteToLocalFile(chatMessageEntity.getImageBytes(), System.currentTimeMillis() + ".png");
+                String imagePath = FileUtil.saveByteToLocalFile(chatMessageEntity.getImageBytes(), System.currentTimeMillis() + ".png");
                 chatMessageEntity.setImagePath(imagePath);
+                chatMessageEntity.setImageBytes(null);
             } else if (chatMessageEntity.getVoiceBytes() != null) {
-                String voicePath = ImageUtil.saveByteToLocalFile(chatMessageEntity.getVoiceBytes(), System.currentTimeMillis() + ".aar");
+                String voicePath = FileUtil.saveByteToLocalFile(chatMessageEntity.getVoiceBytes(), System.currentTimeMillis() + ".aar");
                 chatMessageEntity.setVoicePath(voicePath);
+                chatMessageEntity.setVoiceBytes(null);
+            } else if (chatMessageEntity.getFileContent() != null) {
+                chatMessageEntity.setFilePath(Constants.MEDIA_PATH + System.currentTimeMillis() + ".mp4");
+                FileUtil.saveByteToLocalFile(chatMessageEntity.getFileContent(), chatMessageEntity.getFilePath());
+                chatMessageEntity.setFileContent(null);
             }
 
-            ChatMessageDbApi chatDb = ChatMessageModel.newInstance(chatMessageEntity);
-            chatDb.updateJid(StringUtil.getWrapJid(fromUser));
+            ChatMessageModel chatDb = ChatMessageModel.newInstance(chatMessageEntity);
+            chatDb.setJid(StringUtil.getWrapJid(fromUser));
             // 若聊天对象的窗口已经打开，则不发送通知
             if (checkJid(fromUser)) {
-                chatDb.updateState(true);
+                chatDb.setState(true);
                 // 统一交由ChatContentView#showMessage中展示
                 EventBus.getDefault().post(chatMessageEntity);
                 Log.d(Constants.TAG, "New message from " + from + ": " + "to " + message.getFrom() + "body:" + message.getBody());
             } else {
-                chatDb.updateState(false);
-                sendNotification(chatMessageEntity, chatDb.jid());
+                chatDb.setState(false);
+                sendNotification(chatMessageEntity, chatDb.getJid());
             }
+
+            FriendModel friend = DataHelper.getFriend(chatDb.getJid());
+
+            // 新消息+1
+            friend.notReadCountAutoAddOne();
+            // 加入到消息列表
+            friend.setInMessageList(true);
+            // 更新上次聊天时间为当前时间
+            friend.setLastChatTime(System.currentTimeMillis());
+            friend.save();
+
             /**
-             * 有新消息则在对应的好友上面加上 消息数量
-             * @see cn.dazhou.railway.splash.functions.contact.ContactListFragment#updateTipMessage
+             * 有新消息则在消息列表中置顶
+             * @see cn.dazhou.railway.im.friend.message.list.MessageListFragment#updateTipMessage
              * @param friendModel
              */
-            String tip = getTipString(chatDb);
-            EventBus.getDefault().post(new ContactListFragment.TipMessage(chatDb.jid(), tip));
-
-            // 有新消息则在对应的好友上面加上 消息数量
-            FriendDbApi friendDb = new FriendModel();
-            friendDb.jid(chatDb.jid());
-
-            EventBus.getDefault().post(friendDb);
-            chatDb.saveMessage();
+            EventBus.getDefault().post(friend);
+            chatDb.save();
         }
     };
 
-    private String getTipString(ChatMessageDbApi chatDbApi) {
+    private String getTipString(ChatMessageModel chatDbApi) {
         String tip = null;
         // 好友聊天的最后一条消息
-        switch (chatDbApi.dataType()) {
+        switch (chatDbApi.getDataType()) {
             case file:
                 tip = "[文件消息]";
                 break;
@@ -225,7 +236,7 @@ public class IMChatService extends Service {
                 tip = "[语音消息]";
                 break;
             case text:
-                tip = chatDbApi.textContent();
+                tip = chatDbApi.getContent();
                 break;
             default:
                 break;
@@ -272,7 +283,24 @@ public class IMChatService extends Service {
 //        PendingIntent pIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pIntent);
-        notificationManager.notify(1, mBuilder.build());
+        Notification notification = mBuilder.build();
+        boolean canRingtone = SharedPreferenceUtil.getBoolean(context, cn.dazhou.railway.config.Constants.CAN_RINGTONE, true);
+        boolean canShake = SharedPreferenceUtil.getBoolean(context, cn.dazhou.railway.config.Constants.CAN_SHAKE, true);
+        // 同为true
+        if (canRingtone && canShake) {
+            notification.defaults = Notification.DEFAULT_ALL;
+            // 同为false
+        } else if (!canRingtone && !canShake) {
+            notification.defaults = Notification.DEFAULT_LIGHTS;
+            // ringtone为true
+        } else if (canRingtone) {
+            notification.defaults = Notification.DEFAULT_SOUND;
+            // shake为false
+        } else {
+            notification.defaults = Notification.DEFAULT_VIBRATE;
+        }
+
+        notificationManager.notify(1, notification);
     }
 
     /**
@@ -307,7 +335,9 @@ public class IMChatService extends Service {
                         .type(Constants.CHAT_ITEM_TYPE_LEFT)
                         .build();
                 ChatMessageModel chatMessageModel = ChatMessageModel.newInstance(chatMessage);
+                chatMessageModel.setJid(StringUtil.getWrapJid(chatMessage.getJid()));
                 chatMessageModel.save();
+                // 目标聊天窗口是否已经打开
                 if (checkJid(jid)) {
                     // 统一交由ChatContentView#showMessage中展示
                     EventBus.getDefault().post(chatMessage);
@@ -357,7 +387,6 @@ public class IMChatService extends Service {
         Uri data = Uri.fromFile(file);
         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE , data));
     }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void messageEventBus(final String jid) {

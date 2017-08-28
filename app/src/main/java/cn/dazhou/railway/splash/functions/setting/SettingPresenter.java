@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
+import cn.dazhou.railway.splash.functions.setting.function.MessageTipActivity;
 import cn.dazhou.railway.util.IMUtil;
 import cn.dazhou.railway.util.SharedPreferenceUtil;
 
@@ -34,12 +35,15 @@ public class SettingPresenter implements SettingContract.Presenter {
             case R.id.bt_accept:
                 final String defaultIp = SharedPreferenceUtil.getString(mContext, Constants.SERVER_IP, Constants.SERVER_IP_DEFAULT);
                 final int defaultPort = SharedPreferenceUtil.getInt(mContext, Constants.SERVER_PORT, Constants.SERVER_PORT_DEFAULT);
+                final int defaultWorkPort = SharedPreferenceUtil.getInt(mContext, "work_port", 8080);
                 if (mView.getIp().equals(defaultIp)
-                        && mView.getPort().equals(String.valueOf(defaultPort))) {
+                        && mView.getPort().equals(String.valueOf(defaultPort))
+                        && mView.getWorkPort().equals(String.valueOf(defaultWorkPort))) {
 
                 } else {
                     try {
                         SharedPreferenceUtil.putInt(mContext, Constants.SERVER_PORT, Integer.valueOf(mView.getPort()));
+                        SharedPreferenceUtil.putInt(mContext, "work_port", Integer.valueOf(mView.getWorkPort()));
                         SharedPreferenceUtil.putString(mContext, Constants.SERVER_IP, mView.getIp());
                     } catch (Exception e) {
                         Toast.makeText(mContext, "请输入正确的端口号", Toast.LENGTH_SHORT).show();
@@ -55,6 +59,9 @@ public class SettingPresenter implements SettingContract.Presenter {
                         }
                     }, 1000);
                 }
+                break;
+            case R.id.tip:
+                MessageTipActivity.startItself(mContext);
                 break;
         }
     }

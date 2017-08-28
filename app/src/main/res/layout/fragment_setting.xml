@@ -56,6 +56,34 @@
     </LinearLayout>
 
     <LinearLayout
+        android:background="#CCCCCC"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:paddingLeft="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="工作端口号："
+            android:textSize="@dimen/text_body" />
+
+        <EditText
+            android:id="@+id/edit_work_port"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:digits="0123456789"
+            android:maxLines="1"
+            android:maxLength="5"
+            android:inputType="number"
+            android:paddingLeft="@dimen/content_horizontal_margin"
+            android:paddingRight="@dimen/content_horizontal_margin" />
+    </LinearLayout>
+
+    <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

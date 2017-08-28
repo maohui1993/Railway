@@ -1,10 +1,10 @@
 package cn.dazhou.im.adapter.holder;
 
+import android.graphics.Bitmap;
 import android.os.Handler;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -63,14 +63,14 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
     View fileContainer;
     @BindView(R2.id.file_video)
     ImageView video;
-    @BindView(R2.id.video_content)
-    SurfaceView surfaceView;
-    @BindView(R2.id.video_suspend)
-    ImageView suspend;
+//    @BindView(R2.id.video_suspend)
+//    ImageView suspend;
     @BindView(R2.id.progress_video)
     ProgressBar videoProgress;
     @BindView(R2.id.video)
     View videoContent;
+    @BindView(R2.id.thumbnail)
+    ImageView thumbnail;
     private RelativeLayout.LayoutParams layoutParams;
 
     private ChatAdapter1.OnItemClickListener onItemClickListener;
@@ -186,49 +186,33 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
             videoContent.setVisibility(VISIBLE);
             video.setVisibility(View.VISIBLE);
             videoProgress.setVisibility(VISIBLE);
-            if (data.getFileProcess() == videoProgress.getMax()) {
-//                videoProgress.setVisibility(GONE);
-            } else {
-                videoProgress.setProgress(data.getFileProcess());
-            }
-            video.setOnClickListener(new View.OnClickListener() {
+            videoProgress.setProgress(data.getFileProcess());
+
+//            if (getOwnerRecyclerView().getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
+//                LoadThreadManager.getThreadPool().execute(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        final Bitmap b = MediaPlayerUtils.getVideoThumbnail(data.getFilePath());
+//                        handler.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                thumbnail.setImageBitmap(b);
+//                            }
+//                        });
+//                    }
+//                });
+//            }
+
+            Glide.with(getContext()).load(data.getFilePath()).into(thumbnail);
+
+            // 点击之后改变状态并处理
+            thumbnail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(videoProgress.getProgress() != videoProgress.getMax()) {
+                    onItemClickListener.onVideoClick(v, data);
+                    if (videoProgress.getProgress() != videoProgress.getMax()) {
                         Toast.makeText(getContext(), "接受中···", Toast.LENGTH_SHORT).show();
                         return;
-                    }
-                    surfaceView.setVisibility(View.VISIBLE);
-                    video.setVisibility(GONE);
-                    surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
-                        @Override
-                        public void surfaceCreated(final SurfaceHolder holder) {
-                            onItemClickListener.onVideoClick(data.getFilePath(), surfaceView);
-                            surfaceView.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-                        }
-
-                        @Override
-                        public void surfaceDestroyed(SurfaceHolder holder) {
-
-                        }
-                    });
-
-                }
-            });
-
-            surfaceView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    byte state = onItemClickListener.onSuspendOrRestart();
-                    if (state == MediaPlayerUtils.PLAYING) {
-                        suspend.setVisibility(GONE);
-                    } else {
-                        suspend.setVisibility(VISIBLE);
                     }
                 }
             });

@@ -1,50 +1,70 @@
 package cn.dazhou.database;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+
+import java.util.Comparator;
 
 /**
  * Created by hooyee on 2017/8/8.
  */
 
 @Table(database = RailwayDatabase.class)
-public class FunctionItemModel extends BaseModel {
+public class FunctionItemModel extends BaseModel implements Comparable<FunctionItemModel>, Parcelable{
     @PrimaryKey
-    String shortName;  // 简称
+    String functionname;       // 功能名称
     @PrimaryKey
     String jid;        // 用户Id
     @Column
     String iconUrl;    // 图标url
     @Column
-    String name;       // 功能名称
-    @Column
-    String href;       // 功能对应的超链接
+    String url;       // 功能对应的超链接
     @Column
     int state;         // 状态：0停用，1正常
     @Column
-    int position;      // 记录功能的排序位置：-1代表未参加排序
+    int sort;      // 记录功能的排序位置：-1代表未参加排序
+    @Column
+    int functiontype;
 
     public FunctionItemModel(){}
 
-    private FunctionItemModel(String jid, String iconUrl, String name, String shortName, String href, int state, int position) {
+    private FunctionItemModel(String jid, String iconUrl, String functionname, String url, int state, int sort, int functiontype) {
         this.jid = jid;
         this.iconUrl = iconUrl;
-        this.name = name;
-        this.shortName = shortName;
-        this.href = href;
+        this.functionname = functionname;
+        this.url = url;
         this.state = state;
-        this.position = position;
+        this.sort = sort;
+        this.functiontype = functiontype;
     }
 
-    public String getShortName() {
-        return shortName;
+    protected FunctionItemModel(Parcel in) {
+        functionname = in.readString();
+        jid = in.readString();
+        iconUrl = in.readString();
+        url = in.readString();
+        state = in.readInt();
+        sort = in.readInt();
+        functiontype = in.readInt();
     }
 
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
-    }
+    public static final Creator<FunctionItemModel> CREATOR = new Creator<FunctionItemModel>() {
+        @Override
+        public FunctionItemModel createFromParcel(Parcel in) {
+            return new FunctionItemModel(in);
+        }
+
+        @Override
+        public FunctionItemModel[] newArray(int size) {
+            return new FunctionItemModel[size];
+        }
+    };
 
     public String getJid() {
         return jid;
@@ -62,20 +82,20 @@ public class FunctionItemModel extends BaseModel {
         this.iconUrl = iconUrl;
     }
 
-    public String getName() {
-        return name;
+    public String getFunctionname() {
+        return functionname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFunctionname(String functionname) {
+        this.functionname = functionname;
     }
 
-    public String getHref() {
-        return href;
+    public String getUrl() {
+        return url;
     }
 
-    public void setHref(String href) {
-        this.href = href;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public int getState() {
@@ -86,22 +106,52 @@ public class FunctionItemModel extends BaseModel {
         this.state = state;
     }
 
-    public int getPosition() {
-        return position;
+    public int getSort() {
+        return sort;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
+    public void setSort(int sort) {
+        this.sort = sort;
     }
+
+    public int getFunctiontype() {
+        return functiontype;
+    }
+
+    public void setFunctiontype(int functiontype) {
+        this.functiontype = functiontype;
+    }
+
+    @Override
+    public int compareTo(@NonNull FunctionItemModel o) {
+        return sort - o.getSort();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(functionname);
+        dest.writeString(jid);
+        dest.writeString(iconUrl);
+        dest.writeString(url);
+        dest.writeInt(state);
+        dest.writeInt(sort);
+        dest.writeInt(functiontype);
+    }
+
 
     public static class Builder {
         String jid;
         String iconUrl;
-        String name;
-        String shortName;
-        String href;
+        String functionname;
+        String url;
         int state;
-        int position = -1;
+        int sort = -1;
+        int functiontype;
 
         public Builder jid(String jid) {
             this.jid = jid;
@@ -113,18 +163,13 @@ public class FunctionItemModel extends BaseModel {
             return this;
         }
 
-        public Builder name(String name) {
-            this.name = name;
+        public Builder functionname(String functionname) {
+            this.functionname = functionname;
             return this;
         }
 
-        public Builder shortName(String shortName) {
-            this.shortName = shortName;
-            return this;
-        }
-
-        public Builder href(String href) {
-            this.href = href;
+        public Builder url(String url) {
+            this.url = url;
             return this;
         }
 
@@ -133,13 +178,18 @@ public class FunctionItemModel extends BaseModel {
             return this;
         }
 
-        public Builder position(int position) {
-            this.position = position;
+        public Builder sort(int sort) {
+            this.sort = sort;
+            return this;
+        }
+
+        public Builder functiontype(int functiontype) {
+            this.functiontype = functiontype;
             return this;
         }
 
         public FunctionItemModel build() {
-            return new FunctionItemModel(jid, iconUrl, name, shortName, href, state, position);
+            return new FunctionItemModel(jid, iconUrl, functionname, url, state, sort, functiontype);
         }
     }
 }

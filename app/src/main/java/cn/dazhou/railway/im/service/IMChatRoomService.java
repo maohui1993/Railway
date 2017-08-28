@@ -20,6 +20,7 @@ import cn.dazhou.database.ChatMessageModel;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ChatMessageEntity;
 import cn.dazhou.im.util.Constants;
+import cn.dazhou.im.util.FileUtil;
 import cn.dazhou.im.util.ImageUtil;
 import cn.dazhou.im.util.JsonUtil;
 import cn.dazhou.railway.util.LogUtil;
@@ -63,9 +64,9 @@ public class IMChatRoomService extends Service {
             String voicePath = null;
             // 语音与图片不能同时发送
             if (chatMessageEntity.getImageBytes() != null) {
-                imagePath = ImageUtil.saveByteToLocalFile(chatMessageEntity.getImageBytes(), System.currentTimeMillis() + ".png");
+                imagePath = FileUtil.saveByteToLocalFile(chatMessageEntity.getImageBytes(), System.currentTimeMillis() + ".png");
             } else if (chatMessageEntity.getVoiceBytes() != null) {
-                voicePath = ImageUtil.saveByteToLocalFile(chatMessageEntity.getVoiceBytes(), System.currentTimeMillis() + ".aar");
+                voicePath = FileUtil.saveByteToLocalFile(chatMessageEntity.getVoiceBytes(), System.currentTimeMillis() + ".aar");
             }
             ChatMessageModel chatMessageModel = new ChatMessageModel.Builder()
                     .content(chatMessageEntity.getContent())

@@ -1,11 +1,14 @@
 package cn.dazhou.im.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by hooyee on 2017/5/8.
  * 聊天的数据
  */
 
-public class ChatMessageEntity {
+public class ChatMessageEntity implements Parcelable{
     private int id;
     private String imagePath;      // 图片消息，记录图片的位置
     private String voicePath;      // 语音消息，记录语音的位置
@@ -20,16 +23,17 @@ public class ChatMessageEntity {
     private long voiceTime;
     private String jid;            // 当前用户为发送方，则记录接收方jid，为接收方则记录发送方jid
     private String roomJid;        // 如果为群聊，记录群的Jid
-    private String filePath;       // 传送的文件的path
+    private String filePath = "";       // 传送的文件的path
     private int sendState;
     private Type dataType;         // 数据类型
     private int fileProcess = 100;       // 文件传输进度
+    private byte[] fileContent;    // 文件内容
 
     public ChatMessageEntity() {
     }
 
     public ChatMessageEntity(String imagePath, String voicePath, String content, String fromJid, String toJid, boolean state, int type, long date,
-                             byte[] imageBytes, byte[] voiceBytes, long voiceTime, String jid, String roomJid, String fileUri, int sendState, Type dataType) {
+                             byte[] imageBytes, byte[] voiceBytes, long voiceTime, String jid, String roomJid, String fileUri, int sendState, Type dataType, byte[] fileContent) {
         this.imagePath = imagePath;
         this.voicePath = voicePath;
         this.content = content;
@@ -46,7 +50,41 @@ public class ChatMessageEntity {
         this.filePath = fileUri;
         this.sendState = sendState;
         this.dataType = dataType;
+        this.fileContent = fileContent;
     }
+
+    protected ChatMessageEntity(Parcel in) {
+        id = in.readInt();
+        imagePath = in.readString();
+        voicePath = in.readString();
+        content = in.readString();
+        fromJid = in.readString();
+        toJid = in.readString();
+        state = in.readByte() != 0;
+        type = in.readInt();
+        date = in.readLong();
+        imageBytes = in.createByteArray();
+        voiceBytes = in.createByteArray();
+        voiceTime = in.readLong();
+        jid = in.readString();
+        roomJid = in.readString();
+        filePath = in.readString();
+        sendState = in.readInt();
+        fileProcess = in.readInt();
+        fileContent = in.createByteArray();
+    }
+
+    public static final Creator<ChatMessageEntity> CREATOR = new Creator<ChatMessageEntity>() {
+        @Override
+        public ChatMessageEntity createFromParcel(Parcel in) {
+            return new ChatMessageEntity(in);
+        }
+
+        @Override
+        public ChatMessageEntity[] newArray(int size) {
+            return new ChatMessageEntity[size];
+        }
+    };
 
     public String getImagePath() {
         return imagePath;
@@ -165,6 +203,7 @@ public class ChatMessageEntity {
     }
 
     public void setFilePath(String fileUri) {
+        fileUri = fileUri == null ? "" : fileUri;
         this.filePath = fileUri;
     }
 
@@ -192,16 +231,49 @@ public class ChatMessageEntity {
         this.id = id;
     }
 
+    public byte[] getFileContent() {
+        return fileContent;
+    }
+
+    public void setFileContent(byte[] fileContent) {
+        this.fileContent = fileContent;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof ChatMessageEntity) {
             ChatMessageEntity e = (ChatMessageEntity) obj;
-//            return filePath.equals(e.getFilePath());
-            return date == e.getDate()
-                    && type == e.getType()
-                    && dataType == e.getDataType();
+            return filePath.equals(e.getFilePath())
+                    && type == e.getType();
         }
         return false;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(imagePath);
+        dest.writeString(voicePath);
+        dest.writeString(content);
+        dest.writeString(fromJid);
+        dest.writeString(toJid);
+        dest.writeByte((byte) (state ? 1 : 0));
+        dest.writeInt(type);
+        dest.writeLong(date);
+        dest.writeByteArray(imageBytes);
+        dest.writeByteArray(voiceBytes);
+        dest.writeLong(voiceTime);
+        dest.writeString(jid);
+        dest.writeString(roomJid);
+        dest.writeString(filePath);
+        dest.writeInt(sendState);
+        dest.writeInt(fileProcess);
+        dest.writeParcelable(dataType, flags);
     }
 
     public static class Builder {
@@ -218,13 +290,14 @@ public class ChatMessageEntity {
         private long voiceTime;
         private String jid;            // 当前用户为发送方，则记录接收方jid，为接收方则记录发送方jid
         private String roomJid;        // 如果为群聊，记录群的Jid
-        private String filePath;           // 传送的文件的Uri
+        private String filePath = "";           // 传送的文件的Uri
         private int sendState;
         private Type dataType = Type.text;         // 数据类型
+        private byte[] fileContent;
 
         public ChatMessageEntity build() {
             return new ChatMessageEntity(imagePath, voicePath, content, fromJid, toJid, state, type, date
-                    , imageBytes, voiceBytes, voiceTime, jid, roomJid, filePath, sendState, dataType);
+                    , imageBytes, voiceBytes, voiceTime, jid, roomJid, filePath, sendState, dataType, fileContent);
         }
 
         public Builder imagePath(String imagePath) {
@@ -306,13 +379,46 @@ public class ChatMessageEntity {
             this.dataType = dataType;
             return this;
         }
+
+        public Builder fileContent(byte[] fileContent) {
+            this.fileContent = fileContent;
+            return this;
+        }
     }
 
-    public enum Type {
-        file,
-        text,
-        voice,
-        picture,
-        video
+    public enum Type implements Parcelable{
+        file(0),
+        text(1),
+        voice(2),
+        picture(3),
+        video(4);
+
+        private int value;
+
+        Type(int v) {
+            value = v;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(value);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<Type> CREATOR = new Creator<Type>() {
+            @Override
+            public Type createFromParcel(Parcel in) {
+                return Type.values()[in.readInt()];
+            }
+
+            @Override
+            public Type[] newArray(int size) {
+                return new Type[size];
+            }
+        };
     }
 }

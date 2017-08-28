@@ -60,7 +60,7 @@ public class ChatFunctionFragment extends BaseFragment {
     @OnClick(R2.id.chat_function_photograph)
     void takePhotoOrVideo() {
         Intent intent = new Intent(getContext(), CameraActivity.class);
-        startActivityForResult(intent, REQUEST_CODE);
+        startActivityForResult(intent, Constants.CROP_PHOTO);
     }
 
     void takePhoto() {
@@ -132,7 +132,7 @@ public class ChatFunctionFragment extends BaseFragment {
                     String path = data.getStringExtra("path");
                     try {
                         Bitmap bmp = ImageUtil.createBitmapByPath(path, 300, 400);
-                        byte[] bytes = ImageUtil.compressImage(bmp, 1024 * 2, 100);
+                        byte[] bytes = ImageUtil.compressImage(bmp, 1024 * 8, 100);
                         ChatMessageEntity messageInfo = new ChatMessageEntity.Builder()
                                 .imageBytes(bytes)
                                 .imagePath(path)
@@ -145,8 +145,6 @@ public class ChatFunctionFragment extends BaseFragment {
                     }
                 } else if (res == Constants.CROP_VIDEO) {
                     String path = data.getStringExtra("path");
-                    int fileType = mJudgeMultiMediaType.getMediaFileType(path);
-                    ChatMessageEntity.Type type = mJudgeMultiMediaType.isVideoFile(fileType) ? ChatMessageEntity.Type.video : ChatMessageEntity.Type.file;
 
                     ChatMessageEntity messageInfo = new ChatMessageEntity.Builder()
                             .filePath(path)
@@ -170,7 +168,7 @@ public class ChatFunctionFragment extends BaseFragment {
                         cursor.close();
 
                         Bitmap bmp = ImageUtil.createBitmapByPath(picturePath, 300, 400);
-                        byte[] bytes = ImageUtil.compressImage(bmp, 1024 * 2, 100);
+                        byte[] bytes = ImageUtil.compressImage(bmp, 1024 * 8, 100);
                         ChatMessageEntity messageInfo = new ChatMessageEntity.Builder()
                                 .imageBytes(bytes)
                                 .imagePath(picturePath)
@@ -192,8 +190,9 @@ public class ChatFunctionFragment extends BaseFragment {
                 }
                 Uri uri = data.getData();
                 String filePath = FileUtil.getPathByUri4kitkat(getContext(), uri);
-                int fileType = mJudgeMultiMediaType.getMediaFileType(filePath);
-                ChatMessageEntity.Type type = mJudgeMultiMediaType.isVideoFile(fileType) ? ChatMessageEntity.Type.video : ChatMessageEntity.Type.file;
+//                int fileType = mJudgeMultiMediaType.getMediaFileType(filePath);
+//                ChatMessageEntity.Type type = mJudgeMultiMediaType.isVideoFile(fileType) ? ChatMessageEntity.Type.video : ChatMessageEntity.Type.file;
+                ChatMessageEntity.Type type =  ChatMessageEntity.Type.file;
 
                 Log.i("FILE", "type = " + type);
 

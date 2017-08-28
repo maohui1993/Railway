@@ -1,6 +1,5 @@
 package cn.dazhou.im.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -19,8 +18,6 @@ import com.cjt2325.cameralibrary.lisenter.JCameraLisenter;
 import com.cjt2325.cameralibrary.util.DeviceUtil;
 import com.cjt2325.cameralibrary.util.FileUtil;
 
-import java.io.File;
-
 import cn.dazhou.im.R;
 import cn.dazhou.im.util.Constants;
 
@@ -35,14 +32,14 @@ public class CameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
         jCameraView = (JCameraView) findViewById(R.id.jcameraview);
         //设置视频保存路径
-        jCameraView.setSaveVideoPath(Environment.getExternalStorageDirectory().getPath() + File.separator + "Railway");
+        jCameraView.setSaveVideoPath(Environment.getExternalStorageDirectory() + "/railway/video/");
         jCameraView.setFeatures(JCameraView.BUTTON_STATE_BOTH);
         jCameraView.setMediaQuality(JCameraView.MEDIA_QUALITY_MIDDLE);
         jCameraView.setErrorLisenter(new ErrorLisenter() {
             @Override
             public void onError() {
                 //错误监听
-                Log.i("CJT", "camera error");
+                Log.i(Constants.TAG, "camera error");
                 Intent intent = new Intent();
                 setResult(103, intent);
                 finish();
@@ -58,7 +55,6 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void captureSuccess(Bitmap bitmap) {
                 //获取图片bitmap
-//                Log.i("JCameraView", "bitmap = " + bitmap.getWidth());
                 String path = FileUtil.saveBitmap("Railway", bitmap);
                 Intent intent = new Intent();
                 intent.putExtra("path", path);
@@ -69,7 +65,7 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void recordSuccess(String url) {
                 //获取视频路径
-                Log.i("CJT", "url = " + url );
+                Log.i(Constants.TAG, "url = " + url );
                 Intent intent = new Intent();
                 intent.putExtra("path", url);
                 setResult(Constants.CROP_VIDEO, intent);
@@ -83,7 +79,7 @@ public class CameraActivity extends AppCompatActivity {
             }
         });
 
-        Log.i("CJT", DeviceUtil.getDeviceModel());
+        Log.i(Constants.TAG, DeviceUtil.getDeviceModel());
     }
 
     @Override
@@ -108,14 +104,14 @@ public class CameraActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        Log.i("CJT", "onResume");
+        Log.i(Constants.TAG, "onResume");
         super.onResume();
         jCameraView.onResume();
     }
 
     @Override
     protected void onPause() {
-        Log.i("CJT", "onPause");
+        Log.i(Constants.TAG, "onPause");
         super.onPause();
         jCameraView.onPause();
     }

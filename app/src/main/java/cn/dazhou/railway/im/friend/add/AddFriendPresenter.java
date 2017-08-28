@@ -8,8 +8,8 @@ import android.widget.Toast;
 import java.util.List;
 
 import cn.dazhou.im.IMLauncher;
-import cn.dazhou.im.acpect.db.FriendDbApi;
 import cn.dazhou.railway.MyApp;
+import cn.dazhou.railway.config.Constants;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -64,7 +64,7 @@ public class AddFriendPresenter implements AddFriendContract.Presenter {
     private void sendRequest(int position) {
         StringBuilder sb = new StringBuilder(mAddFriendView.getData().get(position).getUsername());
         // 拼写jid
-        sb.append(FriendDbApi.JID_SEPARATOR).append(MyApp.gServerIp);
+        sb.append(Constants.JID_SEPARATOR).append(MyApp.gServerIp);
         try {
             IMLauncher.addFriend(sb.toString());
         } catch (IMLauncher.IMException e) {
