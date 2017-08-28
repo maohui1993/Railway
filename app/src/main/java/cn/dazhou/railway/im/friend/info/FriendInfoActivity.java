@@ -18,6 +18,8 @@ import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.util.SharedPreferenceUtil;
 
+import static android.view.View.GONE;
+
 public class FriendInfoActivity extends AppCompatActivity {
     @BindView(R.id.tx_nick_name)
     TextView mNickNameTx;
@@ -27,6 +29,8 @@ public class FriendInfoActivity extends AppCompatActivity {
     TextView mTelTx;
     @BindView(R.id.my_toolbar)
     Toolbar mToolbar;
+    @BindView(R.id.search_record)
+    TextView mSearchTx;
     FriendModel friendModel;
 
     @Override
@@ -38,6 +42,8 @@ public class FriendInfoActivity extends AppCompatActivity {
         String jid = getIntent().getStringExtra(Constants.DATA_KEY);
         mJidTx.setText(jid);
         mToolbar.setTitle("好友信息");
+        // TODO: 待实现功能，先屏蔽
+        mSearchTx.setVisibility(GONE);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {

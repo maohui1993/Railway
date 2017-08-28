@@ -43,6 +43,8 @@ public class MyselfInfoActivity extends AppCompatActivity {
     MultiText mTelMtx;
     @BindView(R.id.mt_logout)
     MultiText mLogoutMtx;
+    @BindView(R.id.mt_exit)
+    MultiText mExitMt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,8 @@ public class MyselfInfoActivity extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // TODO: 待实现功能，先屏蔽
+        mExitMt.setVisibility(View.GONE);
     }
 
     @Override
