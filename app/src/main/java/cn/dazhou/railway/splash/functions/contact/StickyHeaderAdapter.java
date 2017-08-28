@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.jude.easyrecyclerview.decoration.StickyHeaderDecoration;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import cn.dazhou.database.FriendModel;
@@ -24,35 +23,38 @@ public class StickyHeaderAdapter implements StickyHeaderDecoration.IStickyHeader
     private LayoutInflater mInflater;
     private List<FriendModel> datas;
 
-    private char[] header = {
-        'N','a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '*'
-    };
+    private List<Character> referenceHeaderId;
 
-    private String[] reference = {
-        "新消息","A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L","M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "*"
+    private char[] header = {
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '*'
     };
 
     public StickyHeaderAdapter(Context context, List<FriendModel> allData) {
         mInflater = LayoutInflater.from(context);
         datas = allData;
+        initHeader();
+    }
+
+    private void initHeader() {
+        referenceHeaderId = new ArrayList<>();
+        for (char c : header) {
+            referenceHeaderId.add(c);
+        }
     }
 
     @Override
     public long getHeaderId(int position) {
         if (position < datas.size()) {
-            char firstChar = datas.get(position).getName().toLowerCase().charAt(0);
-            // 如果有新消息
-            if (datas.get(position).isHasNewMsg()) {
-                return 0;
-            }
+            char firstChar = datas.get(position).getPingyin().toLowerCase().charAt(0);
+
             int i = 0;
-            for (; i < header.length; i++) {
-                if (header[i] == firstChar) {
+            for (; i < referenceHeaderId.size(); i++) {
+                if (referenceHeaderId.get(i) == firstChar) {
                     return i;
                 }
             }
         }
-        return header.length - 1;
+        return referenceHeaderId.size() - 1;
 
     }
 
@@ -64,7 +66,7 @@ public class StickyHeaderAdapter implements StickyHeaderDecoration.IStickyHeader
 
     @Override
     public void onBindHeaderViewHolder(HeaderHolder viewHolder, int position) {
-        viewHolder.header.setText(reference[(int)getHeaderId(position)]);
+        viewHolder.header.setText(referenceHeaderId.get((int)getHeaderId(position)).toString());
     }
 
     class HeaderHolder extends RecyclerView.ViewHolder {

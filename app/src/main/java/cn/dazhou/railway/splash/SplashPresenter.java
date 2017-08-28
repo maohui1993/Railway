@@ -64,7 +64,7 @@ public class SplashPresenter implements SplashContract.Presenter {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     try {
-                                        IMLauncher.addFriend(StringUtil.getRealJid(result));
+                                        IMLauncher.addFriend(StringUtil.getRealJid(result), result);
                                     } catch (IMLauncher.IMException e) {
                                         e.printStackTrace();
                                     }

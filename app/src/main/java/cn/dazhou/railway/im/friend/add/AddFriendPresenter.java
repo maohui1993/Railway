@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.config.Constants;
@@ -62,11 +63,11 @@ public class AddFriendPresenter implements AddFriendContract.Presenter {
     }
 
     private void sendRequest(int position) {
-        StringBuilder sb = new StringBuilder(mAddFriendView.getData().get(position).getUsername());
+        String jid = mAddFriendView.getData().get(position).getUsername();
         // 拼写jid
-        sb.append(Constants.JID_SEPARATOR).append(MyApp.gServerIp);
+        String name = mAddFriendView.getData().get(position).getName();
         try {
-            IMLauncher.addFriend(sb.toString());
+            IMLauncher.addFriend(StringUtil.getRealJid(jid), name);
         } catch (IMLauncher.IMException e) {
             e.printStackTrace();
         }

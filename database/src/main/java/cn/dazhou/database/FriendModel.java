@@ -13,6 +13,8 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.List;
 
+import cn.dazhou.database.util.PingyinUtil;
+
 /**
  * Created by hooyee on 2017/5/17.
  */
@@ -49,6 +51,8 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel> {
     private long lastChatTime;
 
     List<ChatMessageModel> chatMessages;
+
+    private String pingyin;
 
     @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "chatMessages")
     public List<ChatMessageModel> getMyChatMessages() {
@@ -205,6 +209,13 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel> {
         this.lastChatTime = lastChatTime;
     }
 
+    public String getPingyin() {
+        if (pingyin == null) {
+            pingyin = PingyinUtil.cn2Spell(name);
+        }
+        return pingyin;
+    }
+
     public static int typeToInt(String type) {
         switch (type) {
             case "remove":
@@ -230,7 +241,7 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel> {
         if (getName() == null) {
             return -1;
         }
-        return this.getName().toLowerCase().compareTo(o.getName());
+        return this.getPingyin().compareTo(o.getPingyin());
     }
 
     @Override
