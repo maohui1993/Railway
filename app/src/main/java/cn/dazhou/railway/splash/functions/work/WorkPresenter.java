@@ -127,6 +127,12 @@ public class WorkPresenter implements WorkContract.Presenter {
             InputStream inputStream = null;
             OutputStream outputStream = null;
 
+            if(!iconFile.getParentFile().exists()) {
+                if(iconFile.getParentFile().mkdirs()) {
+                    iconFile.createNewFile();
+                }
+            }
+
             try {
                 byte[] fileReader = new byte[4096];
 
