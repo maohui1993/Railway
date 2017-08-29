@@ -14,6 +14,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 
+import java.util.Date;
 import java.util.Set;
 
 import cn.dazhou.database.FriendModel;
@@ -32,6 +33,7 @@ import static cn.dazhou.railway.config.Constants.DATA_KEY;
  * 启动时需要知道是与谁聊天，故启动的时候要带一个data值传入。
  */
 public class ChatActivity extends AppCompatActivity {
+    private static final String EXTRA_DATA = "_date";
 
     Toolbar mToolbar;
     private ChatPresenter mPresenter;
@@ -40,12 +42,14 @@ public class ChatActivity extends AppCompatActivity {
      * 正在chat的用户jid 形式为【正在聊天的用户jid+@+自身jid】
      */
     private String mJid;
+    private Date mDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         mJid = getIntent().getStringExtra(DATA_KEY);
+        mDate = (Date) getIntent().getSerializableExtra(EXTRA_DATA);
 
         mChatFragment = (ChatFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
         if (mChatFragment == null) {
@@ -65,7 +69,7 @@ public class ChatActivity extends AppCompatActivity {
                 SplashActivity.startItself(ChatActivity.this);
             }
         });
-        mPresenter = new ChatPresenter(this, mChatFragment, mJid);
+        mPresenter = new ChatPresenter(this, mChatFragment, mJid, mDate);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -115,8 +119,13 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     public static void startItself(Context context, String data) {
+        startItself(context, data, null);
+    }
+
+    public static void startItself(Context context, String jid, Date date) {
         Intent intent = new Intent(context, ChatActivity.class);
-        intent.putExtra(DATA_KEY, data);
+        intent.putExtra(DATA_KEY, jid);
+        intent.putExtra(EXTRA_DATA, date);
         context.startActivity(intent);
     }
 

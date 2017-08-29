@@ -71,13 +71,12 @@ public class FriendModel extends BaseModel implements Comparable<FriendModel> {
         return chatMessages;
     }
 
-
-
-    public synchronized List<ChatMessageModel> getMyChatMessages(int page) {
+    public synchronized List<ChatMessageModel> getMyChatMessages(int page, int initPosition) {
         int count = (int) SQLite.selectCountOf(ChatMessageModel_Table.id)
                 .from(ChatMessageModel.class)
                 .where(ChatMessageModel_Table.jid.eq(jid))
-                .count();
+                .count()
+                - initPosition;
         // 避免查找出重复数据
         int limitCount = onceMaxShown;
         int offset = count - onceMaxShown * page;

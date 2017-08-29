@@ -25,9 +25,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme1">
-        <!--<meta-data-->
-            <!--android:name="com.baidu.lbsapi.API_KEY"-->
-            <!--android:value="tKiTYcTGAZB0NrpWK19f57Rrp3PzrGOo" />-->
+
+        <!-- <meta-data -->
+        <!-- android:name="com.baidu.lbsapi.API_KEY" -->
+        <!-- android:value="tKiTYcTGAZB0NrpWK19f57Rrp3PzrGOo" /> -->
 
         <activity
             android:name=".im.login.LoginActivity"
@@ -118,7 +119,8 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity android:name=".splash.functions.work.http.FunctionActivity" />
-        <activity android:name=".splash.functions.setting.function.MessageTipActivity"></activity>
+        <activity android:name=".splash.functions.setting.function.MessageTipActivity" />
+        <activity android:name=".im.friend.info.SearchChatRecordActivity"></activity>
     </application>
 
 </manifest>

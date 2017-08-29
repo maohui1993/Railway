@@ -76,13 +76,13 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/search_record"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#ffffff"
         android:padding="@dimen/content_horizontal_margin">
         <TextView
-            android:id="@+id/search_record"
             android:text="查找聊天记录"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

@@ -29,13 +29,16 @@ public class FriendInfoActivity extends AppCompatActivity {
     Toolbar mToolbar;
     FriendModel friendModel;
 
+    private String jid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_info);
         ButterKnife.bind(this);
 
-        String jid = getIntent().getStringExtra(Constants.DATA_KEY);
+        jid = getIntent().getStringExtra(Constants.DATA_KEY);
+        jid = StringUtil.getWrapJid(jid);
         mJidTx.setText(jid);
         mToolbar.setTitle("好友信息");
         setSupportActionBar(mToolbar);
@@ -57,6 +60,7 @@ public class FriendInfoActivity extends AppCompatActivity {
 
     @OnClick(R.id.search_record)
     void searchChatRecord() {
+        SearchChatRecordActivity.startItself(this, jid);
     }
 
     public static void startItself(Context context, String data) {

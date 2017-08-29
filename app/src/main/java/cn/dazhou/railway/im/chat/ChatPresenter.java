@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.view.MenuItem;
 
+import java.util.Date;
 import java.util.List;
 
 import cn.dazhou.database.ChatMessageModel;
@@ -27,20 +28,34 @@ public class ChatPresenter implements ChatContract.Presenter {
     private FriendModel mFriendModel;
     private int page = 1;
 
-    public ChatPresenter(Context context, ChatContract.View view, String jid) {
+    private Date mDate;
+
+    private int initPosition;
+
+    public ChatPresenter(Context context, ChatContract.View view, String jid, Date date) {
         mContext = context;
         mChatView = view;
         mJid = jid;
+        mDate = date;
         mChatView.setPresenter(this);
     }
 
     @Override
     public void init() {
+        List<ChatMessageModel> chatMessageModels;
         mFriendModel = DataHelper.getFriend(mJid);
+
+        if (mDate != null) {
+            chatMessageModels = DataHelper.getChatMessages(mJid, mDate);
+            mChatView.refresh(ChatMessageModel.toChatMessageEntity(chatMessageModels));
+            initPosition = chatMessageModels.size();
+            return;
+        }
+
         if (mFriendModel != null) {
             // 进入了聊天界面，便说明该用户所有未读消息为已读
             mFriendModel.setNotReadCount(0);
-            List<ChatMessageModel> chatMessageModels = mFriendModel.getMyChatMessages(page);
+            chatMessageModels = mFriendModel.getMyChatMessages(page, 0);
             mFriendModel.update();
             page++;
             mChatView.refresh(ChatMessageModel.toChatMessageEntity(chatMessageModels));
@@ -86,7 +101,7 @@ public class ChatPresenter implements ChatContract.Presenter {
         if (mFriendModel == null) {
             return;
         }
-        final List<ChatMessageModel> chatMessageModels = mFriendModel.getMyChatMessages(page);
+        final List<ChatMessageModel> chatMessageModels = mFriendModel.getMyChatMessages(page, initPosition);
         if (chatMessageModels != null && chatMessageModels.size() > 0) {
             mChatView.showLoadTip("加载更多...", false);
             wholeLoaded = false;
