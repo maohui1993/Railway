@@ -99,6 +99,8 @@ public class IMChatService extends Service {
                 message.setJid(fromUser);
                 ChatMessageModel chatMessageModel = ChatMessageModel.newInstance(message);
                 chatMessageModel.setJid(StringUtil.getWrapJid(fromUser));
+                boolean show = DataHelper.whetherShowTimestamp(chatMessageModel);
+                chatMessageModel.setShowTimestamp(show);
                 chatMessageModel.save();
                 sendNotification(message, chatMessageModel.getJid());
             }

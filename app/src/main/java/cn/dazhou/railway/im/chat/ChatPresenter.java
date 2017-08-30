@@ -45,6 +45,7 @@ public class ChatPresenter implements ChatContract.Presenter {
         List<ChatMessageModel> chatMessageModels;
         mFriendModel = DataHelper.getFriend(mJid);
 
+        // 从查找聊天记录进来这个页面的
         if (mDate != null) {
             chatMessageModels = DataHelper.getChatMessages(mJid, mDate);
             mChatView.refresh(ChatMessageModel.toChatMessageEntity(chatMessageModels));
