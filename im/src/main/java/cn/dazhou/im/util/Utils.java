@@ -97,7 +97,11 @@ public class Utils {
 
     public static String getFormatTime(long time) {
         Date today = getStartTime();
-        String format = today.before(new Date(time)) ? "HH:mm:ss" : "MM-dd-HH:mm:ss";
+        Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+        calendar.setTimeInMillis(time);
+        int aimYear = calendar.get(Calendar.YEAR);
+        String format = today.before(new Date(time)) ? "HH:mm:ss" : aimYear == currentYear ? "MM月dd日 HH:mm" : "yyyy年MM月dd日 HH:mm";
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(time);
     }

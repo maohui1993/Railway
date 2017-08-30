@@ -83,7 +83,7 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         // IMChatService#messageEventBus 处理该事件
-        EventBus.getDefault().post(mJid);
+        EventBus.getDefault().post(StringUtil.getUsername(mJid));
     }
 
     private void setTitle() {
