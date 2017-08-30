@@ -188,6 +188,11 @@ public class IMChatService extends Service {
 
             ChatMessageModel chatDb = ChatMessageModel.newInstance(chatMessageEntity);
             chatDb.setJid(StringUtil.getWrapJid(fromUser));
+
+            boolean show = DataHelper.whetherShowTimestamp(chatDb);
+            chatDb.setShowTimestamp(show);
+            chatMessageEntity.setShowTimestamp(show);
+
             // 若聊天对象的窗口已经打开，则不发送通知
             if (checkJid(fromUser)) {
                 chatDb.setState(true);
@@ -215,7 +220,7 @@ public class IMChatService extends Service {
              * @param friendModel
              */
             EventBus.getDefault().post(friend);
-            chatDb.save();
+            DataHelper.save(chatDb);
         }
     };
 

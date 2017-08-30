@@ -82,7 +82,13 @@ public class ChatPresenter implements ChatContract.Presenter {
             if (saveMessage) {
                 ChatMessageModel model = ChatMessageModel.newInstance(msg);
                 model.setJid(mJid);         // 正在聊天的人
-                model.save();
+
+                // 是否显示时间戳
+                boolean show = DataHelper.whetherShowTimestamp(model);
+                model.setShowTimestamp(show);
+                msg.setShowTimestamp(show);
+
+                DataHelper.save(model);
                 msg.setId(model.getId());
             } else {
                 ChatMessageModel model = DataHelper.getChatMessageById(msg.getId());

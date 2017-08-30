@@ -86,9 +86,14 @@ public class ChatSendViewHolder extends BaseViewHolder<ChatMessageEntity> {
 
     @Override
     public void setData(final ChatMessageEntity data) {
-        chatItemDate.setText(Utils.getFormatTime(data.getDate()));
-        chatItemDate.setVisibility(View.VISIBLE);
+        if (data.isShowTimestamp()) {
+            chatItemDate.setText(Utils.getFormatTime(data.getDate()));
+            chatItemDate.setVisibility(View.VISIBLE);
+        } else {
+            chatItemDate.setVisibility(View.GONE);
+        }
         Glide.with(getContext()).load(R.drawable.header_02).asBitmap().into(chatItemHeader);
+
         if (data.getDataType() == ChatMessageEntity.Type.text) {
             chatItemContentText.setSpanText(handler, data.getContent(), true);
             chatItemVoice.setVisibility(GONE);

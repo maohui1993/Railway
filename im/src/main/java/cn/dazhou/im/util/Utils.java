@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -94,8 +96,23 @@ public class Utils {
     }
 
     public static String getFormatTime(long time) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
+        Date today = getStartTime();
+        String format = today.before(new Date(time)) ? "HH:mm:ss" : "MM-dd-HH:mm:ss";
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(time);
+    }
+
+    /**
+     * 获取当天的00:00:00
+     * @return
+     */
+    private static Date getStartTime() {
+        Calendar todayStart = Calendar.getInstance();
+        todayStart.set(Calendar.HOUR, 0);
+        todayStart.set(Calendar.MINUTE, 0);
+        todayStart.set(Calendar.SECOND, 0);
+        todayStart.set(Calendar.MILLISECOND, 0);
+        return todayStart.getTime();
     }
 
     //毫秒转秒

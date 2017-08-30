@@ -28,12 +28,14 @@ public class ChatMessageEntity implements Parcelable{
     private Type dataType;         // 数据类型
     private int fileProcess = 100;       // 文件传输进度
     private byte[] fileContent;    // 文件内容
+    private boolean showTimestamp; // 是否显示时间戳
 
     public ChatMessageEntity() {
     }
 
-    public ChatMessageEntity(String imagePath, String voicePath, String content, String fromJid, String toJid, boolean state, int type, long date,
-                             byte[] imageBytes, byte[] voiceBytes, long voiceTime, String jid, String roomJid, String fileUri, int sendState, Type dataType, byte[] fileContent) {
+    public ChatMessageEntity(int id, String imagePath, String voicePath, String content, String fromJid, String toJid, boolean state, int type, long date,
+                             byte[] imageBytes, byte[] voiceBytes, long voiceTime, String jid, String roomJid, String fileUri, int sendState, Type dataType, byte[] fileContent, boolean showTimestamp) {
+        this.id = id;
         this.imagePath = imagePath;
         this.voicePath = voicePath;
         this.content = content;
@@ -51,6 +53,7 @@ public class ChatMessageEntity implements Parcelable{
         this.sendState = sendState;
         this.dataType = dataType;
         this.fileContent = fileContent;
+        this.showTimestamp = showTimestamp;
     }
 
     protected ChatMessageEntity(Parcel in) {
@@ -72,6 +75,7 @@ public class ChatMessageEntity implements Parcelable{
         sendState = in.readInt();
         fileProcess = in.readInt();
         fileContent = in.createByteArray();
+        showTimestamp = in.readByte() != 0;
     }
 
     public static final Creator<ChatMessageEntity> CREATOR = new Creator<ChatMessageEntity>() {
@@ -239,6 +243,14 @@ public class ChatMessageEntity implements Parcelable{
         this.fileContent = fileContent;
     }
 
+    public boolean isShowTimestamp() {
+        return showTimestamp;
+    }
+
+    public void setShowTimestamp(boolean showTimestamp) {
+        this.showTimestamp = showTimestamp;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof ChatMessageEntity) {
@@ -274,9 +286,11 @@ public class ChatMessageEntity implements Parcelable{
         dest.writeInt(sendState);
         dest.writeInt(fileProcess);
         dest.writeParcelable(dataType, flags);
+        dest.writeByte((byte) (showTimestamp ? 1 : 0));
     }
 
     public static class Builder {
+        private int id;
         private String imagePath;      // 图片消息，记录图片的位置
         private String voicePath;      // 语音消息，记录语音的位置
         private String content;        // 普通文本消息
@@ -294,10 +308,16 @@ public class ChatMessageEntity implements Parcelable{
         private int sendState;
         private Type dataType = Type.text;         // 数据类型
         private byte[] fileContent;
+        private boolean showTimestamp;
 
         public ChatMessageEntity build() {
-            return new ChatMessageEntity(imagePath, voicePath, content, fromJid, toJid, state, type, date
-                    , imageBytes, voiceBytes, voiceTime, jid, roomJid, filePath, sendState, dataType, fileContent);
+            return new ChatMessageEntity(id, imagePath, voicePath, content, fromJid, toJid, state, type, date
+                    , imageBytes, voiceBytes, voiceTime, jid, roomJid, filePath, sendState, dataType, fileContent, showTimestamp);
+        }
+
+        public Builder id(int id) {
+            this.id = id;
+            return this;
         }
 
         public Builder imagePath(String imagePath) {
@@ -382,6 +402,11 @@ public class ChatMessageEntity implements Parcelable{
 
         public Builder fileContent(byte[] fileContent) {
             this.fileContent = fileContent;
+            return this;
+        }
+
+        public Builder showTimestamp(boolean show) {
+            this.showTimestamp = show;
             return this;
         }
     }

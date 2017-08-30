@@ -1,6 +1,7 @@
 package cn.dazhou.database.util;
 
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
@@ -115,11 +116,38 @@ public class DataHelper {
                 .querySingle();
     }
 
+    /**
+     * 所有数据库存储都主张使用这个方法，方便检索代码
+     *
+     * @param model
+     */
+    public static void save(BaseModel model) {
+        model.save();
+    }
+
     public static ChatMessageModel getChatMessageById(int id) {
         return SQLite.select()
                 .from(ChatMessageModel.class)
                 .where(ChatMessageModel_Table.id.eq(id))
                 .querySingle();
+    }
+
+    public static ChatMessageModel getLatestChatMessage(String jid) {
+        return SQLite.select()
+                .from(ChatMessageModel.class)
+                .where(ChatMessageModel_Table.jid.eq(jid))
+                .orderBy(ChatMessageModel_Table.date.desc())
+                .querySingle();
+    }
+
+    public static boolean whetherShowTimestamp(ChatMessageModel current) {
+        ChatMessageModel last = DataHelper.getLatestChatMessage(current.getJid());
+        // 为null说明数据库中没有数据，为第一条数据应该显示
+        if (last == null) {
+            return true;
+        }
+        // 判断上一条数据存储的时间与当前的时间差距有多大
+        return current.getDate() - last.getDate() > 5 * 60 * 1000 ? true : false;
     }
 
     public static List<ChatMessageModel> getChatMessages(FriendModel friend) {

@@ -12,6 +12,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.im.entity.ChatMessageEntity;
 
 /**
@@ -56,6 +57,8 @@ public class ChatMessageModel extends BaseModel {
     private String filePath;
     @Column
     private int sendState;     // 发送状态
+    @Column
+    private boolean showTimestamp;
 
 
     @Column
@@ -86,23 +89,23 @@ public class ChatMessageModel extends BaseModel {
         List<ChatMessageEntity> messages = new ArrayList<ChatMessageEntity>();
         Log.i("TAG", "models.size = " + models.size());
         for (ChatMessageModel model : models) {
-            ChatMessageEntity message = new ChatMessageEntity();
-            message.setId(model.getId());
-            message.setImagePath(model.imagePath);
-            message.setVoicePath(model.voicePath);
-            message.setContent(model.content);
-            message.setState(model.state);
-            message.setDate(model.date);
-            // model存储的为 聊天对象的jid + @ +自身的jid
-            // 发送的消息应该只要包含接受方的jid
-            message.setJid(model.jid.split("@")[0]);
-            message.setToJid(model.toJid);
-            message.setFromJid(model.fromJid);
-            message.setType(model.getType());
-            message.setVoiceTime(model.voiceTime);
-            message.setDataType(model.getDataType());
-            message.setFilePath(model.getFilePath());
-            message.setSendState(model.getSendState());
+            ChatMessageEntity message = new ChatMessageEntity.Builder()
+                    .id(model.id)
+                    .imagePath(model.imagePath)
+                    .voicePath(model.voicePath)
+                    .content(model.content)
+                    .state(model.state)
+                    .date(model.date)
+                    .jid(StringUtil.getUsername(model.jid))
+                    .toJid(model.toJid)
+                    .fromJid(model.fromJid)
+                    .type(model.type)
+                    .voiceTime(model.voiceTime)
+                    .dataType(model.dataType)
+                    .filePath(model.filePath)
+                    .sendState(model.sendState)
+                    .showTimestamp(model.showTimestamp)
+                    .build();
             messages.add(message);
         }
         return messages;
@@ -123,6 +126,7 @@ public class ChatMessageModel extends BaseModel {
                 .filePath(info.getFilePath())
                 .dataType(info.getDataType())
                 .sendState(info.getSendState())
+                .showTimestamp(info.isShowTimestamp())
                 .build();
     }
 //
@@ -256,8 +260,16 @@ public class ChatMessageModel extends BaseModel {
         this.sendState = sendState;
     }
 
+    public boolean isShowTimestamp() {
+        return showTimestamp;
+    }
+
+    public void setShowTimestamp(boolean showTimestamp) {
+        this.showTimestamp = showTimestamp;
+    }
+
     private ChatMessageModel(int id, String imagePath, String voicePath, String content, String fromJid, String toJid, String jid,
-                             int type, long voiceTime, long date, ChatMessageEntity.Type dataType, String filePath, int sendState) {
+                             int type, long voiceTime, long date, ChatMessageEntity.Type dataType, String filePath, int sendState, boolean showTimestamp) {
         this.id = id;
         this.imagePath = imagePath;
         this.voicePath = voicePath;
@@ -271,6 +283,7 @@ public class ChatMessageModel extends BaseModel {
         this.dataType = dataType;
         this.filePath = filePath;
         this.sendState = sendState;
+        this.showTimestamp = showTimestamp;
     }
 
     public static class Builder {
@@ -288,9 +301,10 @@ public class ChatMessageModel extends BaseModel {
         private ChatMessageEntity.Type dataType;
         private String filePath;
         private int sendState;
+        private boolean showTimestamp;
 
         public ChatMessageModel build() {
-            return new ChatMessageModel(id, imagePath, voicePath, content, fromJid, toJid, jid, type, voiceTime, date, dataType, filePath, sendState);
+            return new ChatMessageModel(id, imagePath, voicePath, content, fromJid, toJid, jid, type, voiceTime, date, dataType, filePath, sendState, showTimestamp);
         }
 
         public Builder id(int id) {
@@ -360,6 +374,11 @@ public class ChatMessageModel extends BaseModel {
 
         public Builder sendState(int sendState) {
             this.sendState = sendState;
+            return this;
+        }
+
+        public Builder showTimestamp(boolean show) {
+            this.showTimestamp = show;
             return this;
         }
     }

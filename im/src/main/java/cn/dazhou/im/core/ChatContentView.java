@@ -193,6 +193,8 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         return true;
     }
 
+    private long lastChatTiming;
+
     /**
      * 负责展示消息
      *
@@ -223,7 +225,7 @@ public class ChatContentView extends LinearLayout implements ChatAdapter1.OnItem
         mAdapter.add(messageInfo);
         // 将光标移动到最新的消息处
         chatList.scrollToPosition(mAdapter.getCount() - 1);
-
+        lastChatTiming = messageInfo.getDate();
     }
 
     /**

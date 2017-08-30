@@ -2,11 +2,9 @@ package cn.dazhou.railway.im.friend.info;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Toast;
 
 import com.squareup.timessquare.CalendarCellDecorator;
 import com.squareup.timessquare.CalendarCellView;
@@ -18,8 +16,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import cn.dazhou.database.ChatMessageModel;
-import cn.dazhou.database.FriendModel;
 import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.chat.ChatActivity;
@@ -68,9 +64,6 @@ public class SearchChatRecordActivity extends AppCompatActivity {
         calendar.setCellClickInterceptor(new CalendarPickerView.CellClickInterceptor() {
             @Override
             public boolean onCellClicked(Date date) {
-                Toast.makeText(SearchChatRecordActivity.this, date.toString(), Toast.LENGTH_SHORT).show();
-//                List<ChatMessageModel> chats = DataHelper.getChatMessages(jid, date);
-
                 ChatActivity.startItself(SearchChatRecordActivity.this, jid, date);
                 return false;
             }
