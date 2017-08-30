@@ -59,6 +59,8 @@ public class SearchChatRecordActivity extends AppCompatActivity {
                     cellView.setClickable(false);
                     cellView.setSelectable(false);
                 }
+
+                cellView.setVisibility(cellView.isCurrentMonth() ? View.VISIBLE : View.GONE);
             }
         };
         decorators.add(cellDecorator);
