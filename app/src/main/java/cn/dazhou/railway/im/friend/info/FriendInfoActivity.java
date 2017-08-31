@@ -3,7 +3,6 @@ package cn.dazhou.railway.im.friend.info;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
@@ -17,7 +16,6 @@ import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.railway.BaseActivity;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
-import cn.dazhou.railway.im.friend.message.search.SearchByDateActivity;
 import cn.dazhou.railway.im.friend.message.search.SearchChatMessageActivity;
 import cn.dazhou.railway.util.SharedPreferenceUtil;
 

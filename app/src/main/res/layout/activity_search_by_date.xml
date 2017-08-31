@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cn.dazhou.railway.im.friend.message.search.SearchByDateActivity">
+    tools:context="cn.dazhou.railway.im.friend.message.search.date.SearchByDateActivity">
     <com.squareup.timessquare.CalendarPickerView
         android:id="@+id/calendar_view"
         android:layout_width="match_parent"

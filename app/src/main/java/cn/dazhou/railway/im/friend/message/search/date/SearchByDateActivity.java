@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.friend.message.search;
+package cn.dazhou.railway.im.friend.message.search.date;
 
 import android.content.Context;
 import android.content.Intent;
