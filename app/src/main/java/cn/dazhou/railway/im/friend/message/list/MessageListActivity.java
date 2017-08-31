@@ -7,10 +7,11 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import cn.dazhou.railway.BaseActivity;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.util.ActivityUtils;
 
-public class MessageListActivity extends AppCompatActivity {
+public class MessageListActivity extends BaseActivity {
     private MessageListFragment mFragment;
     private MessageListContract.Presenter mPresenter;
     private Toolbar mToolbar;
@@ -18,7 +19,7 @@ public class MessageListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_message_list);
+        addLayoutToBase(R.layout.activity_message_list);
         mToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         mToolbar.setTitle("消息列表");
         setSupportActionBar(mToolbar);

@@ -120,7 +120,8 @@
             android:screenOrientation="portrait" />
         <activity android:name=".splash.functions.work.http.FunctionActivity" />
         <activity android:name=".splash.functions.setting.function.MessageTipActivity" />
-        <activity android:name=".im.friend.info.SearchChatRecordActivity"></activity>
+        <activity android:name=".im.friend.message.search.SearchByDateActivity" />
+        <activity android:name=".im.friend.message.search.SearchChatMessageActivity" ></activity>
     </application>
 
 </manifest>

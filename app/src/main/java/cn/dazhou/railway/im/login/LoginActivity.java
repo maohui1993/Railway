@@ -8,11 +8,12 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
+import cn.dazhou.railway.BaseActivity;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.util.ActivityUtils;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
     Toolbar mToolbar;
 
     private LoginPresenter mPresenter;

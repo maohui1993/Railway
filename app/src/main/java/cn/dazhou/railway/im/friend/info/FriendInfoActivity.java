@@ -14,11 +14,14 @@ import butterknife.OnClick;
 import cn.dazhou.database.FriendModel;
 import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.database.util.StringUtil;
+import cn.dazhou.railway.BaseActivity;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
+import cn.dazhou.railway.im.friend.message.search.SearchByDateActivity;
+import cn.dazhou.railway.im.friend.message.search.SearchChatMessageActivity;
 import cn.dazhou.railway.util.SharedPreferenceUtil;
 
-public class FriendInfoActivity extends AppCompatActivity {
+public class FriendInfoActivity extends BaseActivity {
     @BindView(R.id.tx_nick_name)
     TextView mNickNameTx;
     @BindView(R.id.tx_jid)
@@ -34,7 +37,7 @@ public class FriendInfoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_friend_info);
+        addLayoutToBase(R.layout.activity_friend_info);
         ButterKnife.bind(this);
 
         jid = getIntent().getStringExtra(Constants.DATA_KEY);
@@ -60,7 +63,8 @@ public class FriendInfoActivity extends AppCompatActivity {
 
     @OnClick(R.id.search_record)
     void searchChatRecord() {
-        SearchChatRecordActivity.startItself(this, jid);
+//        SearchByDateActivity.startItself(this, jid);
+        SearchChatMessageActivity.startItself(this);
     }
 
     public static void startItself(Context context, String data) {

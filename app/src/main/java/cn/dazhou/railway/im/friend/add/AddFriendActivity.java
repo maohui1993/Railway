@@ -10,10 +10,11 @@ import android.view.MenuInflater;
 import android.view.View;
 
 import butterknife.BindView;
+import cn.dazhou.railway.BaseActivity;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.util.ActivityUtils;
 
-public class AddFriendActivity extends AppCompatActivity {
+public class AddFriendActivity extends BaseActivity {
 
     @BindView(R.id.my_toolbar)
     Toolbar mToolbar;
@@ -23,7 +24,7 @@ public class AddFriendActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_friend);
+        addLayoutToBase(R.layout.activity_add_friend);
         mToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

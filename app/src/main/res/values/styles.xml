@@ -10,8 +10,27 @@
 
     <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" >
+        <item name="overlapAnchor">false</item>
+    </style>
+    
     <style name="AppTheme1" parent="Theme.AppCompat.Light.NoActionBar">
         <!--<item name="android:windowBackground">@drawable/background_home</item>-->
+    </style>
+
+    <style name="AppTheme.NoActionBar2" parent="AppTheme">
+        <item name="colorPrimary">#3C8DBC</item>
+        <item name="colorPrimaryDark">#3C8DBC</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <!--设置menu中item的图标颜色-->
+        <item name="android:textColorSecondary">#ffffff</item>
+    </style>
+
+    <!--标题与NavigationIcon的距离-->
+    <style name="Toolbar.MyStyle" parent="Base.Widget.AppCompat.Toolbar">
+        <item name="contentInsetStart">0dp</item>
+        <item name="titleTextColor">#ffffff</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
     </style>
 </resources>

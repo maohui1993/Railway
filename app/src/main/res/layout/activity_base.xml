@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/base_content"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        style="@style/Toolbar.MyStyle"
+        android:elevation="4dp"
+        app:popupTheme="@style/PopupOverlay">
+        <android.support.v7.widget.ActionMenuView
+            android:id="@+id/menu_view"
+            android:gravity="left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.ActionMenuView>
+    </android.support.v7.widget.Toolbar>
+</LinearLayout>

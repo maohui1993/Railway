@@ -18,11 +18,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ExtraInfo;
+import cn.dazhou.railway.BaseActivity;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 
-public class EditInfoActivity extends AppCompatActivity {
+public class EditInfoActivity extends BaseActivity {
     public static final String TITLE_NAME = "修改名称";
     public static final String TITLE_TEL = "修改手机";
     public static final String TITLE_ADDR = "修改地址";
@@ -35,7 +36,7 @@ public class EditInfoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_info);
+        addLayoutToBase(R.layout.activity_edit_info);
         ButterKnife.bind(this);
         info = getIntent().getParcelableExtra(Constants.DATA_KEY);
         if (info.getTitle().equals(TITLE_TEL)) {

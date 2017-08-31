@@ -22,12 +22,13 @@ import butterknife.ButterKnife;
 import cn.dazhou.database.FriendRequestModel;
 import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.im.entity.UserBean;
+import cn.dazhou.railway.BaseActivity;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
 import cn.dazhou.railway.im.friend.add.AddFriendActivity;
 
-public class FriendRequestActivity extends AppCompatActivity {
+public class FriendRequestActivity extends BaseActivity {
     @BindView(R.id.easy_recycler_ver)
     EasyRecyclerView mEasyRecyclerView;
     @BindView(R.id.my_toolbar)
@@ -37,7 +38,7 @@ public class FriendRequestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_friend_request);
+        addLayoutToBase(R.layout.activity_friend_request);
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);

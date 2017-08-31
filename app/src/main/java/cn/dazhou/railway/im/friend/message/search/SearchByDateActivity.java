@@ -1,4 +1,4 @@
-package cn.dazhou.railway.im.friend.info;
+package cn.dazhou.railway.im.friend.message.search;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +20,7 @@ import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.chat.ChatActivity;
 
-public class SearchChatRecordActivity extends AppCompatActivity {
+public class SearchByDateActivity extends AppCompatActivity {
     private static final String EXTRA_DATA = "_DATA";
 
     CalendarPickerView calendar;
@@ -30,7 +30,7 @@ public class SearchChatRecordActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_chat_record);
+        setContentView(R.layout.activity_search_by_date);
 
         jid = getIntent().getStringExtra(EXTRA_DATA);
 
@@ -64,7 +64,7 @@ public class SearchChatRecordActivity extends AppCompatActivity {
         calendar.setCellClickInterceptor(new CalendarPickerView.CellClickInterceptor() {
             @Override
             public boolean onCellClicked(Date date) {
-                ChatActivity.startItself(SearchChatRecordActivity.this, jid, date);
+                ChatActivity.startItself(SearchByDateActivity.this, jid, date);
                 return false;
             }
         });
@@ -72,7 +72,7 @@ public class SearchChatRecordActivity extends AppCompatActivity {
     }
 
     public static void startItself(Context context, String jid) {
-        Intent intent = new Intent(context, SearchChatRecordActivity.class);
+        Intent intent = new Intent(context, SearchByDateActivity.class);
         intent.putExtra(EXTRA_DATA, jid);
         context.startActivity(intent);
     }

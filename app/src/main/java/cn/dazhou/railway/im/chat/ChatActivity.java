@@ -21,6 +21,7 @@ import cn.dazhou.database.FriendModel;
 import cn.dazhou.database.util.DataHelper;
 import cn.dazhou.database.util.StringUtil;
 import cn.dazhou.im.IMLauncher;
+import cn.dazhou.railway.BaseActivity;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.im.friend.info.FriendInfoActivity;
@@ -32,7 +33,7 @@ import static cn.dazhou.railway.config.Constants.DATA_KEY;
 /**
  * 启动时需要知道是与谁聊天，故启动的时候要带一个data值传入。
  */
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends BaseActivity {
     private static final String EXTRA_DATA = "_date";
 
     Toolbar mToolbar;
@@ -47,7 +48,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
+        addLayoutToBase(R.layout.activity_chat);
         mJid = getIntent().getStringExtra(DATA_KEY);
         mDate = (Date) getIntent().getSerializableExtra(EXTRA_DATA);
 
