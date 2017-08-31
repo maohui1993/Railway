@@ -17,7 +17,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.AppTheme_NoActionBar2);
+        setTheme(R.style.AppTheme_toolbar);
         setContentView(R.layout.activity_base);
     }
 

@@ -20,10 +20,11 @@ import android.webkit.WebViewClient;
 import java.io.File;
 
 import cn.dazhou.database.FunctionItemModel;
+import cn.dazhou.railway.BaseActivity;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.util.ActivityUtils;
 
-public class FunctionActivity extends AppCompatActivity {
+public class FunctionActivity extends BaseActivity {
     private static final String EXTRA_DATA = "function";
     private Toolbar mToolbar;
     private WebView mHomeWeb;
@@ -31,7 +32,7 @@ public class FunctionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_function);
+        addLayoutToBase(R.layout.activity_function);
         mHomeWeb = (WebView) findViewById(R.id.wv_home);
         mToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         FunctionItemModel model = getIntent().getParcelableExtra(EXTRA_DATA);

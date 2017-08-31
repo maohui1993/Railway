@@ -85,6 +85,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".splash.SplashActivity"
+            android:theme="@style/AppTheme.NoActionBar2"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>

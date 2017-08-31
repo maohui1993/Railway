@@ -23,7 +23,7 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MyApp.addActivity(this);
-        setContentView(R.layout.activity_login);
+        addLayoutToBase(R.layout.activity_login);
         mToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(mToolbar);
 

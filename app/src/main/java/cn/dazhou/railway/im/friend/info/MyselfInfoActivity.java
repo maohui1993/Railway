@@ -20,6 +20,7 @@ import butterknife.OnClick;
 import cn.dazhou.database.UserModel;
 import cn.dazhou.im.IMLauncher;
 import cn.dazhou.im.entity.ExtraInfo;
+import cn.dazhou.railway.BaseActivity;
 import cn.dazhou.railway.MyApp;
 import cn.dazhou.railway.R;
 import cn.dazhou.railway.config.Constants;
@@ -28,7 +29,7 @@ import cn.dazhou.railway.util.IMUtil;
 import cn.dazhou.railway.util.SharedPreferenceUtil;
 import cn.dazhou.railway.widget.MultiText;
 
-public class MyselfInfoActivity extends AppCompatActivity {
+public class MyselfInfoActivity extends BaseActivity {
     @BindView(R.id.my_toolbar)
     Toolbar mToolbar;
     @BindView(R.id.header)
@@ -47,7 +48,7 @@ public class MyselfInfoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_myself_info);
+        addLayoutToBase(R.layout.activity_myself_info);
         ButterKnife.bind(this);
         mToolbar.setTitle("个人信息");
         setSupportActionBar(mToolbar);

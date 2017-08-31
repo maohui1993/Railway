@@ -23,7 +23,10 @@
         <item name="colorPrimaryDark">#3C8DBC</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <!--设置menu中item的图标颜色-->
+    </style>
+
+    <style name="AppTheme.toolbar" parent="AppTheme.NoActionBar2" >
+        <!--&lt;!&ndash;设置menu中item的图标颜色&ndash;&gt;-->
         <item name="android:textColorSecondary">#ffffff</item>
     </style>
 
